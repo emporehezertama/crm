@@ -1,0 +1,9 @@
+#custom_modal .modal-dialog{ margin-right:0;height: 100%;margin-top:0; }
+#custom_modal{ padding-right:0 !important; }
+#custom_modal .modal-content { border-radius:0;height: 100%; }
+#custom_modal .modal-header h4.modal-title { color: white !important; }
+#custom_modal .modal-header { border-radius: 0; }
+
+#custom_modal_edit .modal-dialog{ margin-right:0;height: 100%;margin-top:0; }
+#custom_modal_edit{ padding-right:0 !important; }
+#custom_modal_edit .modal-content { border-radius:0;height: 100%; }

@@ -1,0 +1,10 @@
+html, body {
+	background: #fcfbfc !important;
+}
+
+.modal-header {
+	border-bottom: 1px solid #e5e5e5;
+}
+.modal-footer {
+	border-top: 1px solid #e5e5e5;
+}

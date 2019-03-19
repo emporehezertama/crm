@@ -19,6 +19,26 @@ Route::get('/', function(){
 
 Auth::routes();
 
+Route::group(['middleware' => ['auth']], function(){
+	Route::resource('project','ProjectController', ['only'=> ['index','create','store','edit','destroy','update']]);
+	Route::resource('client','ClientController', ['only'=> ['index','create','store','edit','destroy','update']]);
+
+	Route::resource('pipeline','PipelineController', ['only'=> ['index','create','store','edit','destroy','update']]);
+	Route::post('pipeline/add-note/{id}', 'PipelineController@addNote')->name('pipeline.add-note');
+	Route::get('pipeline/calls/{id}', 'PipelineController@calls')->name('pipeline.calls');
+	Route::get('pipeline/reminder/{id}', 'PipelineController@reminder')->name('pipeline.reminder');
+	Route::get('pipeline/demo/{id}', 'PipelineController@demo')->name('pipeline.demo');
+	Route::get('pipeline/edit/{id}', 'PipelineController@edit')->name('pipeline.edit');
+	Route::get('pipeline/terminate/{id}', 'PipelineController@terminate')->name('pipeline.terminate');
+	Route::post('pipeline/move-to-quotation/{id}', 'PipelineController@moveToQuotation')->name('pipeline.move-to-quotation');
+	Route::post('pipeline/move-to-negotiation/{id}', 'PipelineController@moveToNegotation')->name('pipeline.move-to-negotiation');
+	Route::post('pipeline/move-to-po/{id}', 'PipelineController@moveToPO')->name('pipeline.move-to-po');
+	Route::get('pipeline/move-to-change-request/{id}', 'PipelineController@moveToChangeRequest')->name('pipeline.move-to-change-request');
+
+	Route::post('ajax/get-pipeline-history', 'AjaxController@getPipelineHistory')->name('ajax.get-pipeline-history');
+	Route::post('ajax/get-company', 'AjaxController@getCompany')->name('ajax.get-company');
+});
+
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['auth', 'access:1']], function(){
 	Route::get('/', 'IndexController@index')->name('admin.index');
 	Route::get('success-stories', 'IndexController@index')->name('admin.success-stories.index');
@@ -35,19 +55,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
 	Route::post('profile/change-password', 'IndexController@changePassword')->name('admin.profile.change-password');
 });
 
-Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['auth', 'access:4']], function(){
+Route::group(['prefix' => 'sales', 'middleware' => ['auth', 'access:4']], function(){
 	Route::get('/', 'PipelineController@index')->name('sales.index');
-	Route::resource('pipeline','PipelineController', ['only'=> ['index','create','store','edit','destroy','update'], 'as' => 'sales']);
-	Route::resource('project','ProjectController', ['only'=> ['index','create','store','edit','destroy','update'], 'as' => 'sales']);
-	Route::resource('client','ClientController', ['only'=> ['index','create','store','edit','destroy','update'], 'as' => 'sales']);
-	Route::post('pipeline/add-note/{id}', 'PipelineController@addNote')->name('sales.pipeline.add-note');
-	Route::get('pipeline/calls/{id}', 'PipelineController@calls')->name('sales.pipeline.calls');
-	Route::get('pipeline/reminder/{id}', 'PipelineController@reminder')->name('sales.pipeline.reminder');
-	Route::get('pipeline/demo/{id}', 'PipelineController@demo')->name('sales.pipeline.demo');
-	Route::get('pipeline/edit/{id}', 'PipelineController@edit')->name('sales.pipeline.edit');
-	Route::get('pipeline/terminate/{id}', 'PipelineController@terminate')->name('sales.pipeline.terminate');
-	Route::post('pipeline/move-to-quotation/{id}', 'PipelineController@moveToQuotation')->name('sales.pipeline.move-to-quotation');
-	Route::get('pipeline/move-to-negotiation/{id}', 'PipelineController@moveToNegotation')->name('sales.pipeline.move-to-negotiation');
-	Route::get('pipeline/move-to-po/{id}', 'PipelineController@moveToPO')->name('sales.pipeline.move-to-po');
-	Route::get('pipeline/move-to-change-request/{id}', 'PipelineController@moveToChangeRequest')->name('sales.pipeline.move-to-change-request');
+	
 });

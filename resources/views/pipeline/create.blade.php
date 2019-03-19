@@ -25,7 +25,7 @@
   <div class="content-body">
     <div class="row">
       <div class="col-12 px-0">
-        <form class="form form-horizontal" method="POST" id="form_card" name="form_card" enctype="multipart/form-data" action="{{ route('sales.pipeline.store') }}">
+        <form class="form form-horizontal" method="POST" id="form_card" autocomplete="off" name="form_card" enctype="multipart/form-data" action="{{ route('pipeline.store') }}">
           {{ csrf_field() }}
           <div class="col-6 float-left">
              <div class="card">
@@ -46,6 +46,31 @@
                       </div>
                     </div>
                   </div>
+                  <div class="form-group">
+                      <label class="col-md-12">Project Category</label>
+                      <div class="col-md-12">
+                        <select class="form-control" name="project_category">
+                          <option>IT Services</option>
+                          <option value="IT Services - Custome Software Development"> -- Custome Software Development</option>
+                          <option value="IT Services - SaaS Application Developement"> -- SaaS Application Developement</option>
+                          <option value="IT Services - Cloud Software Developement"> -- Cloud Software Developement</option>
+                          <option value="IT Services - Application Enhancement"> -- Application Enhancement</option>
+                          <option value="IT Services - UI/UX Developement and Design"> -- UI/UX Developement and Design</option>
+                          <option value="IT Services - Mobile Application Developement"> -- Mobile Application Developement</option>
+                          <option value="IT Services - Full Life Cycle Software Testing"> -- Full Life Cycle Software Testing</option>
+                          <option value="IT Services - Dedicated In House Programmer"> -- Dedicated In House Programmer</option>
+                          <option>HR Services</option>
+                          <option value="HR Services - Recruitment & Head Hunting"> -- Recruitment & Head Hunting</option>
+                          <option value="HR Services - Contract & Temporary Staffing"> -- Contract & Temporary Staffing</option>
+                          <option value="HR Services - Payroll"> -- Payroll</option>
+                          <option>ERP Solution</option>
+                          <option value="ERP Solution - ERP Solutions"> --- ERP Solutions</option>
+                          <option value="ERP Solution - HR Solutions"> --- HR Solutions</option>
+                          <option value="ERP Solution - SLIK"> --- SLIK</option>
+                          <option>Others</option>
+                        </select>
+                      </div>
+                  </div>
                   <div class="form-body">
                     <div class="form-group">
                       <div class="col-md-12">
@@ -56,6 +81,7 @@
                       </div>
                     </div>
                   </div>
+                  
                  
                   <div class="form-body">
                     <div class="form-group">

@@ -1,4 +1,13 @@
 
+// datepicker
+$('.datepicker').each(function(){
+    $(this).pickadate({
+        selectMonths: true,
+        selectYears: true,
+        format: 'yyyy-mm-dd',
+    });
+});
+
 $('.data-table').DataTable( {
     paging: false,
     bInfo: false,

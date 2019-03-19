@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Sales;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CrmClient;
@@ -37,7 +37,7 @@ class ClientController extends Controller
 
         $params['data'] = $data;
         
-        return view('sales.client.index')->with($params);
+        return view('client.index')->with($params);
     }
 
     /**
@@ -46,7 +46,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        return view('sales.client.create');
+        return view('client.create');
     }
 
     /**
@@ -86,7 +86,7 @@ class ClientController extends Controller
         }
         $client->save();
 
-        return redirect()->route('sales.client.index')->with('message-success', 'Client saved.');
+        return redirect()->route('client.index')->with('message-success', 'Client saved.');
     }
 
     /**
@@ -97,7 +97,7 @@ class ClientController extends Controller
     {
         $params['data'] = CrmClient::where('id', $id)->first();
 
-        return view('sales.client.edit')->with($params);
+        return view('client.edit')->with($params);
     }
 
     /**
@@ -144,7 +144,7 @@ class ClientController extends Controller
             $data->save();
         }
 
-        return redirect()->route('sales.client.index')->with('message-success', 'Client saved.');
+        return redirect()->route('client.index')->with('message-success', 'Client saved.');
     }
 
     /**
@@ -156,6 +156,6 @@ class ClientController extends Controller
         $data = CrmClient::where('id', $id)->first();
         $data->delete();
 
-        return redirect()->route('sales.client.index')->with('message-success', 'Deleted');
+        return redirect()->route('client.index')->with('message-success', 'Deleted');
     }
 }

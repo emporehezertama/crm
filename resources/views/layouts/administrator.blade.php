@@ -17,6 +17,8 @@
   <link href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css" rel="stylesheet">
   <!-- BEGIN VENDOR CSS-->
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/vendors.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/daterange/daterangepicker.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/datatable/datatables.min.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/sweetalert.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/app.css') }}">
@@ -30,6 +32,9 @@
   <link rel="stylesheet" type="text/css" href="{{ asset('css/custom-modal.css') }}?{{date('YmdHis')}}">
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-callout.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('css/style-custom.css') }}?{{date('YmdHis')}}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/pickers/daterange/daterange.css') }}">
+
+  
   <!-- END Page Level CSS-->
 </head>
 <body class="vertical-layout vertical-overlay-menu 2-columns   menu-expanded fixed-navbar"
@@ -112,6 +117,10 @@ data-open="click" data-menu="vertical-overlay-menu" data-col="2-columns">
   <script src="{{ asset('app-assets/vendors/js/tables/datatable/datatables.min.js') }}" type="text/javascript"></script>
   <script src="{{ asset('app-assets/vendors/js/jquery.priceformat.min.js') }}"></script>
   <script src="{{ asset('app-assets/vendors/js/bootbox.min.js') }}"></script>
+
+  <script src="{{ asset('app-assets/vendors/js/pickers/pickadate/picker.js') }}" type="text/javascript"></script>
+  <script src="{{ asset('app-assets/vendors/js/pickers/pickadate/picker.date.js') }}" type="text/javascript"></script>
+
   <script src="{{ asset('js/general.js') }}?ran={{date('YmdHis')}}" type="text/javascript"></script>
   
   @include('layouts.alert')

@@ -1,6 +1,32 @@
 <?php 
 
 /**
+ * Get Payment Method
+ * @param  $id
+ * @return void
+ */
+function get_crm_payment_method($id)
+{
+	$arr = [ 1=>'Perpetual License', 2=>'Subscription'];
+
+	return @$arr[$id];
+}
+
+/**
+ * Get Crm Project Item
+ * @param  $object
+ */
+function get_crm_project_item($object, $key)
+{
+	$item = \App\Models\CrmProjectItems::where('crm_project_id', $object->id)->where('status', $object->pipeline_status)->where('item', $key)->first();
+
+	if($item)
+	{
+		return $item->value;
+	}
+}
+
+/**
  * Count Data
  * @return number
  */
@@ -80,6 +106,8 @@ function status_pipeline_card($item)
     if($item->status_card == 5)
     {
        	$html = '<div class="mt-0 p-1" style="border-bottom: 1px solid #e4e7ed;">
+
+       				<strong>'. $item->title .'</strong><br />
 			        '. $item->value;
 
 		if(!empty($item->file))
@@ -87,8 +115,10 @@ function status_pipeline_card($item)
 			$html .= '<br /><a href="'. asset('storage/projects/'. $item->crm_project_id .'/'. $item->file) .'" target="_blank">'. $item->file .'</a>';
 		}
 		
-		$html .='<div class="clearfix"></div><small class="float-left" style="font-size: 70%;">'. date('d M Y', strtotime($item->created_at)) .'</small>
-			      </div>';
+		$html .='<div class="clearfix"></div>
+					<small class="float-left" style="font-size: 70%;">'. date('d M Y', strtotime($item->created_at)) .'</small>
+					<small class="float-right">'. $item->user->name .'</small>
+			    </div>';
     }
 
     return $html;

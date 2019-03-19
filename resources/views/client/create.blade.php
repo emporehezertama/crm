@@ -10,7 +10,7 @@
       <div class="row breadcrumbs-top">
         <div class="breadcrumb-wrapper col-12">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Home</a>
+            <li class="breadcrumb-item"><a href="/">Home</a>
             </li>
             <li class="breadcrumb-item active">Client / Customer
             </li>
@@ -27,7 +27,7 @@
   <div class="content-body">
     <div class="row">
       <div class="col-12 px-0">
-        <form class="form form-horizontal" method="POST" action="{{ route('sales.client.store') }}" enctype="multipart/form-data">
+        <form class="form form-horizontal" method="POST" action="{{ route('client.store') }}" enctype="multipart/form-data" autocomplete="off">
           <div class="col-6 float-left">
              <div class="card">
               <div class="card-header">

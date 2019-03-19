@@ -38,6 +38,7 @@
             </li>
           </ul>
         </li>
+        <li class="dropdown nav-item mega-dropdown"><a class="nav-link" href="{{ route('pipeline.index') }}">Pipeline</a>
         <li class="dropdown nav-item mega-dropdown"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">Setting</a>
            <ul class="mega-dropdown-menu dropdown-menu row">
             <li class="col-md-3">
@@ -67,15 +68,15 @@
               <ul class="drilldown-menu">
                 <li class="menu-list">
                   <ul>
-                    <li><a class="dropdown-item" href="{{ route('sales.client.index') }}"><i class="ft-user"></i> Client / Customer</a></li>
-                    <li><a class="dropdown-item" href="{{ route('sales.project.index') }}"><i class="ft-user"></i> Project</a></li>
+                    <li><a class="dropdown-item" href="{{ route('client.index') }}"><i class="ft-user"></i> Client / Customer</a></li>
+                    <li><a class="dropdown-item" href="{{ route('project.index') }}"><i class="ft-user"></i> Project</a></li>
                   </ul>
                 </li>
               </ul>
             </li>
           </ul>
         </li>
-        <li class="dropdown nav-item "><a class="nav-link" href="{{ route('sales.pipeline.index') }}">Pipeline</a>
+        <li class="dropdown nav-item "><a class="nav-link" href="{{ route('pipeline.index') }}">Pipeline</a>
       </ul>
       @endif
       @endif

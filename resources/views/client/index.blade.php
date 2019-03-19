@@ -19,7 +19,7 @@
     </div>
     <div class="content-header-right text-md-right col-md-6 col-12">
       <div class="btn-group">
-        <a href="{{ route('sales.client.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Cient / Customer</a>
+        <a href="{{ route('client.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Cient / Customer</a>
       </div>
     </div>
   </div>
@@ -59,11 +59,11 @@
                         <td>{{ isset($item->sales->name) ? $item->sales->name : '' }}</td>
                         <td>{{ $item->created_at }}</td>
                         <td>
-                          <form method="POST" action="{{ route('sales.client.destroy', $item->id) }}">
+                          <form method="POST" action="{{ route('client.destroy', $item->id) }}">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
                             <a href="javascript:void(0)" class="text-danger" title="Delete data" onclick="confirm_delete('Hapus data ini ?', this)"><i class="la la-trash"></i></a>
-                            <a href="{{ route('sales.client.edit', $item->id) }}" title="Edit Data"><i class="la la-edit"></i></a>
+                            <a href="{{ route('client.edit', $item->id) }}" title="Edit Data"><i class="la la-edit"></i></a>
                           </form>
                         </td>
                       </tr>

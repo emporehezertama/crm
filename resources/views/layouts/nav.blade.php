@@ -12,8 +12,8 @@
               <ul class="drilldown-menu">
                 <li class="menu-list">
                   <ul>
-                    <li><a class="dropdown-item" href="{{ route('admin.client.index') }}"><i class="ft-user"></i> Client / Customer</a></li>
-                    <li><a class="dropdown-item" href="{{ route('admin.project.index') }}"><i class="ft-user"></i> Project</a></li>
+                    <li><a class="dropdown-item" href="{{ route('client.index') }}"><i class="ft-user"></i> Client / Customer</a></li>
+                    <!-- <li><a class="dropdown-item" href="{{ route('project.index') }}"><i class="ft-user"></i> Project</a></li> -->
                   </ul>
                 </li>
               </ul>
@@ -69,7 +69,7 @@
                 <li class="menu-list">
                   <ul>
                     <li><a class="dropdown-item" href="{{ route('client.index') }}"><i class="ft-user"></i> Client / Customer</a></li>
-                    <li><a class="dropdown-item" href="{{ route('project.index') }}"><i class="ft-user"></i> Project</a></li>
+                    <!-- <li><a class="dropdown-item" href="{{ route('project.index') }}"><i class="ft-user"></i> Project</a></li> -->
                   </ul>
                 </li>
               </ul>

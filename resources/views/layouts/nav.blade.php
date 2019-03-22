@@ -39,6 +39,7 @@
           </ul>
         </li>
         <li class="dropdown nav-item mega-dropdown"><a class="nav-link" href="{{ route('pipeline.index') }}">Pipeline</a>
+        <li class="dropdown nav-item mega-dropdown"><a class="nav-link" href="{{ route('task.index') }}">Task</a>
         <li class="dropdown nav-item mega-dropdown"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">Setting</a>
            <ul class="mega-dropdown-menu dropdown-menu row">
             <li class="col-md-3">

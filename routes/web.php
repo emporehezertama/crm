@@ -23,6 +23,7 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::resource('project','ProjectController', ['only'=> ['index','create','store','edit','destroy','update']]);
 	Route::resource('client','ClientController', ['only'=> ['index','create','store','edit','destroy','update']]);
 
+	Route::resource('task','TaskController', ['only'=> ['index','create','store','edit','destroy','update']]);
 	Route::resource('pipeline','PipelineController', ['only'=> ['index','create','store','edit','destroy','update']]);
 	Route::post('pipeline/add-note/{id}', 'PipelineController@addNote')->name('pipeline.add-note');
 	Route::get('pipeline/calls/{id}', 'PipelineController@calls')->name('pipeline.calls');

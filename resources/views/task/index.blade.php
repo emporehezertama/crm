@@ -1,26 +1,25 @@
 @extends('layouts.administrator')
 
-@section('title', 'Pipeline')
+@section('title', 'Task Management')
 
 @section('content')
 <div class="content-wrapper">
   <div class="content-header row">
     <div class="content-header-left col-md-6 col-12 mb-2">
-      <h3 class="content-header-title mb-0">Pipeline</h3>
+      <h3 class="content-header-title mb-0">Task Management</h3>
       <div class="row breadcrumbs-top">
         <div class="breadcrumb-wrapper col-12">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Home</a>
             </li>
-            <li class="breadcrumb-item active">Pipeline</li>
+            <li class="breadcrumb-item active">Task Management</li>
           </ol>
         </div>
       </div>
     </div>
     <div class="content-header-right text-md-right col-md-6 col-12">
       <div class="btn-group">
-        <a href="{{ route('pipeline.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Add Card</a>
-        <a href="{{ route('task.create') }}" class="btn btn-round btn-success"><i class="ft ft-plus"></i> Add Task</a>
+        <a href="{{ route('pipeline.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Add Task</a>
       </div>
     </div>
   </div>
@@ -29,7 +28,7 @@
 
       <div class="col-2 box_pipeline" style="flex:0 0 20%; max-width: 20%;">
         <div class=" pt-1 pl-0 pr-0" style="position: relative;">
-          <h3 class="float-left">Seed </h3>
+          <h3 class="float-left">Kick Of Meeting </h3>
           <h3 class="float-right">{{ count_($seed, true) }}</h3>
           <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($seed) ) }}</label>
           <div class="clearfix"></div>
@@ -90,7 +89,7 @@
       
       <div class="col-2 box_pipeline" style="flex:0 0 20%; max-width: 20%;">
         <div class="pt-1 pl-0 pr-0" style="position: relative;">
-          <h3 class="float-left">Quotation </h3>
+          <h3 class="float-left">Assesment </h3>
           <h3 class="float-right">{{ count_($quotation, true) }}</h3>
           <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($quotation) ) }}</label>
           <div class="clearfix"></div>
@@ -158,7 +157,7 @@
 
       <div class="col-2 box_pipeline" style="flex:0 0 20%; max-width: 20%;">
         <div class="pt-1 pl-0 pr-0" style="position: relative;">
-          <h3 class="float-left">PO / Contract  </h3>
+          <h3 class="float-left">UI / UX</h3>
           <h3 class="float-right">{{ count_($po, true) }}</h3>
           <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($po) ) }}</label>
           <div class="clearfix"></div>
@@ -183,7 +182,6 @@
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
                         <a href="{{ route('pipeline.move-to-change-request', $item->id) }}" class="dropdown-item text-success">Move to Change Request <i class="ft-arrow-right"></i></a>
                         <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
-                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_invoice('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Invoice</a>
                         <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
                       </span>
                     </span>
@@ -256,7 +254,7 @@
 
       <div class="col-2 box_pipeline" style="flex:0 0 20%; max-width: 20%;">
         <div class="pt-1 pl-0 pr-0" style="position: relative;">
-        <h3 class="float-left">Invoice </h3>
+        <h3 class="float-left">Development </h3>
           <h3 class="float-right">{{ count_($cr, true) }}</h3>
           <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($cr) ) }}</label>
           <div class="clearfix"></div>
@@ -330,7 +328,7 @@
 
       <div class="col-2 box_pipeline" style="flex:0 0 20%; max-width: 20%;">
         <div class="pt-1 pl-0 pr-0" style="position: relative;">
-        <h3 class="float-left">PO Done </h3>
+        <h3 class="float-left">QA & Testing </h3>
           <h3 class="float-right">{{ count_($cr, true) }}</h3>
           <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($cr) ) }}</label>
           <div class="clearfix"></div>
@@ -404,7 +402,7 @@
 
       <div class="col-2 box_pipeline" style="flex:0 0 20%; max-width: 20%;">
         <div class="pt-1 pl-0 pr-0" style="position: relative;">
-        <h3 class="float-left">Payment Receive </h3>
+        <h3 class="float-left">Implementation</h3>
           <h3 class="float-right">{{ count_($cr, true) }}</h3>
           <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($cr) ) }}</label>
           <div class="clearfix"></div>
@@ -476,6 +474,157 @@
         </div>
         @endforeach
       </div>
+
+      <div class="col-2 box_pipeline" style="flex:0 0 20%; max-width: 20%;">
+        <div class="pt-1 pl-0 pr-0" style="position: relative;">
+        <h3 class="float-left">UAT</h3>
+          <h3 class="float-right">{{ count_($cr, true) }}</h3>
+          <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($cr) ) }}</label>
+          <div class="clearfix"></div>
+          <div class="progress progress-sm mt-1 mb-0">
+            <div class="progress-bar bg-gradient-x-pink" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+        <div class="clearfix"></div><br />
+        @foreach($cr as $item)
+        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <div class="card-content">
+            <div class="card-header">
+              <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
+              <small>{{ date('d F Y', strtotime($item->created_at)) }}</small>
+              <a class="heading-elements-toggle"><i class="la la-ellipsis-h font-medium-3"></i></a>
+              <div class="heading-elements">
+                <ul class="list-inline mb-0">
+                  <li>
+                    <span class="dropdown">
+                      <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
+                      <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
+                        <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
+                      </span>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="card-body pt-0">
+              <p class="mb-0"><i class="ft ft-check-circle text-success"></i> {{ $item->name }} </p>
+              @if(!empty($item->description))
+              <p><pre>{{ $item->description }}</pre></p>
+              @endif
+              <p>Rp. {{ number_format($item->price,0,'','.') }}</p>
+              <a href="{{ asset('storage/projects/'. $item->id .'/'. $item->file) }}" target="_blank">{{ $item->file }}</a>
+              <hr />
+
+              <div class="bs-callout-primary callout-border-left p-1 mb-0 m-t-5" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="1" onclick="history_pipeline(this, 'Seed')">
+                <span class="alert-icon">
+                  <i class="ft-list"></i>
+                </span>Seed
+              </div>
+
+              <div class="bs-callout-primary callout-border-left p-1 mb-0 mt-1" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="2" onclick="history_pipeline(this, 'Quotation')">
+                <span class="alert-icon">
+                  <i class="ft-list"></i>
+                </span>Quotation
+              </div>
+
+              <div class="bs-callout-primary callout-border-left p-1 mb-0 mt-1" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="4" onclick="history_pipeline(this, 'Negotation')">
+                <span class="alert-icon">
+                  <i class="ft-list"></i>
+                </span>PO
+              </div>
+
+              <p>
+                @if($item->projectPipeline)
+                  @foreach($item->projectPipeline as $i)
+                    @if($i->pipeline_status == $item->pipeline_status)
+                      {!! status_pipeline_card($i) !!}
+                    @endif
+                  @endforeach
+                @endif
+              </p>
+            </div>
+          </div>
+        </div>
+        @endforeach
+      </div>
+
+      <div class="col-2 box_pipeline" style="flex:0 0 20%; max-width: 20%;">
+        <div class="pt-1 pl-0 pr-0" style="position: relative;">
+        <h3 class="float-left">Go Live</h3>
+          <h3 class="float-right">{{ count_($cr, true) }}</h3>
+          <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($cr) ) }}</label>
+          <div class="clearfix"></div>
+          <div class="progress progress-sm mt-1 mb-0">
+            <div class="progress-bar bg-gradient-x-pink" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+        <div class="clearfix"></div><br />
+        @foreach($cr as $item)
+        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <div class="card-content">
+            <div class="card-header">
+              <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
+              <small>{{ date('d F Y', strtotime($item->created_at)) }}</small>
+              <a class="heading-elements-toggle"><i class="la la-ellipsis-h font-medium-3"></i></a>
+              <div class="heading-elements">
+                <ul class="list-inline mb-0">
+                  <li>
+                    <span class="dropdown">
+                      <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
+                      <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
+                        <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
+                      </span>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="card-body pt-0">
+              <p class="mb-0"><i class="ft ft-check-circle text-success"></i> {{ $item->name }} </p>
+              @if(!empty($item->description))
+              <p><pre>{{ $item->description }}</pre></p>
+              @endif
+              <p>Rp. {{ number_format($item->price,0,'','.') }}</p>
+              <a href="{{ asset('storage/projects/'. $item->id .'/'. $item->file) }}" target="_blank">{{ $item->file }}</a>
+              <hr />
+
+              <div class="bs-callout-primary callout-border-left p-1 mb-0 m-t-5" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="1" onclick="history_pipeline(this, 'Seed')">
+                <span class="alert-icon">
+                  <i class="ft-list"></i>
+                </span>Seed
+              </div>
+
+              <div class="bs-callout-primary callout-border-left p-1 mb-0 mt-1" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="2" onclick="history_pipeline(this, 'Quotation')">
+                <span class="alert-icon">
+                  <i class="ft-list"></i>
+                </span>Quotation
+              </div>
+
+              <div class="bs-callout-primary callout-border-left p-1 mb-0 mt-1" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="4" onclick="history_pipeline(this, 'Negotation')">
+                <span class="alert-icon">
+                  <i class="ft-list"></i>
+                </span>PO
+              </div>
+
+              <p>
+                @if($item->projectPipeline)
+                  @foreach($item->projectPipeline as $i)
+                    @if($i->pipeline_status == $item->pipeline_status)
+                      {!! status_pipeline_card($i) !!}
+                    @endif
+                  @endforeach
+                @endif
+              </p>
+            </div>
+          </div>
+        </div>
+        @endforeach
+      </div>
+      
     </div>
   </div>
 </div>
@@ -861,32 +1010,6 @@
   </div>
 </div>
 
-<div class="modal fade text-left" id="modal_add_invoice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <form method="POST" action="" id="form-add-invoice" enctype="multipart/form-data" autocomplete="off">
-        {{ csrf_field() }}
-        <div class="modal-header">
-          <h4 class="modal-title company_name">Invoice</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-              <input type="text" class="form-control modal-invoice-nominal" value="" >
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn grey btn-outline-secondary btn-sm" data-dismiss="modal"><i class="ft ft-x"></i> Close</button>
-          <button type="submit" class="btn btn-info btn-sm">Submit <i class="ft ft-plus"></i></button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-
 <style type="text/css">
   .row_pipeline {
     display: inline-block !important;
@@ -930,13 +1053,6 @@
 
 @section('js')
 <script type="text/javascript">
-  
-  function add_invoice(action)
-  {
-    $("#form-add-invoice").attr('action', action);
-
-    $("#modal_add_invoice").modal("show"); 
-  }
 
   function auto_generate_po()
   {

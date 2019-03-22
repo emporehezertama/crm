@@ -11,7 +11,7 @@ use App\Models\CrmProjectItems;
 use App\Models\CrmProjectPaymentMethodSubscription;
 use App\Models\CrmProjectPaymentMethodPerpetualLicense;
 
-class PipelineController extends Controller
+class TaskController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -36,7 +36,7 @@ class PipelineController extends Controller
         $params['po']               = CrmProjects::where('pipeline_status', 4)->orderBy('updated_at', 'DESC')->get();
         $params['cr']               = CrmProjects::where('pipeline_status', 5)->orderBy('updated_at', 'DESC')->get();
 
-        return view('pipeline.index')->with($params);
+        return view('task.index')->with($params);
     }
 
     /**

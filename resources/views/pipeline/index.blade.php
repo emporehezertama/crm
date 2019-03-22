@@ -63,7 +63,7 @@
             </div>
             <div class="card-body pt-0">
               @if(!empty($item->project_category))
-              {{ $item->project_category }}
+              <p>{{ $item->project_category }}</p>
               @endif
               <p class="mb-0"> {{ $item->name }} </p>
 
@@ -819,7 +819,7 @@
       <form method="POST" action="" id="form-add-note" enctype="multipart/form-data" autocomplete="off">
         {{ csrf_field() }}
         <div class="modal-header">
-          <h4 class="modal-title company_name">Update</h4>
+          <h4 class="modal-title modal_update_title">Update</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -829,10 +829,15 @@
               <input type="text" class="form-control" name="title" placeholder="Title">
             </div>
             <div class="form-group">
-              <textarea class="form-control" name="note" rows="5" placeholder="Typing here"></textarea>
+              <textarea class="form-control" name="note" rows="5" placeholder="Description"></textarea>
             </div>
             <div class="form-group">
-              <input type="file" name="file" />
+              <div class="col-md-6 float-left pl-0">
+                <input type="file" name="file" />
+              </div>
+              <div class="col-md-6 float-left pr-0">
+                <input type="text" class="form-control datepicker" name="date" placeholder="Date Update (Default Today)">
+              </div><div class="clearfix"></div>
             </div>
         </div>
         <div class="modal-footer">
@@ -886,14 +891,13 @@
   </div>
 </div>
 
-
 <style type="text/css">
   .row_pipeline {
     display: inline-block !important;
     white-space: nowrap;
     width: 100%;
     overflow-x:scroll;
-    min-height: 150px;
+    min-height: 500px;
   }
   .box_pipeline {
     vertical-align: top;
@@ -906,6 +910,10 @@
     -min-width: 30%;
   }
 
+  .card-body {
+    white-space: initial;
+  }
+
   /* width */
 ::-webkit-scrollbar {
   width: 2px;
@@ -914,7 +922,7 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #F9FAFD; 
 }
  
 /* Handle */

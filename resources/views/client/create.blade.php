@@ -18,16 +18,25 @@
         </div>
       </div>
     </div>
-
     <div class="col-md-6 float-right">
-      <button type="submit" class="btn btn-info btn-sm float-right"><i class="ft ft-save"></i> Save</button>
+      <button type="button" class="btn btn-info btn-sm float-right" onclick="submit_form()"><i class="ft ft-save"></i> Save</button>
     </div>
-
   </div>
   <div class="content-body">
     <div class="row">
       <div class="col-12 px-0">
-        <form class="form form-horizontal" method="POST" action="{{ route('client.store') }}" enctype="multipart/form-data" autocomplete="off">
+        <form class="form form-horizontal" id="form-client" method="POST" action="{{ route('client.store') }}" enctype="multipart/form-data" autocomplete="off">
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+                </ul>
+            </div>
+        @endif
+                
           <div class="col-6 float-left">
              <div class="card">
               <div class="card-header">
@@ -52,7 +61,7 @@
                         <label class="label-control">Name / Company</label>
                       </div>
                       <div class="col-md-12">
-                        <input type="text" class="form-control" placeholder="Name" name="name">
+                        <input type="text" class="form-control" placeholder="Name" name="name" value="{{ old('name') }}">
                       </div>
                     </div>
                     <div class="form-group">
@@ -60,7 +69,7 @@
                         <label class="label-control">Telepon</label>
                       </div>
                       <div class="col-md-12">
-                        <input type="text" class="form-control" placeholder="Telepon" name="handphone">
+                        <input type="text" class="form-control" placeholder="Telepon" name="handphone" value="{{ old('handphone') }}">
                       </div>
                     </div>
                     <div class="form-group">
@@ -68,7 +77,7 @@
                         <label class="label-control">Email</label>
                       </div>
                       <div class="col-md-12">
-                        <input type="email" class="form-control" name="email" placeholder="Email" />
+                        <input type="email" class="form-control" name="email" placeholder="Email" value="{{ old('email') }}" />
                       </div>
                     </div>
                     <div class="form-group">
@@ -84,7 +93,7 @@
                         <label class="label-control">Address</label>
                       </div>
                       <div class="col-md-12">
-                        <textarea class="form-control" name="address" rows="6" placeholder="Typing here.. "></textarea>
+                        <textarea class="form-control" name="address" rows="6" placeholder="Typing here.. ">{{ old('address') }}</textarea>
                       </div>
                     </div>
                     <div class="form-group">
@@ -120,7 +129,7 @@
                         <label class="label-control">Name</label>
                       </div>
                       <div class="col-md-12">
-                        <input type="text" class="form-control" placeholder="PIC Name" name="pic_name">
+                        <input type="text" class="form-control" placeholder="PIC Name" name="pic_name" value="{{ old('pic_name') }}" />
                       </div>
                     </div>
                      <div class="form-group">
@@ -128,7 +137,7 @@
                         <label class="label-control">Telepon</label>
                       </div>
                       <div class="col-md-12">
-                        <input type="text" class="form-control" placeholder="PIC Telepon" name="pic_telepon">
+                        <input type="text" class="form-control" placeholder="PIC Telepon" name="pic_telepon"value="{{ old('pic_telepon') }}" />
                       </div>
                     </div>
                      <div class="form-group">
@@ -136,7 +145,7 @@
                         <label class="label-control">Email</label>
                       </div>
                       <div class="col-md-12">
-                        <input type="text" class="form-control" placeholder="PIC Email" name="pic_email">
+                        <input type="text" class="form-control" placeholder="PIC Email" name="pic_email"value="{{ old('pic_email') }}" />
                       </div>
                     </div>
                   </div>
@@ -150,6 +159,10 @@
 </div>
 @section('js')
 <script type="text/javascript">
+  function submit_form()
+  {
+    $("#form-client").submit();
+  }
   function open_dialog_photo()
   {
       $("input[name='foto']").trigger('click');   

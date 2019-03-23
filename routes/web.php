@@ -26,6 +26,7 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::resource('task','TaskController', ['only'=> ['index','create','store','edit','destroy','update']]);
 	Route::resource('pipeline','PipelineController', ['only'=> ['index','create','store','edit','destroy','update']]);
 	Route::post('pipeline/add-note/{id}', 'PipelineController@addNote')->name('pipeline.add-note');
+	Route::post('pipeline/store-invoice-perpetual', 'PipelineController@storeInvoicePerpetual')->name('pipeline.store-invoice-perpetual');
 	Route::get('pipeline/calls/{id}', 'PipelineController@calls')->name('pipeline.calls');
 	Route::get('pipeline/reminder/{id}', 'PipelineController@reminder')->name('pipeline.reminder');
 	Route::get('pipeline/demo/{id}', 'PipelineController@demo')->name('pipeline.demo');
@@ -38,6 +39,7 @@ Route::group(['middleware' => ['auth']], function(){
 
 	Route::post('ajax/get-pipeline-history', 'AjaxController@getPipelineHistory')->name('ajax.get-pipeline-history');
 	Route::post('ajax/get-company', 'AjaxController@getCompany')->name('ajax.get-company');
+	Route::post('ajax/get-invoice-perpetual-license', 'AjaxController@getInvoicePerpetualLicense')->name('ajax.get-invoice-perpetual-license');
 });
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['auth', 'access:1']], function(){

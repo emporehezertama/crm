@@ -35,6 +35,9 @@ class PipelineController extends Controller
         $params['negotiation']      = CrmProjects::where('pipeline_status', 3)->orderBy('updated_at', 'DESC')->get();
         $params['po']               = CrmProjects::where('pipeline_status', 4)->orderBy('updated_at', 'DESC')->get();
         $params['cr']               = CrmProjects::where('pipeline_status', 5)->orderBy('updated_at', 'DESC')->get();
+        $params['po_done']          = CrmProjects::where('pipeline_status', 6)->orderBy('updated_at', 'DESC')->get();
+        $params['invoice']          = CrmProjects::where('pipeline_status', 7)->orderBy('updated_at', 'DESC')->get();
+        $params['payment_receive']  = CrmProjects::where('pipeline_status', 8)->orderBy('updated_at', 'DESC')->get();
 
         return view('pipeline.index')->with($params);
     }
@@ -240,7 +243,7 @@ class PipelineController extends Controller
                     $perpetual->terms               = $i;
                     $perpetual->milestone           = $request->milestone[$k];
                     $perpetual->persen              = $request->persen[$k];
-                    $perpetual->value               = $request->value[$k];
+                    $perpetual->value               = replace_idr($request->value[$k]);
                     $perpetual->status              = 0;
                     $perpetual->save();
                 }
@@ -292,6 +295,7 @@ class PipelineController extends Controller
         $data->pipeline_status      = $project->pipeline_status; 
         $data->value                = $request->note;
         $data->title                = $request->title;
+        $data->date                 = empty($request->date) ? date('Y-m-d') : $request->date;
 
         if ($request->hasFile('file'))
         {

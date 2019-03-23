@@ -10,6 +10,7 @@ use App\User;
 use App\Models\CrmProjectPipeline;
 use App\Models\CrmProjectItems;
 use App\Models\CrmClient;
+use App\Models\CrmProjects;
 
 class AjaxController extends Controller
 {
@@ -37,6 +38,30 @@ class AjaxController extends Controller
         if($request->ajax())
         {
 
+        }   
+        
+        return response()->json($params);
+    }
+
+    /**
+     * Get Invoice Perpetual License
+     * @param  Request $request
+     * @return json
+     */
+    public function getInvoicePerpetualLicense(Request $request)
+    {
+        $params     = [];
+        $update     = [];
+        if($request->ajax())
+        {
+            $params['data']     = CrmProjects::where('id', $request->id)->first();
+            $items = [];
+            foreach($params['data']->perpetualLicense as $k => $i)
+            {
+                $items[$k] = $i;
+                $items[$k]['invoice_number'] = $i->id.'/'. $request->id .'/INV/'.date('ymd');
+            }
+            $params['items']    = $items;
         }   
         
         return response()->json($params);

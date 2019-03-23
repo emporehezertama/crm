@@ -114,7 +114,7 @@
                       <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
                         <a href="javascript:void(0)" onclick="move_to_negotation('{{ route('pipeline.move-to-negotiation', $item->id) }}', this)" data-negotation_order="{{ $item->id }}/{{ $item->sales->id }}/NO/{{ date('Ymhis') }}"  class="dropdown-item text-success">Move to Negotiation <i class="ft-arrow-right"></i></a>
-                        <a href="javascript:void(0)" data-po_number="{{ $item->id }}/{{ $item->sales->id }}/PO/{{ date('Ymhis') }}" onclick="move_to_po('{{ route('pipeline.move-to-po', $item->id) }}', this)" class="dropdown-item text-success">Move to PO / Contract <i class="ft-arrow-right"></i></a>
+                        <a href="javascript:void(0)" data-po_number="{{ $item->id }}/{{ $item->sales->id }}/PO/{{ date('Ymhis') }}" data-price="Rp. {{ number_format($item->price,0,'','.') }}" onclick="move_to_po('{{ route('pipeline.move-to-po', $item->id) }}', this)" class="dropdown-item text-success">Move to PO / Contract <i class="ft-arrow-right"></i></a>
                         <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
                         <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
                       </span>
@@ -183,7 +183,15 @@
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
                         <a href="{{ route('pipeline.move-to-change-request', $item->id) }}" class="dropdown-item text-success">Move to Change Request <i class="ft-arrow-right"></i></a>
                         <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
-                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_invoice('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Invoice</a>
+                        
+                        @if(get_crm_project_item($item, 'payment_method') == 1)
+                        <a href="javascript:void(0)" class="dropdown-item" data-id="{{ $item->id }}" data-po_number="{{ get_crm_project_item($item, 'po_number') }}" onclick="add_invoice_perpetual(this)"><i class="ft-plus"></i> Invoice</a>
+                        @endif
+                        
+                        @if(get_crm_project_item($item, 'payment_method') == 2)
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_invoice_subscription('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Invoice</a>
+                        @endif
+
                         <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
                       </span>
                     </span>
@@ -193,18 +201,17 @@
             </div>
             <div class="card-body pt-0">
               <p class="float-left"><strong>{{ get_crm_project_item($item, 'po_number') }}</strong></p>
-              <p style="text-align: right; font-size: 20px; margin-top: 10px; " onclick="show_bottom(this)"><a href="javascript:void(0)"><i class="ft ft-arrow-down"></i></a></p>
-              
+              <p style="text-align: right; font-size: 20px; margin-top: 10px; " onclick="show_bottom(this)"><a href="javascript:void(0)"><i class="ft ft-list"></i></a></p>
               <div style="display: none;">
-                {{ get_crm_payment_method(get_crm_project_item($item, 'payment_method')) }}
-                
+                <p>{{ get_crm_payment_method(get_crm_project_item($item, 'payment_method')) }}</p>
+                <ul>
+                  <li>Project Timeline : {{ get_crm_project_item($item, 'month') }} Month</li>
+                  <li>Start Date : {{ get_crm_project_item($item, 'start_date') }}</li>
+                  <li>End Date : {{ get_crm_project_item($item, 'start_date') }}</li>
+                </ul>
+
                 @if(get_crm_project_item($item, 'payment_method') == 1)
-                  <br />
-                  <ul>
-                    <li>Project Timeline : {{ get_crm_project_item($item, 'month') }} Month</li>
-                    <li>Start Date : {{ get_crm_project_item($item, 'start_date') }}</li>
-                    <li>End Date : {{ get_crm_project_item($item, 'start_date') }}</li>
-                  </ul>
+                
                 @endif
 
                 @if(get_crm_project_item($item, 'payment_method') == 2)
@@ -331,15 +338,15 @@
       <div class="col-2 box_pipeline" style="flex:0 0 20%; max-width: 20%;">
         <div class="pt-1 pl-0 pr-0" style="position: relative;">
         <h3 class="float-left">PO Done </h3>
-          <h3 class="float-right">{{ count_($cr, true) }}</h3>
-          <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($cr) ) }}</label>
+          <h3 class="float-right">{{ count_($po_done, true) }}</h3>
+          <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($po_done) ) }}</label>
           <div class="clearfix"></div>
           <div class="progress progress-sm mt-1 mb-0">
             <div class="progress-bar bg-gradient-x-pink" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
         </div>
         <div class="clearfix"></div><br />
-        @foreach($cr as $item)
+        @foreach($po_done as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
           <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
           <div class="card-content">
@@ -406,14 +413,14 @@
         <div class="pt-1 pl-0 pr-0" style="position: relative;">
         <h3 class="float-left">Payment Receive </h3>
           <h3 class="float-right">{{ count_($cr, true) }}</h3>
-          <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($cr) ) }}</label>
+          <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($payment_receive) ) }}</label>
           <div class="clearfix"></div>
           <div class="progress progress-sm mt-1 mb-0">
             <div class="progress-bar bg-gradient-x-pink" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
         </div>
         <div class="clearfix"></div><br />
-        @foreach($cr as $item)
+        @foreach($payment_receive as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
           <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
           <div class="card-content">
@@ -482,6 +489,83 @@
 
 
 <!-- Modal -->
+<div class="modal fade text-left" id="modal_pay_invoice_perpetual" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form class="" id="form-pay-invoice-perpetual" method="post" action="{{ route('pipeline.store-invoice-perpetual') }}" enctype="multipart/form-data" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel1">Invoice</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="max-height: 400px; overflow-y: scroll;">
+          {{ csrf_field() }}   
+            <!-- payment method  Perpetual License -->
+            <div class="form-body">
+              <div class="form-group">
+                <label class="col-md-12">PO Number</label>
+                <div class="col-md-12">
+                  <input type="text" readonly="true" name="po_number" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-12">Payment Term</label>
+                <div class="col-md-12">
+                  <input type="text" class="form-control" readonly="true" name="payment_term" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-12">Invoice Number</label>
+                <div class="col-md-12">
+                  <input type="text" readonly="true" name="invoice_number" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-12">Date</label>
+                <div class="col-md-12">
+                  <input type="text" readonly="true" name="date" class="form-control datepicker">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-12">Sub Total</label>
+                <div class="col-md-12">
+                  <input type="text" name="sub_total" class="form-control idr">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-12">Tax</label>
+                <div class="col-md-4 float-left">
+                  <input type="text" name="tax" class="form-control" placeholder="Persens %">
+                </div>
+                <div class="col-md-8 float-left">
+                  <input type="text" readonly="true" class="form-control" placeholder="Total Price Tax" name="tax_price">
+                </div><div class="clearfix"></div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-12">Total</label>
+                <div class="col-md-12">
+                  <input type="text" readonly="true" name="total" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-12">Remarks</label>
+                <div class="col-md-12">
+                  <input type="text" name="remarks" class="form-control">
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn grey btn-outline-secondary btn-sm" data-dismiss="modal"><i class="ft ft-x"></i> Close</button>
+          <button type="submit" class="btn btn-info btn-sm">Submit <i class="ft ft-arrow-right"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
 <div class="modal fade text-left" id="move_to_negotation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -541,6 +625,44 @@
 </div>
 
 <!-- Modal -->
+<div class="modal fade text-left" id="modal_invoice_perpetual_license" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <form class="" id="form-invoice-perpetual-license" method="post" action="" enctype="multipart/form-data" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel1">Invoice Perpetual License</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {{ csrf_field() }}   
+            <!-- payment method  Perpetual License -->
+            <div class="form-body perpetual_license">
+              <div class="form-group mb-2">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="border-top:0;">Terms</th>
+                      <th style="border-top:0;">Milestone</th>
+                      <th style="border-top:0;">%</th>
+                      <th style="border-top:0;">Value (Rp)</th>
+                      <th style="border-top:0;"></th>
+                    </tr>
+                  </thead>
+                  <tbody class="table-perpetual-license">
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
 <div class="modal fade text-left" id="move_to_po" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -551,7 +673,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body" style="max-height: 400px; overflow-y: scroll;">
+        <div class="modal-body" style="max-height: 600px; overflow-y: scroll;">
           {{ csrf_field() }}
           <div class="form-body">
               <div class="form-group">
@@ -560,7 +682,7 @@
                 </div>
                 <div class="col-md-12">
                   <div class="input-group">
-                    <input type="text" class="form-control" name="po_number"  aria-describedby="basic-addon2">
+                    <input type="text" class="form-control" name="po_number" required  aria-describedby="basic-addon2">
                     <div class="input-group-append">
                       <span class="input-group-text" id="basic-addon2" onclick="auto_generate_po()" style="cursor: pointer;">Auto Generate</span>
                       <input type="hidden" name="po-auto-generate">
@@ -585,7 +707,7 @@
                 </div>
               <div class="col-md-12">
                 <div class="input-group">
-                  <input type="number" class="form-control" name="month" placeholder="Project Timeline (Month)" aria-describedby="basic-addon2">
+                  <input type="number" class="form-control" required name="month" placeholder="Project Timeline (Month)" aria-describedby="basic-addon2">
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">Month</span>
                   </div>
@@ -593,7 +715,7 @@
               </div>
               <div class="clearfix mt-2"></div>
               <div class="col-md-6 float-left">
-                <input type="text" class="form-control datepicker" name="start_date" placeholder="Start Date">
+                <input type="text" class="form-control datepicker" required name="start_date" placeholder="Start Date">
               </div>
               <div class="col-md-6 float-left">
                 <input type="text" class="form-control" readonly="true" name="end_date" placeholder="End Date">
@@ -606,7 +728,7 @@
                   <label class="label-control">Price</label>
                 </div>
                 <div class="col-md-12">
-                  <input type="text" class="form-control idr" name="price" placeholder="Rp. ">
+                  <input type="text" class="form-control idr" required name="price" placeholder="Rp. ">
                 </div>
               </div>
             </div>
@@ -617,7 +739,7 @@
                   <label class="label-control">Payment Method</label>
                 </div>
                 <div class="col-md-12">
-                  <select class="form-control" name="payment_method">
+                  <select class="form-control" name="payment_method" required>
                     <option value="">- Select -</option>
                     <option value="1">Perpetual License</option>
                     <option value="2">Subscription</option>
@@ -703,7 +825,7 @@
                 <input type="text" class="form-control modal-persen" placeholder="%" />
               </div>
               <div class="col-md-6 pr-0 float-right">
-                <input type="text" class="form-control modal-value" placeholder="Value (Rp)" />
+                <input type="text" class="form-control modal-value idr" placeholder="Value (Rp)" />
               </div><div class="clearfix"></div>
             </div>
         </div>
@@ -866,7 +988,7 @@
   </div>
 </div>
 
-<div class="modal fade text-left" id="modal_add_invoice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+<div class="modal fade text-left" id="modal_add_invoice_subscription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <form method="POST" action="" id="form-add-invoice" enctype="multipart/form-data" autocomplete="off">
@@ -939,11 +1061,74 @@
 @section('js')
 <script type="text/javascript">
   
-  function add_invoice(action)
+  function add_invoice_perpetual(el)
   {
-    $("#form-add-invoice").attr('action', action);
+    var cls = '.table-perpetual-license';
+    $('.table-perpetual-license').html("");
+     $.ajax({
+        type: 'POST',
+        url: '{{ route('ajax.get-invoice-perpetual-license') }}',
+        data: {'id' : $(el).data('id'), '_token' : $("meta[name='csrf-token']").attr('content')},
+        dataType: 'json',
+        success: function (data) {
+          
+          var html = '';
+          $.each(data.items, function(k, i){
+            html += '<tr>';
+            html += '<td>'+ i.terms +'</td>';
+            html += '<td>'+ i.milestone +'</td>';
+            html += '<td>'+ i.persen +'%</td>';
+            html += '<td>'+ (i.value == null ? '' : i.value) +'</td>';
+            html += '<td>';
 
-    $("#modal_add_invoice").modal("show"); 
+            if(i.status == 0)
+            {
+              html += '<a href="javascript:void(0)" data-id="'+ i.id +'" data-invoice_number="'+ i.invoice_number +'" data-terms="'+ i.terms +'" data-value="'+ (i.value == null ? '0' : i.value) +'" data-po_number="'+ $(el).data('po_number') +'" onclick="pay_invoice_perpetual(this)" class="btn btn-info btn-sm"><i class="ft ft-check"></i> Pay</a>';
+            }
+
+            html += '</td>';
+            html += '</tr>';
+          });
+          
+          $('.table-perpetual-license').append(html);
+
+          $("#modal_invoice_perpetual_license").modal("show");
+        }
+      }); 
+  }
+
+  $("input.modal-persen").on('input', function(){
+
+
+    var price   = $("#form-move-to-po input[name='price']").val();
+    var persen  = $(this).val();  
+    var value   = (parseInt(persen) * parseInt(replace_idr(price))) / 100;
+
+    $('.modal-value').val(Math.ceil(value));
+    
+    init_price_format();
+
+  });
+
+  function pay_invoice_perpetual(el)
+  {
+    $("#modal_invoice_perpetual_license").modal("hide");
+
+    $("#form-pay-invoice-perpetual input[name='po_number']").val($(el).data('po_number'));
+    $("#form-pay-invoice-perpetual input[name='payment_term']").val($(el).data('terms'));
+    $("#form-pay-invoice-perpetual input[name='sub_total']").val($(el).data('value'));
+    $("#form-pay-invoice-perpetual input[name='invoice_number']").val($(el).data('invoice_number'));
+
+    $("#modal_pay_invoice_perpetual").modal("show");
+    
+    init_price_format();
+  }
+
+  function add_invoice_subscription(action)
+  {
+    $("#form-add-invoice-subscription").attr('action', action);
+
+    $("#modal_add_invoice_subscription").modal("show"); 
   }
 
   function auto_generate_po()
@@ -992,17 +1177,15 @@
   function show_bottom(el)
   {
     $(el).next().slideToggle("slow", function(){
-
-      console.log( $(this).find('a i.ft-arrow-down').attr('class') );
-
-      if($(this).find('a i.ft-arrow-down'))
-      {
-        $(this).find('a i.ft-arrow-down').removeClass('ft-arrow-down');
-      }
-      else
-      {
-        $(this).find('a i.ft-arrow-up').removeClass('ft-arrow-up').addClass('ft-arrow-down');
-      }
+    
+      // if($(this).prev().find('a i.ft-arrow-down'))
+      // {
+      //   $(this).prev().find('a i.ft-arrow-down').removeClass('ft-arrow-down').addClass('ft-arrow-up');
+      // }
+      // else
+      // {
+      //   $(this).prev().find('a i.ft-arrow-up').removeClass('ft-arrow-up').addClass('ft-arrow-down');
+      // }
 
     });
   }
@@ -1107,6 +1290,8 @@
   function move_to_po(url, el)
   {
     $("input[name='po-auto-generate']").val($(el).data('po_number'));
+
+    $("#form-move-to-po input[name='price']").val($(el).data('price'));
 
     $("#form-move-to-po").attr('action', url);
 

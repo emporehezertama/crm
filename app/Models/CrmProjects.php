@@ -9,6 +9,24 @@ class CrmProjects extends Model
     protected $table = 'crm_projects';
 
     /**
+     * Perpetual License
+     * @return objects
+     */
+    public function perpetualLicense()
+    {
+      return $this->hasMany('App\Models\CrmProjectPaymentMethodPerpetualLicense', 'crm_project_id', 'id');
+    }
+
+    /**
+     * Subscribtion
+     * @return objects
+     */
+    public function subscription()
+    {
+      return $this->hasMany('App\Models\CrmProjectPaymentMethodSubscription', 'crm_project_id', 'id');
+    }
+
+    /**
      * Relation to Sales
      * @return object
      */

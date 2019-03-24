@@ -113,7 +113,7 @@
                     <span class="dropdown">
                       <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
-                        <a href="javascript:void(0)" onclick="move_to_negotation('{{ route('pipeline.move-to-negotiation', $item->id) }}', this)" data-negotation_order="{{ $item->id }}/{{ $item->sales->id }}/NO/{{ date('Ymhis') }}"  class="dropdown-item text-success">Move to Negotiation <i class="ft-arrow-right"></i></a>
+                        <!-- <a href="javascript:void(0)" onclick="move_to_negotation('{{ route('pipeline.move-to-negotiation', $item->id) }}', this)" data-negotation_order="{{ $item->id }}/{{ $item->sales->id }}/NO/{{ date('Ymhis') }}"  class="dropdown-item text-success">Move to Negotiation <i class="ft-arrow-right"></i></a> -->
                         <a href="javascript:void(0)" data-po_number="{{ $item->id }}/{{ $item->sales->id }}/PO/{{ date('Ymhis') }}" data-price="Rp. {{ number_format($item->price,0,'','.') }}" onclick="move_to_po('{{ route('pipeline.move-to-po', $item->id) }}', this)" class="dropdown-item text-success">Move to PO / Contract <i class="ft-arrow-right"></i></a>
                         <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
                         <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>

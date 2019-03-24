@@ -181,7 +181,7 @@
                     <span class="dropdown">
                       <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
-                        <a href="{{ route('pipeline.move-to-change-request', $item->id) }}" class="dropdown-item text-success">Move to Change Request <i class="ft-arrow-right"></i></a>
+                        <a href="{{ route('pipeline.move-to-po-done', $item->id) }}" class="dropdown-item text-success">PO Done <i class="ft-arrow-right"></i></a>
                         <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
                         
                         @if(get_crm_project_item($item, 'payment_method') == 1)
@@ -264,21 +264,21 @@
       <div class="col-2 box_pipeline" style="flex:0 0 20%; max-width: 20%;">
         <div class="pt-1 pl-0 pr-0" style="position: relative;">
         <h3 class="float-left">Invoice </h3>
-          <h3 class="float-right">{{ count_($cr, true) }}</h3>
-          <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($cr) ) }}</label>
+          <h3 class="float-right">{{ count_invoice($invoice, true) }}</h3>
+          <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_invoice($invoice) ) }}</label>
           <div class="clearfix"></div>
           <div class="progress progress-sm mt-1 mb-0">
             <div class="progress-bar bg-gradient-x-pink" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
         </div>
         <div class="clearfix"></div><br />
-        @foreach($cr as $item)
+        @foreach($invoice as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->project->sales->name }}</label>
           <div class="card-content">
             <div class="card-header">
-              <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
-              <small>{{ date('d F Y', strtotime($item->created_at)) }}</small>
+              <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->project->client->name }}" data-id="{{ $item->project->crm_client_id }}">{{ isset($item->project->client->name) ? $item->project->client->name : '' }}</h4>
+              <small>{{ date('d F Y', strtotime($item->date)) }}</small>
               <a class="heading-elements-toggle"><i class="la la-ellipsis-h font-medium-3"></i></a>
               <div class="heading-elements">
                 <ul class="list-inline mb-0">
@@ -287,7 +287,7 @@
                       <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
                         <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
-                        <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
+                        <a href="{{ route('pipeline.print-invoice', $item->id) }}" target="_blank" class="dropdown-item"><i class="ft-printer"></i> Print / Download</a>
                       </span>
                     </span>
                   </li>
@@ -295,31 +295,15 @@
               </div>
             </div>
             <div class="card-body pt-0">
-              <p class="mb-0"><i class="ft ft-check-circle text-success"></i> {{ $item->name }} </p>
-              @if(!empty($item->description))
-              <p><pre>{{ $item->description }}</pre></p>
-              @endif
-              <p>Rp. {{ number_format($item->price,0,'','.') }}</p>
-              <a href="{{ asset('storage/projects/'. $item->id .'/'. $item->file) }}" target="_blank">{{ $item->file }}</a>
-              <hr />
-
-              <div class="bs-callout-primary callout-border-left p-1 mb-0 m-t-5" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="1" onclick="history_pipeline(this, 'Seed')">
-                <span class="alert-icon">
-                  <i class="ft-list"></i>
-                </span>Seed
-              </div>
-              <div class="bs-callout-primary callout-border-left p-1 mb-0 mt-1" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="2" onclick="history_pipeline(this, 'Quotation')">
-                <span class="alert-icon">
-                  <i class="ft-list"></i>
-                </span>Quotation
-              </div>
-              
-              <div class="bs-callout-primary callout-border-left p-1 mb-0 mt-1" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="4" onclick="history_pipeline(this, 'Negotation')">
-                <span class="alert-icon">
-                  <i class="ft-list"></i>
-                </span>PO
-              </div>
-
+              <p><strong>{{ $item->invoice_number }}</strong></p>
+              <p class="mb-0">{{ $item->payment_term }} </p>
+              <ul>
+                <li>Sub Total : {{ format_idr($item->sub_total) }}</li>
+                <li>Tax : {{ $item->tax }}% ({{ format_idr($item->tax_price) }})</li>
+                <li>Total : {{ format_idr($item->total) }}</li>
+              </ul>
+              <p>{{ $item->remarks }}</p>
+              <a href="javascript:void(0)" data-id="{{ $item->id }}" data-invoice_number="{{ $item->invoice_number }}" data-total="{{ format_idr($item->total) }}" onclick="pay_invoice(this)" class="btn btn-success btn-block"><i class="ft ft-check"></i> Pay</a>
               <p>
                 @if($item->projectPipeline)
                   @foreach($item->projectPipeline as $i)
@@ -353,20 +337,6 @@
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
               <small>{{ date('d F Y', strtotime($item->created_at)) }}</small>
-              <a class="heading-elements-toggle"><i class="la la-ellipsis-h font-medium-3"></i></a>
-              <div class="heading-elements">
-                <ul class="list-inline mb-0">
-                  <li>
-                    <span class="dropdown">
-                      <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
-                      <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
-                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
-                        <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
-                      </span>
-                    </span>
-                  </li>
-                </ul>
-              </div>
             </div>
             <div class="card-body pt-0">
               <p class="mb-0"><i class="ft ft-check-circle text-success"></i> {{ $item->name }} </p>
@@ -394,15 +364,6 @@
                   <i class="ft-list"></i>
                 </span>PO
               </div>
-              <p>
-                @if($item->projectPipeline)
-                  @foreach($item->projectPipeline as $i)
-                    @if($i->pipeline_status == $item->pipeline_status)
-                      {!! status_pipeline_card($i) !!}
-                    @endif
-                  @endforeach
-                @endif
-              </p>
             </div>
           </div>
         </div>
@@ -412,8 +373,8 @@
       <div class="col-2 box_pipeline" style="flex:0 0 20%; max-width: 20%;">
         <div class="pt-1 pl-0 pr-0" style="position: relative;">
         <h3 class="float-left">Payment Receive </h3>
-          <h3 class="float-right">{{ count_($cr, true) }}</h3>
-          <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_($payment_receive) ) }}</label>
+          <h3 class="float-right">{{ count_invoice_payment($payment_receive, true) }}</h3>
+          <label style="bottom: 0;right: 0;position: absolute;">Rp. {{ number_format( count_invoice_payment($payment_receive) ) }}</label>
           <div class="clearfix"></div>
           <div class="progress progress-sm mt-1 mb-0">
             <div class="progress-bar bg-gradient-x-pink" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
@@ -422,11 +383,11 @@
         <div class="clearfix"></div><br />
         @foreach($payment_receive as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->project->sales->name }}</label>
           <div class="card-content">
             <div class="card-header">
-              <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
-              <small>{{ date('d F Y', strtotime($item->created_at)) }}</small>
+              <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->project->client->name }}" data-id="{{ $item->project->crm_client_id }}">{{ isset($item->project->client->name) ? $item->project->client->name : '' }}</h4>
+              <small>{{ date('d F Y', strtotime($item->date)) }}</small>
               <a class="heading-elements-toggle"><i class="la la-ellipsis-h font-medium-3"></i></a>
               <div class="heading-elements">
                 <ul class="list-inline mb-0">
@@ -435,7 +396,7 @@
                       <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
                         <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
-                        <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
+                        <a href="{{ route('pipeline.print-invoice', $item->id) }}" target="_blank" class="dropdown-item"><i class="ft-printer"></i> Print / Download</a>
                       </span>
                     </span>
                   </li>
@@ -443,50 +404,77 @@
               </div>
             </div>
             <div class="card-body pt-0">
-              <p class="mb-0"><i class="ft ft-check-circle text-success"></i> {{ $item->name }} </p>
-              @if(!empty($item->description))
-              <p><pre>{{ $item->description }}</pre></p>
-              @endif
-              <p>Rp. {{ number_format($item->price,0,'','.') }}</p>
-              <a href="{{ asset('storage/projects/'. $item->id .'/'. $item->file) }}" target="_blank">{{ $item->file }}</a>
-              <hr />
-
-              <div class="bs-callout-primary callout-border-left p-1 mb-0 m-t-5" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="1" onclick="history_pipeline(this, 'Seed')">
-                <span class="alert-icon">
-                  <i class="ft-list"></i>
-                </span>Seed
-              </div>
-
-              <div class="bs-callout-primary callout-border-left p-1 mb-0 mt-1" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="2" onclick="history_pipeline(this, 'Quotation')">
-                <span class="alert-icon">
-                  <i class="ft-list"></i>
-                </span>Quotation
-              </div>
-
-              <div class="bs-callout-primary callout-border-left p-1 mb-0 mt-1" role="alert" style="cursor: pointer;" data-id="{{ $item->id }}" data-status="4" onclick="history_pipeline(this, 'Negotation')">
-                <span class="alert-icon">
-                  <i class="ft-list"></i>
-                </span>PO
-              </div>
-
-              <p>
-                @if($item->projectPipeline)
-                  @foreach($item->projectPipeline as $i)
-                    @if($i->pipeline_status == $item->pipeline_status)
-                      {!! status_pipeline_card($i) !!}
-                    @endif
-                  @endforeach
-                @endif
-              </p>
+              <p><strong>{{ $item->invoice_number }}</strong></p>
+              <ul style="padding-left: 15px;">
+                <li>Total Payment : {{ format_idr($item->total_payment) }}</li>
+                <li>Payment Date : {{ $item->date_payment }}</li>
+                <li>Remarks : {{ $item->remarks_payment }}</li>
+              </ul>
             </div>
           </div>
         </div>
         @endforeach
       </div>
+
     </div>
   </div>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade text-left" id="modal_pay_invoice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form class="" id="form-pay-invoice" method="post" action="{{ route('pipeline.store-invoice-pay') }}" enctype="multipart/form-data" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel1">Invoice</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {{ csrf_field() }}   
+            <input type="hidden" name="id" >
+            <!-- payment method  Perpetual License -->
+            <div class="form-body">
+              <div class="form-group">
+                <label class="col-md-12">Invoice Number</label>
+                <div class="col-md-12">
+                  <input type="text" readonly="true" name="invoice_number" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">Value (IDR)</label>
+                <div class="col-md-12">
+                  <input type="text" required name="total_payment" class="form-control idr">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">Payment Date</label>
+                <div class="col-md-12">
+                  <input type="text" required name="date_payment" class="form-control datepicker">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">Remarks</label>
+                <div class="col-md-12">
+                  <input type="text" name="remarks_payment" class="form-control">
+                </div>
+              </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn grey btn-outline-secondary btn-sm" data-dismiss="modal"><i class="ft ft-x"></i> Close</button>
+          <button type="submit" class="btn btn-info btn-sm">Pay <i class="ft ft-arrow-right"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade text-left" id="modal_pay_invoice_perpetual" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
@@ -499,8 +487,10 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body" style="max-height: 400px; overflow-y: scroll;">
+        <div class="modal-body" style="max-height: 500px; overflow-y: scroll;">
           {{ csrf_field() }}   
+            <input type="hidden" name="crm_project_id" >
+            <input type="hidden" name="id" >
             <!-- payment method  Perpetual License -->
             <div class="form-body">
               <div class="form-group">
@@ -534,18 +524,19 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-md-12">Tax</label>
+                <label class="col-md-4 float-left">Tax (%)</label>
+                <label class="col-md-8 float-left">Tax Price (Rp)</label>
                 <div class="col-md-4 float-left">
                   <input type="text" name="tax" class="form-control" placeholder="Persens %">
                 </div>
                 <div class="col-md-8 float-left">
-                  <input type="text" readonly="true" class="form-control" placeholder="Total Price Tax" name="tax_price">
+                  <input type="text" readonly="true" class="form-control idr" placeholder="Rp. 0" name="tax_price">
                 </div><div class="clearfix"></div>
               </div>
               <div class="form-group">
                 <label class="col-md-12">Total</label>
                 <div class="col-md-12">
-                  <input type="text" readonly="true" name="total" class="form-control">
+                  <input type="text" readonly="true" name="total" class="form-control idr">
                 </div>
               </div>
               <div class="form-group">
@@ -1061,9 +1052,18 @@
 @section('js')
 <script type="text/javascript">
   
+  function pay_invoice(el)
+  {
+    $("#form-pay-invoice input[name='id']").val($(el).data('id'));
+    $("#form-pay-invoice input[name='invoice_number']").val($(el).data('invoice_number'));
+    $("#form-pay-invoice input[name='total_payment']").val($(el).data('total'));
+    $("#modal_pay_invoice").modal("show");
+  }
+
   function add_invoice_perpetual(el)
   {
     var cls = '.table-perpetual-license';
+
     $('.table-perpetual-license').html("");
      $.ajax({
         type: 'POST',
@@ -1083,7 +1083,7 @@
 
             if(i.status == 0)
             {
-              html += '<a href="javascript:void(0)" data-id="'+ i.id +'" data-invoice_number="'+ i.invoice_number +'" data-terms="'+ i.terms +'" data-value="'+ (i.value == null ? '0' : i.value) +'" data-po_number="'+ $(el).data('po_number') +'" onclick="pay_invoice_perpetual(this)" class="btn btn-info btn-sm"><i class="ft ft-check"></i> Pay</a>';
+              html += '<a href="javascript:void(0)" data-id="'+ i.id +'" data-crm_project_id="'+ $(el).data('id') +'" data-invoice_number="'+ i.invoice_number +'" data-terms="'+ i.terms +'" data-value="'+ (i.value == null ? '0' : i.value) +'" data-po_number="'+ $(el).data('po_number') +'" onclick="pay_invoice_perpetual(this)" class="btn btn-info btn-sm"><i class="ft ft-check"></i> Pay</a>';
             }
 
             html += '</td>';
@@ -1099,7 +1099,6 @@
 
   $("input.modal-persen").on('input', function(){
 
-
     var price   = $("#form-move-to-po input[name='price']").val();
     var persen  = $(this).val();  
     var value   = (parseInt(persen) * parseInt(replace_idr(price))) / 100;
@@ -1110,6 +1109,19 @@
 
   });
 
+  $("#form-pay-invoice-perpetual input[name='tax']").on('input', function(){
+
+    var tax       = $(this).val() != "" ? parseInt($(this).val()) : 0 ;
+    var price     = $("#form-pay-invoice-perpetual input[name='sub_total']").val();
+    var tax_price = tax * replace_idr(price) / 100;
+
+    $("#form-pay-invoice-perpetual  input[name='tax_price']").val(tax_price);
+    $("#form-pay-invoice-perpetual  input[name='total']").val(parseInt(replace_idr(price)) + parseInt(tax_price) );
+
+    init_price_format();
+  });
+
+
   function pay_invoice_perpetual(el)
   {
     $("#modal_invoice_perpetual_license").modal("hide");
@@ -1118,6 +1130,9 @@
     $("#form-pay-invoice-perpetual input[name='payment_term']").val($(el).data('terms'));
     $("#form-pay-invoice-perpetual input[name='sub_total']").val($(el).data('value'));
     $("#form-pay-invoice-perpetual input[name='invoice_number']").val($(el).data('invoice_number'));
+    $("#form-pay-invoice-perpetual input[name='total']").val($(el).data('value'));
+    $("#form-pay-invoice-perpetual input[name='crm_project_id']").val($(el).data('crm_project_id'));
+    $("#form-pay-invoice-perpetual input[name='id']").val($(el).data('id'));
 
     $("#modal_pay_invoice_perpetual").modal("show");
     

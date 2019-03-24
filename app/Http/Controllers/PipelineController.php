@@ -10,6 +10,7 @@ use App\Models\CrmProjectPipeline;
 use App\Models\CrmProjectItems;
 use App\Models\CrmProjectPaymentMethodSubscription;
 use App\Models\CrmProjectPaymentMethodPerpetualLicense;
+use App\Models\CrmProjectInvoice;
 
 class PipelineController extends Controller
 {
@@ -36,10 +37,77 @@ class PipelineController extends Controller
         $params['po']               = CrmProjects::where('pipeline_status', 4)->orderBy('updated_at', 'DESC')->get();
         $params['cr']               = CrmProjects::where('pipeline_status', 5)->orderBy('updated_at', 'DESC')->get();
         $params['po_done']          = CrmProjects::where('pipeline_status', 6)->orderBy('updated_at', 'DESC')->get();
-        $params['invoice']          = CrmProjects::where('pipeline_status', 7)->orderBy('updated_at', 'DESC')->get();
-        $params['payment_receive']  = CrmProjects::where('pipeline_status', 8)->orderBy('updated_at', 'DESC')->get();
+        $params['invoice']          = CrmProjectInvoice::where('status', '0')->orderBy('updated_at', 'DESC')->get();
+        $params['payment_receive']  = CrmProjectInvoice::where('status', 1)->orderBy('updated_at', 'DESC')->get();
 
         return view('pipeline.index')->with($params);
+    }
+
+    /**
+     * Print Invoice
+     * @param  $id
+     * @return pdf
+     */
+    public function printInvoice($id)
+    {
+        $params['data'] = CrmProjectInvoice::where('id', $id)->first();
+
+        $view = view('pipeline.invoice-print')->with($params);        
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view);
+
+        return $pdf->stream();
+    }
+
+    /**
+     * Store Invoice Perpetula
+     * @param  Request $request
+     * @return objects
+     */
+    public function storeInvoicePerpetual(Request $request)
+    {
+        $data                       = new CrmProjectInvoice();
+        $data->crm_project_id       = $request->crm_project_id;
+        $data->payment_term         = $request->payment_term;
+        $data->invoice_number       = $request->invoice_number;
+        $data->date                 = $request->date;
+        $data->sub_total            = replace_idr($request->sub_total);
+        $data->tax                  = $request->tax;
+        $data->tax_price            = replace_idr($request->tax_price);
+        $data->total                = replace_idr($request->total);
+        $data->remarks              = $request->remarks;
+        $data->status               = 0;
+        $data->save();
+
+        $perpetual = CrmProjectPaymentMethodPerpetualLicense::where('id', $request->id)->first();
+        if($perpetual)
+        {
+            $perpetual->status                  = 1;
+            $perpetual->crm_project_invoice_id  = $data->id;
+            $perpetual->save();
+        }
+
+        return redirect()->route('pipeline.index');
+    }
+
+    /**
+     * Store Invoice Pay
+     * @param  Request $request
+     * @return void
+     */
+    public function storeInvoicePay(Request $request)
+    {
+        $invoice = CrmProjectInvoice::where('id', $request->id)->first();
+        if($invoice)
+        {
+            $invoice->date_payment      = $request->date_payment;
+            $invoice->total_payment     = replace_idr($request->total_payment);
+            $invoice->remarks_payment   = $request->remarks_payment;
+            $invoice->status            = 1;
+            $invoice->save();            
+        }
+
+        return redirect()->route('pipeline.index')->with('message-success', 'Payment Success');
     }
 
     /**
@@ -55,10 +123,10 @@ class PipelineController extends Controller
      * Move To Change Request
      * @return 
      */
-    public function moveToChangeRequest($id)
+    public function moveToPoDone($id)
     {
         $project = CrmProjects::where('id', $id)->first();
-        $project->pipeline_status = 5;
+        $project->pipeline_status = 6;
         $project->save();
 
         return redirect()->route('pipeline.index');

@@ -180,7 +180,7 @@
                     <span class="dropdown">
                       <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
-                        <a href="{{ route('pipeline.move-to-change-request', $item->id) }}" class="dropdown-item text-success">Move to Change Request <i class="ft-arrow-right"></i></a>
+                        
                         <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
                         <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
                       </span>

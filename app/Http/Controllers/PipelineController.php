@@ -344,7 +344,7 @@ class PipelineController extends Controller
             // if subscribe year
             if($request->subscription_year_or_month==1)
             {
-                for($var =0; $var >= $request->year; $var++)
+                for($var =0; $var <= $request->year; $var++)
                 {
                     $sub                    = new CrmProjectPaymentMethodPerpetualLicense();
                     $sub->crm_project_id    = $project->id; 
@@ -357,7 +357,7 @@ class PipelineController extends Controller
             //if subscribe month
             if($request->subscription_year_or_month==2)
             {
-                for($var =0; $var >= $request->year; $var++)
+                for($var =0; $var <= $request->year; $var++)
                 {
                     $sub                    = new CrmProjectPaymentMethodPerpetualLicense();
                     $sub->crm_project_id    = $project->id; 

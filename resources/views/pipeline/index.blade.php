@@ -747,18 +747,22 @@
                 </div>
                 <div class="col-md-12">
                   <div class="input-group">
-                    <select name="year" class="form-control">
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                      <option>6</option>
-                      <option>7</option>
-                      <option>8</option>
-                    </select>
+                    <input type="number" class="form-control" name="year">
                     <div class="input-group-append">
-                      <span class="input-group-text" id="basic-addon2">Year</span>
+                      <select class="form-control" name="subscription_year_or_month">
+                        <option value="1">Year</option>
+                        <option value="2">Month</option>
+                      </select>  
                     </div>
                   </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <label class="label-control">Start Date</label>
+                </div>
+                <div class="col-md-12">
+                  <input type="text" name="start_date_subscription" class="form-control datepicker">
                 </div>
               </div>
             </div>

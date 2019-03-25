@@ -326,6 +326,47 @@ class PipelineController extends Controller
             $item->item                 = 'year';
             $item->value                = $request->year;
             $item->save();
+
+            $item                       = new CrmProjectItems();
+            $item->crm_project_id       = $project->id;
+            $item->status               = 4;
+            $item->item                 = 'subscription_year_or_month';
+            $item->value                = $request->subscription_year_or_month;
+            $item->save();
+
+            $item                       = new CrmProjectItems();
+            $item->crm_project_id       = $project->id;
+            $item->status               = 4;
+            $item->item                 = 'start_date_subscription';
+            $item->value                = $request->start_date_subscription;
+            $item->save();
+
+            // if subscribe year
+            if($request->subscription_year_or_month==1)
+            {
+                for($var =0; $var >= $request->year; $var++)
+                {
+                    $sub                    = new CrmProjectPaymentMethodPerpetualLicense();
+                    $sub->crm_project_id    = $project->id; 
+                    $sub->term              = $var;
+                    $sub->due_date          = date('Y-m-d', strtotime('+ '+ $var +' year', strtotime($request->start_date_subscription)));
+                    $sub->status            = 0;
+                    $sub->save();
+                }
+            }
+            //if subscribe month
+            if($request->subscription_year_or_month==2)
+            {
+                for($var =0; $var >= $request->year; $var++)
+                {
+                    $sub                    = new CrmProjectPaymentMethodPerpetualLicense();
+                    $sub->crm_project_id    = $project->id; 
+                    $sub->term              = $var;
+                    $sub->due_date          = date('Y-m-d', strtotime('+ '+ $var +' month', strtotime($request->start_date_subscription)));
+                    $sub->status            = 0;
+                    $sub->save();
+                }
+            }
         }
 
         if ($request->hasFile('file'))

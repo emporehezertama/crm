@@ -32,20 +32,6 @@
               </div>
               <div class="card-content collapse show">
                 <div class="card-body">
-                  <div class="form-group">
-                    <div class="col-md-6 float-left">
-                      @if(empty($data->foto))
-                        <img src="{{ asset('images/your-logo.png') }}" />
-                      @else
-                        <img src="{{ asset($data->foto) }}" />
-                      @endif
-                    </div>
-                    <div class="col-md-6 float-left">
-                      <a href="javascript:void(0)" class="btn btn-secondary btn-sm" onclick="open_dialog_photo()"><i class="ft ft-image"></i> Change Logo</a>
-                      <input type="file" class="form-control" name="foto" style="display: none;">
-                    </div><div class="clearfix"></div><br />
-                  </div>
-
                   <div class="form-body">
                     <div class="form-group">
                       <div class="col-md-12">

@@ -46,16 +46,7 @@
               <div class="card-content collapse show">
                 <div class="card-body">
                   <div class="form-body">
-                    
-                    <div class="form-group">
-                      <div class="col-md-6 float-left">
-                        <img src="{{ asset('images/your-logo.png') }}" />
-                      </div>
-                      <div class="col-md-6 float-left">
-                        <a href="javascript:void(0)" class="btn btn-secondary btn-sm" onclick="open_dialog_photo()"><i class="ft ft-image"></i> Change Logo</a>
-                        <input type="file" class="form-control" name="foto" style="display: none;">
-                      </div><div class="clearfix"></div><br />
-                    </div>
+
                     <div class="form-group">
                       <div class="col-md-12">
                         <label class="label-control">Name / Company</label>

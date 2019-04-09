@@ -40,7 +40,7 @@
         <div class="clearfix"></div><br />
         @foreach($seed as $item)
         <div class="card mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
@@ -101,7 +101,7 @@
         <div class="clearfix"></div><br />
         @foreach($quotation as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
@@ -169,7 +169,7 @@
         <div class="clearfix"></div><br />
         @foreach($po as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
@@ -274,7 +274,7 @@
         <div class="clearfix"></div><br />
         @foreach($invoice as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->project->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->project->client->name }}" data-id="{{ $item->project->crm_client_id }}">{{ isset($item->project->client->name) ? $item->project->client->name : '' }}</h4>
@@ -332,7 +332,7 @@
         <div class="clearfix"></div><br />
         @foreach($po_done as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
@@ -383,7 +383,7 @@
         <div class="clearfix"></div><br />
         @foreach($payment_receive as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->project->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->project->client->sales->name) ? $item->project->client->sales->name : ''  }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->project->client->name }}" data-id="{{ $item->project->crm_client_id }}">{{ isset($item->project->client->name) ? $item->project->client->name : '' }}</h4>
@@ -1022,6 +1022,9 @@
     width: 100%;
     overflow-x:scroll;
     min-height: 500px;
+  }
+  .row_pipeline h4 {
+    white-space: normal;
   }
   .box_pipeline {
     vertical-align: top;

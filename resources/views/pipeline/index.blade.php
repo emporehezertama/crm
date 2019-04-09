@@ -68,7 +68,7 @@
               <p class="mb-0"> {{ $item->name }} </p>
 
               @if(!empty($item->description))
-              <p><pre>{{ $item->description }}</pre></p>
+              <p>{{ $item->description }}</p>
               @endif
               <p>Rp. {{ number_format($item->price,0,'','.') }}</p>
               <a href="{{ asset('storage/projects/'. $item->id .'/'. $item->file) }}" target="_blank">{{ $item->file }}</a>

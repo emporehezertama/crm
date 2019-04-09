@@ -135,7 +135,6 @@ class ClientController extends Controller
         $client->fax                    = $request->fax;
         $client->email                  = $request->email;
         $client->address                = $request->address;
-        // $client->sales_id               = $request->sales_id;
         $client->pic_name               = $request->pic_name;
         $client->pic_email              = $request->pic_email;
         $client->pic_telepon            = $request->pic_telepon;

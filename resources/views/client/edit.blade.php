@@ -86,6 +86,7 @@
                         </select>
                       </div>
                     </div>
+                    
                     <div class="form-group">
                       <div class="col-md-6">
                         <label class="label-control">Status</label>

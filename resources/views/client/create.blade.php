@@ -87,34 +87,31 @@
                         <textarea class="form-control" name="address" rows="6" placeholder="Typing here.. ">{{ old('address') }}</textarea>
                       </div>
                     </div>
+                    
                     <div class="form-group">
-                      <div class="col-md-6 float-left">
+                      <div class="col-md-6">
+                        <label class="label-control">Sales</label>
+                      </div>
+                      <div class="col-md-12">
+                          <select class="form-control" name="sales_id">
+                            <option value=""> Select Sales / Marketing </option>
+                            @foreach(list_sales() as $item)
+                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                          </select>
+                        </div> 
+                    </div>
+
+                    <div class="form-group">
+                      <div class="col-md-6">
                         <label class="label-control">Status</label>
                       </div>
-  
-                      @if(Auth::user()->user_access_id == 1)
-                      <div class="col-md-6 float-left">
-                        <label class="label-control">Sales</label>
-                      </div>                    
-                      <div class="clearfix"></div>
-                      @endif
-
-
                       <div class="col-md-6 float-left">
                         <select class="form-control" name="status">
                           <option value="1">Active</option>
                           <option value="0">Inactive</option>
                         </select>
                       </div>
-                       @if(Auth::user()->user_access_id == 1)
-                        <div class="col-md-6 float-left">
-                          <select class="form-control" name="sales_id">
-                            @foreach(list_sales() as $item)
-                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                            @endforeach
-                          </select>
-                        </div> 
-                       @endif
                       <div class="clearfix"></div>
                     </div>
                   </div>

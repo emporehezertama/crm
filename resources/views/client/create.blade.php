@@ -88,15 +88,33 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <div class="col-md-6">
+                      <div class="col-md-6 float-left">
                         <label class="label-control">Status</label>
                       </div>
+  
+                      @if(Auth::user()->user_access_id == 1)
+                      <div class="col-md-6 float-left">
+                        <label class="label-control">Sales</label>
+                      </div>                    
+                      <div class="clearfix"></div>
+                      @endif
+
+
                       <div class="col-md-6 float-left">
                         <select class="form-control" name="status">
                           <option value="1">Active</option>
                           <option value="0">Inactive</option>
                         </select>
                       </div>
+                       @if(Auth::user()->user_access_id == 1)
+                        <div class="col-md-6 float-left">
+                          <select class="form-control" name="sales_id">
+                            @foreach(list_sales() as $item)
+                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                          </select>
+                        </div> 
+                       @endif
                       <div class="clearfix"></div>
                     </div>
                   </div>
@@ -121,6 +139,14 @@
                       </div>
                       <div class="col-md-12">
                         <input type="text" class="form-control" placeholder="PIC Name" name="pic_name" value="{{ old('pic_name') }}" />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <label class="label-control">Job Title</label>
+                      </div>
+                      <div class="col-md-12">
+                        <input type="text" class="form-control" placeholder="Job Title" name="pic_position" value="{{ old('pic_position') }}" />
                       </div>
                     </div>
                      <div class="form-group">

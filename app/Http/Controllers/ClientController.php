@@ -63,7 +63,8 @@ class ClientController extends Controller
             'handphone'          => 'required',
             'pic_name'           => 'required',
             'pic_email'          => 'required',
-            'pic_telepon'        => 'required'
+            'pic_telepon'        => 'required',
+            'pic_position'        => 'required'
             //'confirmation'      => 'same:password',
         ]);
 
@@ -79,11 +80,21 @@ class ClientController extends Controller
         $client->fax                    = $request->fax;
         $client->email                  = $request->email;
         $client->address                = $request->address;
-        $client->sales_id               = \Auth::user()->id;
+
+        if(\Auth::user()->user_access_id == 1)
+        {
+            $client->sales_id               = $request->sales_id;            
+        }
+        else
+        {
+            $client->sales_id               = \Auth::user()->id;            
+        }
+
         $client->user_id                = $data->id;
         $client->pic_name               = $request->pic_name;
         $client->pic_email              = $request->pic_email;
         $client->pic_telepon            = $request->pic_telepon;
+        $client->pic_position            = $request->pic_position;
 
         if ($request->hasFile('foto'))
         {
@@ -128,6 +139,16 @@ class ClientController extends Controller
         $client->pic_name               = $request->pic_name;
         $client->pic_email              = $request->pic_email;
         $client->pic_telepon            = $request->pic_telepon;
+        $client->pic_position            = $request->pic_position;
+
+        if(\Auth::user()->user_access_id == 1)
+        {
+            $client->sales_id               = $request->sales_id;            
+        }
+        else
+        {
+            $client->sales_id               = \Auth::user()->id;            
+        }
 
         if ($request->hasFile('foto'))
         {

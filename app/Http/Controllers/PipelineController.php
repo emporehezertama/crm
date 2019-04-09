@@ -274,6 +274,7 @@ class PipelineController extends Controller
         $data->pipeline_status      = $project->pipeline_status; 
         $data->value                = $request->note;
         $data->title                = $request->title;
+        $date->date                 = empty($request->date) ? date('Y-m-d') : $request->date; 
 
         if ($request->hasFile('file'))
         {

@@ -116,7 +116,7 @@ function status_pipeline_card($item)
 		}
 		
 		$html .='<div class="clearfix"></div>
-					<small class="float-left" style="font-size: 70%;">'. date('d M Y', strtotime($item->created_at)) .'</small>
+					<small class="float-left" style="font-size: 70%;">'. date('d M Y', strtotime($item->date)) .'</small>
 					<small class="float-right">'. $item->user->name .'</small>
 			    </div>';
     }

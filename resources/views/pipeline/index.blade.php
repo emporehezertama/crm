@@ -689,13 +689,25 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-              <input type="text" class="form-control" name="title" placeholder="Title">
+              <div class="col-md-6 float-left pl-0">
+                <select class="form-control" name="title">
+                  <option value="">Update Type</option>
+                  <option>Call</option>
+                  <option>Mail</option>
+                  <option>Meet</option>
+                  <option>Demo</option>
+                </select>
+              </div>
+              <div class="col-md-6 pr-0 float-right">
+                <input type="text" name="date" class="form-control datepicker" placeholder="Date">
+              </div>
+              <div class="clearfix"></div>
             </div>
             <div class="form-group">
               <textarea class="form-control" name="note" rows="5" placeholder="Typing here"></textarea>
             </div>
             <div class="form-group">
-              <input type="file" name="file" />
+              <input type="file" name="file" /> 
             </div>
         </div>
         <div class="modal-footer">

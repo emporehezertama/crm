@@ -1,3 +1,22 @@
+init_price_format();
+
+/**
+ * Replace Idr
+ * @return string
+ */
+function replace_idr(str)
+{
+    str = str.replace('Rp. ', '');
+    str = str.split(',').join('');
+    str = str.split('.').join('');
+
+    return str;
+}
+
+function change_idr()
+{
+
+}
 
 // datepicker
 $('.datepicker').each(function(){
@@ -117,12 +136,15 @@ function cute_url(string)
     return string.toLowerCase();
 }
 
-$('.idr').priceFormat({
-    prefix: 'Rp. ',
-    centsSeparator: '.',
-    thousandsSeparator: '.',
-    centsLimit: 0
-});
+function init_price_format()
+{
+    var priceFormatIdr = $('.idr').priceFormat({
+        prefix: 'Rp. ',
+        centsSeparator: '.',
+        thousandsSeparator: '.',
+        centsLimit: 0
+    });
+}
 
 /**
  * [alert_ description]

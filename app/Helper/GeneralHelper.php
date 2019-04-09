@@ -1,6 +1,16 @@
 <?php 
 
 /**
+ * Format IDR
+ * @param  snumber
+ * @return string
+ */
+function format_idr($number)
+{
+	return 'Rp. '. number_format($number,0,0,'.');
+}
+
+/**
  * Get Payment Method
  * @param  $id
  * @return void
@@ -25,6 +35,60 @@ function get_crm_project_item($object, $key)
 		return $item->value;
 	}
 }
+
+
+/**
+ * Count Data
+ * @return number
+ */
+function count_invoice_payment($data, $count_row=false)
+{
+	$number = 0;
+	foreach($data as $item)
+	{
+		$number += $item->total_payment;
+	}
+
+	if($count_row)
+	{
+		$number = 0;
+		foreach($data as $item)
+		{
+			$number++;
+		}		
+
+		return $number;
+	}
+
+	return $number;
+}
+
+/**
+ * Count Data
+ * @return number
+ */
+function count_invoice($data, $count_row=false)
+{
+	$number = 0;
+	foreach($data as $item)
+	{
+		$number += $item->total;
+	}
+
+	if($count_row)
+	{
+		$number = 0;
+		foreach($data as $item)
+		{
+			$number++;
+		}		
+
+		return $number;
+	}
+
+	return $number;
+}
+
 
 /**
  * Count Data

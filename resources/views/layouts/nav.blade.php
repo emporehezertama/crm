@@ -12,8 +12,8 @@
               <ul class="drilldown-menu">
                 <li class="menu-list">
                   <ul>
-                    <li><a class="dropdown-item" href="{{ route('admin.client.index') }}"><i class="ft-user"></i> Client / Customer</a></li>
-                    <li><a class="dropdown-item" href="{{ route('admin.project.index') }}"><i class="ft-user"></i> Project</a></li>
+                    <li><a class="dropdown-item" href="{{ route('client.index') }}"><i class="ft-user"></i> Client / Customer</a></li>
+                    <!-- <li><a class="dropdown-item" href="{{ route('project.index') }}"><i class="ft-user"></i> Project</a></li> -->
                   </ul>
                 </li>
               </ul>
@@ -39,6 +39,7 @@
           </ul>
         </li>
         <li class="dropdown nav-item mega-dropdown"><a class="nav-link" href="{{ route('pipeline.index') }}">Pipeline</a>
+        <li class="dropdown nav-item mega-dropdown"><a class="nav-link" href="{{ route('task.index') }}">Task</a>
         <li class="dropdown nav-item mega-dropdown"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">Setting</a>
            <ul class="mega-dropdown-menu dropdown-menu row">
             <li class="col-md-3">
@@ -69,7 +70,7 @@
                 <li class="menu-list">
                   <ul>
                     <li><a class="dropdown-item" href="{{ route('client.index') }}"><i class="ft-user"></i> Client / Customer</a></li>
-                    <li><a class="dropdown-item" href="{{ route('project.index') }}"><i class="ft-user"></i> Project</a></li>
+                    <!-- <li><a class="dropdown-item" href="{{ route('project.index') }}"><i class="ft-user"></i> Project</a></li> -->
                   </ul>
                 </li>
               </ul>

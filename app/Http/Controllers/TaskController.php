@@ -10,9 +10,8 @@ use App\Models\CrmProjectPipeline;
 use App\Models\CrmProjectItems;
 use App\Models\CrmProjectPaymentMethodSubscription;
 use App\Models\CrmProjectPaymentMethodPerpetualLicense;
-use App\Models\CrmProjectInvoice;
 
-class PipelineController extends Controller
+class TaskController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -36,78 +35,8 @@ class PipelineController extends Controller
         $params['negotiation']      = CrmProjects::where('pipeline_status', 3)->orderBy('updated_at', 'DESC')->get();
         $params['po']               = CrmProjects::where('pipeline_status', 4)->orderBy('updated_at', 'DESC')->get();
         $params['cr']               = CrmProjects::where('pipeline_status', 5)->orderBy('updated_at', 'DESC')->get();
-        $params['po_done']          = CrmProjects::where('pipeline_status', 6)->orderBy('updated_at', 'DESC')->get();
-        $params['invoice']          = CrmProjectInvoice::where('status', '0')->orderBy('updated_at', 'DESC')->get();
-        $params['payment_receive']  = CrmProjectInvoice::where('status', 1)->orderBy('updated_at', 'DESC')->get();
 
-        return view('pipeline.index')->with($params);
-    }
-
-    /**
-     * Print Invoice
-     * @param  $id
-     * @return pdf
-     */
-    public function printInvoice($id)
-    {
-        $params['data'] = CrmProjectInvoice::where('id', $id)->first();
-
-        $view = view('pipeline.invoice-print')->with($params);        
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view);
-
-        return $pdf->stream();
-    }
-
-    /**
-     * Store Invoice Perpetula
-     * @param  Request $request
-     * @return objects
-     */
-    public function storeInvoicePerpetual(Request $request)
-    {
-        $data                       = new CrmProjectInvoice();
-        $data->crm_project_id       = $request->crm_project_id;
-        $data->payment_term         = $request->payment_term;
-        $data->invoice_number       = $request->invoice_number;
-        $data->date                 = $request->date;
-        $data->sub_total            = replace_idr($request->sub_total);
-        $data->tax                  = $request->tax;
-        $data->tax_price            = replace_idr($request->tax_price);
-        $data->total                = replace_idr($request->total);
-        $data->remarks              = $request->remarks;
-        $data->status               = 0;
-        $data->save();
-
-        $perpetual = CrmProjectPaymentMethodPerpetualLicense::where('id', $request->id)->first();
-        if($perpetual)
-        {
-            $perpetual->status                  = 1;
-            $perpetual->crm_project_invoice_id  = $data->id;
-            $perpetual->save();
-        }
-
-        return redirect()->route('pipeline.index');
-    }
-
-    /**
-     * Store Invoice Pay
-     * @param  Request $request
-     * @return void
-     */
-    public function storeInvoicePay(Request $request)
-    {
-        $invoice = CrmProjectInvoice::where('id', $request->id)->first();
-        if($invoice)
-        {
-            $invoice->date_payment      = $request->date_payment;
-            $invoice->total_payment     = replace_idr($request->total_payment);
-            $invoice->remarks_payment   = $request->remarks_payment;
-            $invoice->status            = 1;
-            $invoice->save();            
-        }
-
-        return redirect()->route('pipeline.index')->with('message-success', 'Payment Success');
+        return view('task.index')->with($params);
     }
 
     /**
@@ -123,10 +52,10 @@ class PipelineController extends Controller
      * Move To Change Request
      * @return 
      */
-    public function moveToPoDone($id)
+    public function moveToChangeRequest($id)
     {
         $project = CrmProjects::where('id', $id)->first();
-        $project->pipeline_status = 6;
+        $project->pipeline_status = 5;
         $project->save();
 
         return redirect()->route('pipeline.index');
@@ -311,7 +240,7 @@ class PipelineController extends Controller
                     $perpetual->terms               = $i;
                     $perpetual->milestone           = $request->milestone[$k];
                     $perpetual->persen              = $request->persen[$k];
-                    $perpetual->value               = replace_idr($request->value[$k]);
+                    $perpetual->value               = $request->value[$k];
                     $perpetual->status              = 0;
                     $perpetual->save();
                 }
@@ -326,47 +255,6 @@ class PipelineController extends Controller
             $item->item                 = 'year';
             $item->value                = $request->year;
             $item->save();
-
-            $item                       = new CrmProjectItems();
-            $item->crm_project_id       = $project->id;
-            $item->status               = 4;
-            $item->item                 = 'subscription_year_or_month';
-            $item->value                = $request->subscription_year_or_month;
-            $item->save();
-
-            $item                       = new CrmProjectItems();
-            $item->crm_project_id       = $project->id;
-            $item->status               = 4;
-            $item->item                 = 'start_date_subscription';
-            $item->value                = $request->start_date_subscription;
-            $item->save();
-
-            // if subscribe year
-            if($request->subscription_year_or_month==1)
-            {
-                for($var =0; $var <= $request->year; $var++)
-                {
-                    $sub                    = new CrmProjectPaymentMethodPerpetualLicense();
-                    $sub->crm_project_id    = $project->id; 
-                    $sub->term              = $var;
-                    $sub->due_date          = date('Y-m-d', strtotime('+ '+ $var +' year', strtotime($request->start_date_subscription)));
-                    $sub->status            = 0;
-                    $sub->save();
-                }
-            }
-            //if subscribe month
-            if($request->subscription_year_or_month==2)
-            {
-                for($var =0; $var <= $request->year; $var++)
-                {
-                    $sub                    = new CrmProjectPaymentMethodPerpetualLicense();
-                    $sub->crm_project_id    = $project->id; 
-                    $sub->term              = $var;
-                    $sub->due_date          = date('Y-m-d', strtotime('+ '+ $var +' month', strtotime($request->start_date_subscription)));
-                    $sub->status            = 0;
-                    $sub->save();
-                }
-            }
         }
 
         if ($request->hasFile('file'))
@@ -404,7 +292,6 @@ class PipelineController extends Controller
         $data->pipeline_status      = $project->pipeline_status; 
         $data->value                = $request->note;
         $data->title                = $request->title;
-        $data->date                 = empty($request->date) ? date('Y-m-d') : $request->date;
 
         if ($request->hasFile('file'))
         {

@@ -56,6 +56,17 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request,[
+            'name'               => 'required',
+            'email'              => 'required|unique:users',
+            'password'           => 'required',
+            'handphone'          => 'required',
+            'pic_name'           => 'required',
+            'pic_email'          => 'required',
+            'pic_telepon'        => 'required'
+            //'confirmation'      => 'same:password',
+        ]);
+
         $data                           = new Users();
         $data->name                     = $request->name;
         $data->password                 = bcrypt($request->password);

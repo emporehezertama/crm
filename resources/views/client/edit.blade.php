@@ -22,7 +22,7 @@
   <div class="content-body">
     <div class="row">
       <div class="col-12 px-0">
-        <form class="form form-horizontal" method="POST" action="{{ route('sales.client.update', $data->id) }}"  enctype="multipart/form-data">
+        <form class="form form-horizontal" method="POST" action="{{ route('client.update', $data->id) }}"  enctype="multipart/form-data">
           <input type="hidden" name="_method" value="PUT">
           <div class="col-6 float-left">
              <div class="card">
@@ -32,20 +32,6 @@
               </div>
               <div class="card-content collapse show">
                 <div class="card-body">
-                  <div class="form-group">
-                    <div class="col-md-6 float-left">
-                      @if(empty($data->foto))
-                        <img src="{{ asset('images/your-logo.png') }}" />
-                      @else
-                        <img src="{{ asset($data->foto) }}" />
-                      @endif
-                    </div>
-                    <div class="col-md-6 float-left">
-                      <a href="javascript:void(0)" class="btn btn-secondary btn-sm" onclick="open_dialog_photo()"><i class="ft ft-image"></i> Change Logo</a>
-                      <input type="file" class="form-control" name="foto" style="display: none;">
-                    </div><div class="clearfix"></div><br />
-                  </div>
-
                   <div class="form-body">
                     <div class="form-group">
                       <div class="col-md-12">
@@ -100,6 +86,7 @@
                         </select>
                       </div>
                     </div>
+                    
                     <div class="form-group">
                       <div class="col-md-6">
                         <label class="label-control">Status</label>
@@ -135,6 +122,14 @@
                         <input type="text" class="form-control" placeholder="PIC Name" name="pic_name" value="{{ $data->pic_name }}">
                       </div>
                     </div>
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <label class="label-control">Job Title</label>
+                      </div>
+                      <div class="col-md-12">
+                        <input type="text" class="form-control" placeholder="Job Title" name="pic_position" value="{{ $data->pic_position }}" />
+                      </div>
+                    </div>
                      <div class="form-group">
                       <div class="col-md-12">
                         <label class="label-control">Telepon</label>
@@ -161,7 +156,7 @@
               <div class="card-content collapse show">
                 <div class="card-body">
                   <div class="form-actions">
-                    <a href="{{ route('sales.client.index') }}" class="btn btn-warning btn-sm"><i class="ft ft-arrow-left"></i> Cancel</a>
+                    <a href="{{ route('client.index') }}" class="btn btn-warning btn-sm"><i class="ft ft-arrow-left"></i> Cancel</a>
                     <button type="submit" class="btn btn-info btn-sm"><i class="ft ft-save"></i> Save</button>
                   </div>
                 </div>

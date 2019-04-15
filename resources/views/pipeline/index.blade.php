@@ -40,7 +40,7 @@
         <div class="clearfix"></div><br />
         @foreach($seed as $item)
         <div class="card mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
@@ -68,7 +68,7 @@
               <p class="mb-0"> {{ $item->name }} </p>
 
               @if(!empty($item->description))
-              <p><pre>{{ $item->description }}</pre></p>
+              <p>{{ $item->description }}</p>
               @endif
               <p>Rp. {{ number_format($item->price,0,'','.') }}</p>
               <a href="{{ asset('storage/projects/'. $item->id .'/'. $item->file) }}" target="_blank">{{ $item->file }}</a>
@@ -101,7 +101,7 @@
         <div class="clearfix"></div><br />
         @foreach($quotation as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
@@ -169,7 +169,7 @@
         <div class="clearfix"></div><br />
         @foreach($po as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
@@ -274,7 +274,7 @@
         <div class="clearfix"></div><br />
         @foreach($invoice as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->project->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->project->client->name }}" data-id="{{ $item->project->crm_client_id }}">{{ isset($item->project->client->name) ? $item->project->client->name : '' }}</h4>
@@ -332,7 +332,7 @@
         <div class="clearfix"></div><br />
         @foreach($po_done as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->client->name }}" data-id="{{ $item->crm_client_id }}">{{ isset($item->client->name) ? $item->client->name : '' }}</h4>
@@ -383,7 +383,7 @@
         <div class="clearfix"></div><br />
         @foreach($payment_receive as $item)
         <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
-          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ $item->project->sales->name }}</label>
+          <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->project->client->sales->name) ? $item->project->client->sales->name : ''  }}</label>
           <div class="card-content">
             <div class="card-header">
               <h4 class="card-title" style="cursor: pointer;" onclick="modal_company(this)" data-name="{{ $item->project->client->name }}" data-id="{{ $item->project->crm_client_id }}">{{ isset($item->project->client->name) ? $item->project->client->name : '' }}</h4>
@@ -943,18 +943,25 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-              <input type="text" class="form-control" name="title" placeholder="Title">
+              <div class="col-md-6 float-left pl-0">
+                <select class="form-control" name="title">
+                  <option value="">Update Type</option>
+                  <option>Call</option>
+                  <option>Mail</option>
+                  <option>Meet</option>
+                  <option>Demo</option>
+                </select>
+              </div>
+              <div class="col-md-6 pr-0 float-right">
+                <input type="text" name="date" class="form-control datepicker" placeholder="Date Update (Default Today)">
+              </div>
+              <div class="clearfix"></div>
             </div>
             <div class="form-group">
               <textarea class="form-control" name="note" rows="5" placeholder="Description"></textarea>
             </div>
             <div class="form-group">
-              <div class="col-md-6 float-left pl-0">
-                <input type="file" name="file" />
-              </div>
-              <div class="col-md-6 float-left pr-0">
-                <input type="text" class="form-control datepicker" name="date" placeholder="Date Update (Default Today)">
-              </div><div class="clearfix"></div>
+              <input type="file" name="file" /> 
             </div>
         </div>
         <div class="modal-footer">
@@ -1053,6 +1060,9 @@
     width: 100%;
     overflow-x:scroll;
     min-height: 500px;
+  }
+  .row_pipeline h4 {
+    white-space: normal;
   }
   .box_pipeline {
     vertical-align: top;

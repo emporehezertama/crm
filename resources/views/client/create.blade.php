@@ -46,16 +46,7 @@
               <div class="card-content collapse show">
                 <div class="card-body">
                   <div class="form-body">
-                    
-                    <div class="form-group">
-                      <div class="col-md-6 float-left">
-                        <img src="{{ asset('images/your-logo.png') }}" />
-                      </div>
-                      <div class="col-md-6 float-left">
-                        <a href="javascript:void(0)" class="btn btn-secondary btn-sm" onclick="open_dialog_photo()"><i class="ft ft-image"></i> Change Logo</a>
-                        <input type="file" class="form-control" name="foto" style="display: none;">
-                      </div><div class="clearfix"></div><br />
-                    </div>
+
                     <div class="form-group">
                       <div class="col-md-12">
                         <label class="label-control">Name / Company</label>
@@ -96,6 +87,21 @@
                         <textarea class="form-control" name="address" rows="6" placeholder="Typing here.. ">{{ old('address') }}</textarea>
                       </div>
                     </div>
+                    
+                    <div class="form-group">
+                      <div class="col-md-6">
+                        <label class="label-control">Sales</label>
+                      </div>
+                      <div class="col-md-12">
+                          <select class="form-control" name="sales_id">
+                            <option value=""> Select Sales / Marketing </option>
+                            @foreach(list_sales() as $item)
+                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                          </select>
+                        </div> 
+                    </div>
+
                     <div class="form-group">
                       <div class="col-md-6">
                         <label class="label-control">Status</label>
@@ -130,6 +136,14 @@
                       </div>
                       <div class="col-md-12">
                         <input type="text" class="form-control" placeholder="PIC Name" name="pic_name" value="{{ old('pic_name') }}" />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <label class="label-control">Job Title</label>
+                      </div>
+                      <div class="col-md-12">
+                        <input type="text" class="form-control" placeholder="Job Title" name="pic_position" value="{{ old('pic_position') }}" />
                       </div>
                     </div>
                      <div class="form-group">

@@ -48,9 +48,6 @@
                       <tr>
                         <td>{{ $key + 1 }}</td>
                         <td>
-                          @if(!empty($item->foto))
-                          <img src="{{ asset($item->foto) }}" style="height: 100px;" /><br /> 
-                          @endif
                           {{ $item->name }}
                         </td>
                         <td>{{ $item->handphone }}</td>

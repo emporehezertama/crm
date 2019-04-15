@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnClient3 extends Migration
+class AddColumnCrmClient20190408 extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddColumnClient3 extends Migration
     public function up()
     {
         Schema::table('crm_client', function (Blueprint $table) {
-            $table->integer('user_id')->nullable();
+            $table->string('pic_position')->nullable();
         });
     }
 

@@ -171,7 +171,7 @@ function status_pipeline_card($item)
     {
        	$html = '<div class="mt-0 p-1" style="border-bottom: 1px solid #e4e7ed;">
 
-       				<strong>'. $item->title .'</strong><br />
+       				<strong><a href="javascript:void(0)" onclick="edit_update(this)" data-id="'. $item->id .'" data-date="'. $item->date .'" data-title="'. $item->title .'" data-note="'. $item->value .'" data-pipeline_status="'. $item->crmProject->pipeline_status .'">'. $item->title .'</a></strong><br />
 			        '. $item->value;
 
 		if(!empty($item->file))

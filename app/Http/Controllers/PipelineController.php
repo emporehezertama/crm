@@ -423,6 +423,36 @@ class PipelineController extends Controller
     }
 
     /**
+     * Update Note
+     * @return void
+     */
+    public function updateNote(Request $request)
+    {
+        $data                       = CrmProjectPipeline::where('id', $request->id)->first();
+        $data->user_id              = \Auth::user()->id;
+        $data->status_card          = 5;
+        $data->pipeline_status      = $request->pipeline_status; 
+        $data->value                = $request->note;
+        $data->title                = $request->title;
+        $data->date                 = empty($request->date) ? date('Y-m-d') : $request->date;
+
+        if ($request->hasFile('file'))
+        {
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+
+            $destinationPath = public_path('/storage/projects/'. $project->id);
+            $file->move($destinationPath, $fileName);
+
+            $data->file = $fileName;
+        }
+
+        $data->save();
+
+        return redirect()->route('pipeline.index');
+    }
+
+    /**
      * Store database Card
      * @return void
      */

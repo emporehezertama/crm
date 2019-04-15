@@ -10,6 +10,7 @@ use App\Models\CrmProjectPipeline;
 use App\Models\CrmProjectItems;
 use App\Models\CrmProjectPaymentMethodSubscription;
 use App\Models\CrmProjectPaymentMethodPerpetualLicense;
+use App\Models\Task;
 
 class TaskController extends Controller
 {
@@ -30,11 +31,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $params['seed']             = CrmProjects::where('pipeline_status', 1)->orderBy('updated_at', 'DESC')->get();
-        $params['quotation']        = CrmProjects::where('pipeline_status', 2)->orderBy('updated_at', 'DESC')->get();
-        $params['negotiation']      = CrmProjects::where('pipeline_status', 3)->orderBy('updated_at', 'DESC')->get();
-        $params['po']               = CrmProjects::where('pipeline_status', 4)->orderBy('updated_at', 'DESC')->get();
-        $params['cr']               = CrmProjects::where('pipeline_status', 5)->orderBy('updated_at', 'DESC')->get();
+        $params['seed']             = Task::where('pipeline_status', 1)->orderBy('updated_at', 'DESC')->get();
 
         return view('task.index')->with($params);
     }

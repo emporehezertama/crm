@@ -1008,6 +1008,44 @@
   </div>
 </div>
 
+<div class="modal fade text-left" id="modal_edit_update" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form method="POST" action="{{ route('pipeline.update-note') }}" id="form-edit-update" enctype="multipart/form-data" autocomplete="off">
+        {{ csrf_field() }}
+        <input type="hidden" name="id" />
+        <input type="hidden" name="pipeline_status" />
+        <div class="modal-header">
+          <h4 class="modal-title modal_update_title">Update</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+              <input type="text" class="form-control" name="title" placeholder="Title">
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" name="note" rows="5" placeholder="Description"></textarea>
+            </div>
+            <div class="form-group">
+              <div class="col-md-6 float-left pl-0">
+                <input type="file" name="file" />
+              </div>
+              <div class="col-md-6 float-left pr-0">
+                <input type="text" class="form-control datepicker" name="date" placeholder="Date Update (Default Today)">
+              </div><div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn grey btn-outline-secondary btn-sm" data-dismiss="modal"><i class="ft ft-x"></i> Close</button>
+          <button type="submit" class="btn btn-info btn-sm">Update <i class="ft ft-save"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <style type="text/css">
   .row_pipeline {
     display: inline-block !important;
@@ -1056,6 +1094,17 @@
 @section('js')
 <script type="text/javascript">
   
+  function edit_update(el)
+  {
+    $("#form-edit-update input[name='id']").val($(el).data('id'));
+    $("#form-edit-update input[name='title']").val($(el).data('title'));
+    $("#form-edit-update textarea[name='note']").val($(el).data('note'));
+    $("#form-edit-update input[name='date']").val($(el).data('date'));
+    $("#form-edit-update input[name='pipeline_status']").val($(el).data('pipeline_status'));
+
+    $("#modal_edit_update").modal("show");
+  }
+
   function pay_invoice(el)
   {
     $("#form-pay-invoice input[name='id']").val($(el).data('id'));

@@ -16,4 +16,13 @@ class CrmProjectPipeline extends Model
    	{
    		return $this->hasOne('App\User', 'id', 'user_id');
    	}
+
+   	/**
+   	 * Relations to crm_project
+   	 * @return object
+   	 */
+   	public function crmProject()
+   	{
+   		return $this->hasOne('App\Models\CrmProjects', 'id', 'crm_project_id');
+   	}
 }

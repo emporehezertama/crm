@@ -19,7 +19,7 @@
     </div>
     <div class="content-header-right text-md-right col-md-6 col-12">
       <div class="btn-group">
-        <a href="{{ route('pipeline.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Add Task</a>
+        <a href="{{ route('task.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Add Task</a>
       </div>
     </div>
   </div>

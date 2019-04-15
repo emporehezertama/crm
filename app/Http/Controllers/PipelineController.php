@@ -31,14 +31,74 @@ class PipelineController extends Controller
      */
     public function index()
     {
-        $params['seed']             = CrmProjects::where('pipeline_status', 1)->orderBy('updated_at', 'DESC')->get();
-        $params['quotation']        = CrmProjects::where('pipeline_status', 2)->orderBy('updated_at', 'DESC')->get();
-        $params['negotiation']      = CrmProjects::where('pipeline_status', 3)->orderBy('updated_at', 'DESC')->get();
-        $params['po']               = CrmProjects::where('pipeline_status', 4)->orderBy('updated_at', 'DESC')->get();
-        $params['cr']               = CrmProjects::where('pipeline_status', 5)->orderBy('updated_at', 'DESC')->get();
-        $params['po_done']          = CrmProjects::where('pipeline_status', 6)->orderBy('updated_at', 'DESC')->get();
-        $params['invoice']          = CrmProjectInvoice::where('status', '0')->orderBy('updated_at', 'DESC')->get();
-        $params['payment_receive']  = CrmProjectInvoice::where('status', 1)->orderBy('updated_at', 'DESC')->get();
+        $seed           = CrmProjects::select('crm_projects.*')->where('pipeline_status', 1)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
+        $quotation      = CrmProjects::select('crm_projects.*')->where('pipeline_status', 2)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
+        $negotiation    = CrmProjects::select('crm_projects.*')->where('pipeline_status', 3)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
+        $po             = CrmProjects::select('crm_projects.*')->where('pipeline_status', 4)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
+        $cr             = CrmProjects::select('crm_projects.*')->where('pipeline_status', 5)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
+        $po_done        = CrmProjects::select('crm_projects.*')->where('pipeline_status', 6)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
+        $invoice        = CrmProjectInvoice::select('crm_project_invoice.*')->where('status', '0')->join('crm_projects', 'crm_projects.id','=','crm_project_invoice.crm_project_id')->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_project_invoice.updated_at', 'DESC');
+        $payment_receive= CrmProjectInvoice::select('crm_project_invoice.*')->where('status', 1)->join('crm_projects', 'crm_projects.id','=','crm_project_invoice.crm_project_id')->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_project_invoice.updated_at', 'DESC');
+
+        if(isset($_GET['search']) and $_GET['search'] != "")
+        {
+            $seed = $seed->where(function($table){
+                         $table->where('crm_client.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.pic_name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_projects.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.address', 'LIKE', '%'. $_GET['search'] .'%');
+                        });
+            $quotation = $quotation->where(function($table){
+                            $table->where('crm_client.name', 'LIKE', '%'. $_GET['search'] .'%')
+                             ->orWhere('crm_client.pic_name', 'LIKE', '%'. $_GET['search'] .'%')
+                             ->orWhere('crm_projects.name', 'LIKE', '%'. $_GET['search'] .'%')
+                             ->orWhere('crm_client.address', 'LIKE', '%'. $_GET['search'] .'%');
+                            });
+            $negotiation = $negotiation->where(function($table){
+                        $table->where('crm_client.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.pic_name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_projects.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.address', 'LIKE', '%'. $_GET['search'] .'%');
+                    });
+            $po = $po->where(function($table){
+                        $table->where('crm_client.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.pic_name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_projects.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.address', 'LIKE', '%'. $_GET['search'] .'%');
+                        });
+            $cr = $cr->where('crm_client.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.pic_name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_projects.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.address', 'LIKE', '%'. $_GET['search'] .'%')
+                         ;
+            $po_done = $po_done->where(function($table){
+                        $table->where('crm_client.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.pic_name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_projects.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.address', 'LIKE', '%'. $_GET['search'] .'%');
+                        });
+            $invoice = $invoice->where(function($table){
+                        $table->where('crm_client.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.pic_name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_projects.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.address', 'LIKE', '%'. $_GET['search'] .'%');
+                        });
+            $payment_receive = $payment_receive->where(function($table){
+                        $table->where('crm_client.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.pic_name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_projects.name', 'LIKE', '%'. $_GET['search'] .'%')
+                         ->orWhere('crm_client.address', 'LIKE', '%'. $_GET['search'] .'%');
+                        });
+        }
+
+        $params['seed']             = $seed->get();
+        $params['quotation']        = $quotation->get(); 
+        $params['negotiation']      = $negotiation->get();
+        $params['po']               = $po->get();
+        $params['cr']               = $cr->get();
+        $params['po_done']          = $po_done->get();
+        $params['invoice']          = $invoice->get();
+        $params['payment_receive']  = $payment_receive->get();
 
         return view('pipeline.index')->with($params);
     }

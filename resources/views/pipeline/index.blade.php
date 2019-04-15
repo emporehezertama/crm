@@ -18,9 +18,20 @@
       </div>
     </div>
     <div class="content-header-right text-md-right col-md-6 col-12">
-      <div class="btn-group">
-        <a href="{{ route('pipeline.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Add Card</a>
-        <a href="{{ route('task.index') }}" class="btn btn-round btn-success"><i class="ft ft-plus"></i> Add Task</a>
+      <div class="col-md-4 float-right">
+        <div class="btn-group">
+          <a href="{{ route('pipeline.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Add Card</a>
+          <a href="{{ route('task.index') }}" class="btn btn-round btn-success"><i class="ft ft-plus"></i> Add Task</a>
+        </div>
+      </div>
+      <div class="col-md-6 float-right text-right">
+        <form method="GET" action="" name="form_search" id="form_search" autocomplete="off">
+          <fieldset class="form-group position-relative">
+            <input type="text" class="form-control round" name="search" id="iconLeft11" value="{{ (isset($_GET['search']) and $_GET['search'] != "") ? $_GET['search'] : '' }}" placeholder="Search Company Name, Pic Name, Project Name, Address">
+            <div class="form-control-position"><i style="cursor: pointer;" onclick="document.getElementById('form_search').submit();" class="ft ft-search primary"></i>
+            </div>
+          </fieldset>
+        </form>
       </div>
     </div>
   </div>
@@ -52,7 +63,7 @@
                     <span class="dropdown">
                       <a id="btnSearchDrop{{$item->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{$item->id}}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
-                        <a href="#" class="dropdown-item text-success" data-quotation_order="{{ $item->id }}/{{ $item->sales->id }}/QO/{{ date('Ymhis') }}" onclick="move_to_quotation('{{ route('pipeline.move-to-quotation', $item->id) }}', this)">Move to Quotation <i class="ft-arrow-right"></i></a>
+                        <a href="#" class="dropdown-item text-success" data-quotation_order="{{ $item->id }}/{{ isset($item->sales->id) ? $item->sales->id : '' }}/QO/{{ date('Ymhis') }}" onclick="move_to_quotation('{{ route('pipeline.move-to-quotation', $item->id) }}', this)">Move to Quotation <i class="ft-arrow-right"></i></a>
                         <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
                         <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
                       </span>
@@ -62,14 +73,19 @@
               </div>
             </div>
             <div class="card-body pt-0">
+              
               @if(!empty($item->project_category))
               <p><a href="javascript:void(0)" onclick="edit_card(this)" data-id="{{ $item->id }}" data-project_category="{{ $item->project_category }}" data-name="{{ $item->name }}" data-crm_client_id="{{ $item->crm_client_id }}" data-pipeline_status="{{ $item->pipeline_status }}" data-price="{{ $item->price }}" data-description="{{ $item->description }}" data-color="{{ $item->color }}">{{ $item->project_category }}</a></p>
               @endif
-              <p class="mb-0">{{ $item->name }} </p>
-
+              <p class="mb-0 float-left">{{ $item->name }} </p>
               @if(!empty($item->description))
-              <p>{{ $item->description }}</p>
+              <p class="text-right" style="cursor: pointer;">
+                <i class="ft ft-list" onclick="show_description(this)"></i>
+              </p>
+              <p style="display: none;" class="float-right">{{ $item->description }}</p>
               @endif
+              <div class="clearfix"></div>
+
               <p>Rp. {{ number_format($item->price,0,'','.') }}</p>
               <a href="{{ asset('storage/projects/'. $item->id .'/'. $item->file) }}" target="_blank">{{ $item->file }}</a>
               <hr />
@@ -125,13 +141,19 @@
             </div>
             <div class="card-body pt-0">
               <strong>{{ get_crm_project_item($item, 'quotation_order') }}</strong><br />
+
               @if(!empty($item->project_category))
-              {{ $item->project_category }}
+              <p><a href="javascript:void(0)" onclick="edit_card(this)" data-id="{{ $item->id }}" data-project_category="{{ $item->project_category }}" data-name="{{ $item->name }}" data-crm_client_id="{{ $item->crm_client_id }}" data-pipeline_status="{{ $item->pipeline_status }}" data-price="{{ $item->price }}" data-description="{{ $item->description }}" data-color="{{ $item->color }}">{{ $item->project_category }}</a></p>
               @endif
-              <p class="mb-0">{{ $item->name }} </p>
+              <p class="mb-0 float-left">{{ $item->name }} </p>
               @if(!empty($item->description))
-              <p><pre>{{ $item->description }}</pre></p>
+              <p class="text-right" style="cursor: pointer;">
+                <i class="ft ft-list" onclick="show_description(this)"></i>
+              </p>
+              <p style="display: none;" class="float-right">{{ $item->description }}</p>
               @endif
+              <div class="clearfix"></div>
+
               <p>Rp. {{ number_format($item->price,0,'','.') }}</p>
               <a href="{{ asset('storage/projects/'. $item->id .'/'. $item->file) }}" target="_blank">{{ $item->file }}</a>
               <hr />
@@ -217,14 +239,19 @@
                 @if(get_crm_project_item($item, 'payment_method') == 2)
                   {{ get_crm_project_item($item, 'year') }} Tahun<br />
                 @endif
-
+                
                 @if(!empty($item->project_category))
-                {{ $item->project_category }}
+                <p><a href="javascript:void(0)" onclick="edit_card(this)" data-id="{{ $item->id }}" data-project_category="{{ $item->project_category }}" data-name="{{ $item->name }}" data-crm_client_id="{{ $item->crm_client_id }}" data-pipeline_status="{{ $item->pipeline_status }}" data-price="{{ $item->price }}" data-description="{{ $item->description }}" data-color="{{ $item->color }}">{{ $item->project_category }}</a></p>
                 @endif
-                <p class="mb-0">{{ $item->name }} </p>
+                <p class="mb-0 float-left">{{ $item->name }} </p>
                 @if(!empty($item->description))
-                <p><pre>{{ $item->description }}</pre></p>
+                <p class="text-right" style="cursor: pointer;">
+                  <i class="ft ft-list" onclick="show_description(this)"></i>
+                </p>
+                <p style="display: none;" class="float-right">{{ $item->description }}</p>
                 @endif
+                <div class="clearfix"></div>
+
                 <p>Rp. {{ number_format($item->price,0,'','.') }}</p>
                 <a href="{{ asset('storage/projects/'. $item->id .'/'. $item->file) }}" target="_blank">{{ $item->file }}</a>
                 <hr />
@@ -1160,6 +1187,7 @@
               </div>
             </div>
           </div>
+
           <div class="col-6 float-left">
             <div class="card">
               <div class="card-content collapse show">
@@ -1256,6 +1284,11 @@
 @section('js')
 <script type="text/javascript">
   
+  function show_description(el)
+  {
+    $(el).parent().next().slideToggle("slow");
+  }
+
   function edit_card(el)
   {
     $("#form-edit-card input[name='id']").val($(el).data('id'));
@@ -1561,7 +1594,7 @@
         var data = data.data;
 
         $('.title-company').html(data.name);
-        $('.title-telepon').html(data.telepon);
+        $('.title-telepon').html(data.handphone);
         $('.title-email').html(data.email);
         $('.title-address').html(data.address);
       }

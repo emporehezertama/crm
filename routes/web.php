@@ -54,7 +54,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
 	Route::resource('client','ClientController', ['only'=> ['index','create','store','edit','destroy','update'], 'as' => 'admin']);
 	Route::resource('project','ProjectController', ['only'=> ['index','create','store','edit','destroy','update'], 'as' => 'admin']);
 	Route::resource('product','ProductController', ['only'=> ['index','create','store','edit','destroy','update'], 'as' => 'admin']);
-
 	Route::get('profile', 'IndexController@profile')->name('admin.profile');
 	Route::get('setting', 'SettingController@index')->name('admin.setting.index');
 	Route::post('setting/update', 'SettingController@update')->name('admin.setting.update');

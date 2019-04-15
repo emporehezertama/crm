@@ -59,7 +59,7 @@ class ClientController extends Controller
         $this->validate($request,[
             'name'               => 'required',
             'email'              => 'required|unique:users',
-            'password'           => 'required',
+            //'password'           => 'required',
             'handphone'          => 'required',
             'pic_name'           => 'required',
             'pic_email'          => 'required',

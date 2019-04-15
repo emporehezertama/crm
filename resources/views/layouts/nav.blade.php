@@ -5,20 +5,8 @@
       <ul class="nav navbar-nav mr-auto float-left">
         <li class="nav-item d-none d-md-block"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu"></i></a></li>
         <li class="nav-item d-none d-md-block"><a class="nav-link nav-link-expand" href="#"><i class="ficon ft-maximize"></i></a></li>
-        <li class="dropdown nav-item mega-dropdown"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">Sales</a>
-          <ul class="mega-dropdown-menu dropdown-menu row">
-            <li class="col-md-3">
-              <h6 class="dropdown-menu-header text-uppercase"><i class="la la-random"></i> Menu</h6>
-              <ul class="drilldown-menu">
-                <li class="menu-list">
-                  <ul>
-                    <li><a class="dropdown-item" href="{{ route('client.index') }}"><i class="ft-user"></i> Client / Customer</a></li>
-                    <!-- <li><a class="dropdown-item" href="{{ route('project.index') }}"><i class="ft-user"></i> Project</a></li> -->
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          </ul>
+        <li class="dropdown nav-item mega-dropdown">
+          <a href="{{ route('client.index') }}" class="nav-link">Client</a>
         </li>
         <li class="dropdown nav-item mega-dropdown">
           <a href="{{ route('admin.product.index') }}" class="nav-link">Product</a>

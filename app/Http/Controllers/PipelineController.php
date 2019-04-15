@@ -467,7 +467,7 @@ class PipelineController extends Controller
         $data->pipeline_status      = $request->pipeline_status;
         $data->name                 = $request->name;
         $data->project_category     = $request->project_category;
-        //$data->sales_id             = \Auth::user()->id;
+        $data->sales_id             = \Auth::user()->id;
 
         if ($request->hasFile('file'))
         {
@@ -629,4 +629,16 @@ class PipelineController extends Controller
 
         return view('project.edit')->with(['data' => $project]);
     }
+
+    /**
+     * Delete
+     * @return void
+     */
+    public function delete($id)
+    {
+        $data   = CrmProjectPipeline::where('id', $id)->first();
+        $data->delete();
+
+        return redirect()->route('pipeline.index');
+    }   
 }

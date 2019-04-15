@@ -169,7 +169,7 @@ function status_pipeline_card($item)
 
     if($item->status_card == 5)
     {
-       	$html = '<div class="mt-0 p-1" style="border-bottom: 1px solid #e4e7ed;cursor:pointer" onclick="edit_update(this)" data-id="'. $item->id .'" data-date="'. $item->date .'" data-title="'. $item->title .'" data-note="'. $item->value .'" data-pipeline_status="'. $item->crmProject->pipeline_status .'">
+       	$html = '<div class="mt-0 p-1" style="border-bottom: 1px solid #e4e7ed;cursor:pointer" onclick="edit_update(this)" data-id="'. $item->id .'" data-date="'. $item->date .'" data-title="'. $item->title .'" data-note="'. $item->value .'" data-pipeline_status="'. $item->crmProject->pipeline_status .'" data-delete="'. route('pipeline.delete', $item->id) .'">
 
        				<strong>'. $item->title .'</strong><br />
 			        '. $item->value;

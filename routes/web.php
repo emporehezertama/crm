@@ -38,9 +38,9 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::post('pipeline/move-to-po/{id}', 'PipelineController@moveToPO')->name('pipeline.move-to-po');
 	Route::get('pipeline/move-to-po-done/{id}', 'PipelineController@moveToPoDone')->name('pipeline.move-to-po-done');
 	Route::get('pipeline/print-invoice/{id}', 'PipelineController@printInvoice')->name('pipeline.print-invoice');
+	Route::get('pipeline/delete/{id}', 'PipelineController@delete')->name('pipeline.delete');
 	Route::post('pipeline/update-note', 'PipelineController@updateNote')->name('pipeline.update-note');
 	Route::post('pipeline/update-card', 'PipelineController@updateCard')->name('pipeline.update-card');
-
 	Route::post('ajax/get-pipeline-history', 'AjaxController@getPipelineHistory')->name('ajax.get-pipeline-history');
 	Route::post('ajax/get-company', 'AjaxController@getCompany')->name('ajax.get-company');
 	Route::post('ajax/get-invoice-perpetual-license', 'AjaxController@getInvoicePerpetualLicense')->name('ajax.get-invoice-perpetual-license');

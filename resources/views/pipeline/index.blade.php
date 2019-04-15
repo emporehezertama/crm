@@ -1057,6 +1057,7 @@
         <div class="modal-footer">
           <button type="button" class="btn grey btn-outline-secondary btn-sm" data-dismiss="modal"><i class="ft ft-x"></i> Close</button>
           <button type="submit" class="btn btn-info btn-sm">Update <i class="ft ft-save"></i></button>
+          <a href="" class="btn btn-danger btn-sm delete" onclick="return confirm('Delete data ?')" title="Delete">Delete<i class="ft ft-trash-2"></i></a>
         </div>
       </form>
     </div>
@@ -1276,6 +1277,7 @@
     $("#form-edit-update textarea[name='note']").val($(el).data('note'));
     $("#form-edit-update input[name='date']").val($(el).data('date'));
     $("#form-edit-update input[name='pipeline_status']").val($(el).data('pipeline_status'));
+    $("#form-edit-update a.delete").attr('href', $(el).data('delete'));
 
     $("#modal_edit_update").modal("show");
   }

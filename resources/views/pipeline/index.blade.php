@@ -39,7 +39,7 @@
         </div>
         <div class="clearfix"></div><br />
         @foreach($seed as $item)
-        <div class="card mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
+        <div class="card mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};border-bottom: 5px solid {{ $item->color  }};margin-bottom:5px;">
           <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
@@ -100,7 +100,7 @@
         </div>
         <div class="clearfix"></div><br />
         @foreach($quotation as $item)
-        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
+        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};border-bottom: 5px solid {{ $item->color  }};margin-bottom:5px;">
           <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
@@ -168,7 +168,7 @@
         </div>
         <div class="clearfix"></div><br />
         @foreach($po as $item)
-        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
+        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};border-bottom: 5px solid {{ $item->color  }};margin-bottom:5px;">
           <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
@@ -273,7 +273,7 @@
         </div>
         <div class="clearfix"></div><br />
         @foreach($invoice as $item)
-        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
+        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};border-bottom: 5px solid {{ $item->color  }};margin-bottom:5px;">
           <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
@@ -331,7 +331,7 @@
         </div>
         <div class="clearfix"></div><br />
         @foreach($po_done as $item)
-        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
+        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};border-bottom: 5px solid {{ $item->color  }};margin-bottom:5px;">
           <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->client->sales->name) ? $item->client->sales->name : '' }}</label>
           <div class="card-content">
             <div class="card-header">
@@ -382,7 +382,7 @@
         </div>
         <div class="clearfix"></div><br />
         @foreach($payment_receive as $item)
-        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};">
+        <div class="card mt-0 mb-0" style="border-left: 5px solid {{ $item->color  }};border-top: 1px solid {{ $item->color  }};border-bottom: 5px solid {{ $item->color  }};margin-bottom:5px;">
           <label style="position: absolute;right: 8px; top: 0;color: {{ $item->color  }};">{{ isset($item->project->client->sales->name) ? $item->project->client->sales->name : ''  }}</label>
           <div class="card-content">
             <div class="card-header">

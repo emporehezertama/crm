@@ -453,6 +453,49 @@ class PipelineController extends Controller
     }
 
     /**
+     * Update Card
+     * @param  Request $request
+     * @return void
+     */
+    public function updateCard(Request $request)
+    {
+        $data                       = CrmProjects::where('id', $request->id)->first();
+        $data->crm_client_id        = $request->crm_client_id;
+        $data->price                = replace_idr($request->price);
+        $data->description          = $request->description; 
+        $data->color                = $request->color; 
+        $data->pipeline_status      = $request->pipeline_status;
+        $data->name                 = $request->name;
+        $data->project_category     = $request->project_category;
+        //$data->sales_id             = \Auth::user()->id;
+
+        if ($request->hasFile('file'))
+        {
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+
+            $destinationPath = public_path('/storage/projects/'. $data->id);
+            $file->move($destinationPath, $fileName);
+
+            $data->file = $fileName;
+        }
+        $data->save();
+
+
+        if(isset($fileName))
+        {
+            $item                       = new CrmProjectItems();
+            $item->crm_project_id       = $data->id;
+            $item->status               = 1;
+            $item->item                 = 'file';
+            $item->value                = $fileName;
+            $item->save();
+        }
+
+        return redirect()->route('pipeline.index')->with('message-success', 'Card Updated');
+    }
+
+    /**
      * Store database Card
      * @return void
      */

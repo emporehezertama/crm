@@ -63,9 +63,9 @@
             </div>
             <div class="card-body pt-0">
               @if(!empty($item->project_category))
-              <p>{{ $item->project_category }}</p>
+              <p><a href="javascript:void(0)" onclick="edit_card(this)" data-id="{{ $item->id }}" data-project_category="{{ $item->project_category }}" data-name="{{ $item->name }}" data-crm_client_id="{{ $item->crm_client_id }}" data-pipeline_status="{{ $item->pipeline_status }}" data-price="{{ $item->price }}" data-description="{{ $item->description }}" data-color="{{ $item->color }}">{{ $item->project_category }}</a></p>
               @endif
-              <p class="mb-0"> {{ $item->name }} </p>
+              <p class="mb-0">{{ $item->name }} </p>
 
               @if(!empty($item->description))
               <p>{{ $item->description }}</p>
@@ -1063,6 +1063,147 @@
   </div>
 </div>
 
+<div class="modal fade text-left" id="modal_edit_card" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <form method="POST" action="{{ route('pipeline.update-card') }}" id="form-edit-card" enctype="multipart/form-data" autocomplete="off">
+        {{ csrf_field() }}
+        <input type="hidden" name="id" />
+        <input type="hidden" name="pipeline_status" />
+        <div class="modal-header">
+          <h4 class="modal-title modal_update_title">Update Card</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="col-6 float-left">
+             <div class="card">
+              <div class="card-content collapse show">
+                <div class="card-body">
+                  <div class="form-body">
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <label class="label-control">Client / Customer</label>
+                      </div>
+                      <div class="col-md-12">
+                        <select class="form-control" name="crm_client_id">
+                          <option value="">Select Client / Customer</option>
+                          @foreach(list_client() as $item)
+                          <option value="{{ $item->id }}">{{ $item->name }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-md-12">Project Category</label>
+                      <div class="col-md-12">
+                        <select class="form-control" name="project_category">
+                          <option>IT Services</option>
+                          <option value="IT Services - Custome Software Development"> -- Custome Software Development</option>
+                          <option value="IT Services - SaaS Application Developement"> -- SaaS Application Developement</option>
+                          <option value="IT Services - Cloud Software Developement"> -- Cloud Software Developement</option>
+                          <option value="IT Services - Application Enhancement"> -- Application Enhancement</option>
+                          <option value="IT Services - UI/UX Developement and Design"> -- UI/UX Developement and Design</option>
+                          <option value="IT Services - Mobile Application Developement"> -- Mobile Application Developement</option>
+                          <option value="IT Services - Full Life Cycle Software Testing"> -- Full Life Cycle Software Testing</option>
+                          <option value="IT Services - Dedicated In House Programmer"> -- Dedicated In House Programmer</option>
+                          <option>HR Services</option>
+                          <option value="HR Services - Recruitment & Head Hunting"> -- Recruitment & Head Hunting</option>
+                          <option value="HR Services - Contract & Temporary Staffing"> -- Contract & Temporary Staffing</option>
+                          <option value="HR Services - Payroll"> -- Payroll</option>
+                          <option>ERP Solution</option>
+                          <option value="ERP Solution - ERP Solutions"> --- ERP Solutions</option>
+                          <option value="ERP Solution - HR Solutions"> --- HR Solutions</option>
+                          <option value="ERP Solution - SLIK"> --- SLIK</option>
+                          <option>Others</option>
+                        </select>
+                      </div>
+                  </div>
+                  <div class="form-body">
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <label class="label-control">Project Name</label>
+                      </div>
+                      <div class="col-md-12">
+                        <input type="text" class="form-control" name="name">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-body">
+                    <div class="form-group">
+                      <div class="col-md-6 float-left">
+                        <label class="label-control">Status</label>
+                      </div>
+                      <div class="col-md-6 float-left">
+                        <label class="label-control">Project Value</label>
+                      </div>
+                      
+                      <div class="col-md-6 float-left">
+                        <select class="form-control" name="pipeline_status">
+                          <option value="">Select Status</option>
+                          @foreach(list_pipeline_status() as $key => $val)
+                          <option value="{{ $key }}">{{ $val }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="col-md-6 float-left">
+                        <input type="text" name="price" class="form-control idr" placeholder="Rp. ">
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 float-left">
+            <div class="card">
+              <div class="card-content collapse show">
+                <div class="card-body">
+                  <div class="form-body">
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <label class="label-control">Note</label>
+                      </div>
+                      <div class="col-md-12">
+                        <textarea class="form-control" name="description" style="height: 125px;"></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-md-6 float-left">
+                        <label class="label-control">Attach File</label>
+                      </div>
+                      <div class="col-md-6 float-left">
+                        <label class="label-control">Color Tags</label>
+                      </div>
+                      <div class="col-md-6 float-left">
+                        <input type="file" name="file" class="form-control">
+                      </div>
+                      <div class="col-md-6 float-left">
+                        <div class="color" style="float: left;"></div>                                
+                        <input type="text" class="form-control" style="float: left; width: 88%;"  placeholder="Color Tags" name="color"><div class="clearfix"></div>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn grey btn-outline-secondary btn-sm" data-dismiss="modal"><i class="ft ft-x"></i> Close</button>
+          <button type="submit" class="btn btn-info btn-sm">Update <i class="ft ft-save"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <style type="text/css">
   .row_pipeline {
     display: inline-block !important;
@@ -1114,10 +1255,24 @@
 @section('js')
 <script type="text/javascript">
   
+  function edit_card(el)
+  {
+    $("#form-edit-card input[name='id']").val($(el).data('id'));
+    $("#form-edit-card select[name='crm_client_id']").val($(el).data('crm_client_id'));
+    $("#form-edit-card select[name='project_category']").val($(el).data('project_category'));
+    $("#form-edit-card input[name='name']").val($(el).data('name'));
+    $("#form-edit-card select[name='pipeline_status']").val($(el).data('pipeline_status'));
+    $("#form-edit-card input[name='price']").val($(el).data('price'));
+    $("#form-edit-card textarea[name='description']").val($(el).data('description'));
+    $("#form-edit-card input[name='color']").val($(el).data('color'));
+
+    $("#modal_edit_card").modal("show");
+  }
+
   function edit_update(el)
   {
     $("#form-edit-update input[name='id']").val($(el).data('id'));
-    $("#form-edit-update input[name='title']").val($(el).data('title'));
+    $("#form-edit-update select[name='title']").val($(el).data('title'));
     $("#form-edit-update textarea[name='note']").val($(el).data('note'));
     $("#form-edit-update input[name='date']").val($(el).data('date'));
     $("#form-edit-update input[name='pipeline_status']").val($(el).data('pipeline_status'));

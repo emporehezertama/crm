@@ -951,6 +951,21 @@
             <td> : </td>
             <td class="title-address"></td>
           </tr>
+          <tr>
+            <th>PIC Name</th>
+            <td> : </td>
+            <td class="title-pic_name"></td>
+          </tr>
+          <tr>
+            <th>PIC Telepon</th>
+            <td> : </td>
+            <td class="title-pic_telepon"></td>
+          </tr>
+          <tr>
+            <th>PIC Email</th>
+            <td> : </td>
+            <td class="title-pic_email"></td>
+          </tr>
         </table>
       </div>
     </div>
@@ -1597,6 +1612,9 @@
         $('.title-telepon').html(data.handphone);
         $('.title-email').html(data.email);
         $('.title-address').html(data.address);
+        $('.title-pic_name').html(data.pic_name);
+        $('.title-pic_telepon').html(data.pic_telepon);
+        $('.title-pic_email').html(data.pic_email);
       }
     });
 

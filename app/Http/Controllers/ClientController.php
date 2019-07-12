@@ -28,14 +28,26 @@ class ClientController extends Controller
     {
         if(\Auth::user()->user_access_id == 1)
         {
-            $data = CrmClient::paginate(50);
+            $data = CrmClient::orderBy('crm_client.id','DESC');
         }
         else
         {
-            $data = CrmClient::where('sales_id', \Auth::user()->id)->paginate(50);
+            $data = CrmClient::where('sales_id', \Auth::user()->id);
         }
 
-        $params['data'] = $data;
+        if(isset($_GET['search']) and $_GET['search'] != "")
+        {
+            $data = $data->join('users', 'users.id','=','crm_client.sales_id')->where(function($table){ 
+                $table->where('crm_client.name', 'LIKE', '%'. $_GET['search'] .'%')
+                ->orWhere('handphone', 'LIKE', '%'. $_GET['search'] .'%')
+                ->orWhere('crm_client.address','LIKE', '%'. $_GET['search'] .'%')
+                ->orWhere('crm_client.email','LIKE', '%'. $_GET['search'] .'%')
+                ->orWhere('users.name','LIKE', '%'. $_GET['search'] .'%');
+            });
+            //dd('aa');
+        }
+
+        $params['data'] = $data->paginate(50);
         
         return view('client.index')->with($params);
     }
@@ -84,7 +96,8 @@ class ClientController extends Controller
         $client->pic_name               = $request->pic_name;
         $client->pic_email              = $request->pic_email;
         $client->pic_telepon            = $request->pic_telepon;
-        $client->pic_position            = $request->pic_position;
+        $client->pic_position           = $request->pic_position;
+        $client->status                 = $request->status;
 
         if ($request->hasFile('foto'))
         {
@@ -130,7 +143,8 @@ class ClientController extends Controller
         $client->pic_telepon            = $request->pic_telepon;
         $client->pic_position           = $request->pic_position;
         $client->sales_id               = $request->sales_id;            
-
+        $client->status                 = $request->status;
+        
         if ($request->hasFile('foto'))
         {
             $file = $request->file('foto');

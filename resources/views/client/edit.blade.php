@@ -92,7 +92,7 @@
                         <label class="label-control">Status</label>
                       </div>
                       <div class="col-md-6">
-                        <select class="form-control" name="status">
+                        <select class="form-control" name="status" id="status">
                           <option value="1" {{ $data->status == 1 ? 'selected' : '' }}>Active</option>
                           <option value="0" {{ $data->status == 0 ? 'selected' : '' }}>Inactive</option>
                         </select>

@@ -197,6 +197,12 @@ function list_pipeline_status()
 	return [1 => 'Seed', 2 => 'Quotation', 3 => 'Negotiation', 4 => 'PO / Contract', 5 => 'Change Request'];
 }
 
+function list_type_project()
+{
+	return [1 => 'License', 2 => 'Trial'];
+}
+
+
 /**
  * Replace IDR
  * @return string
@@ -237,6 +243,15 @@ function list_client()
 function list_sales()
 {
 	return \App\User::where('user_access_id', 4)->get();
+}
+
+/**
+ * List Product Parent
+ * @return object
+ */
+function list_parent()
+{
+	return \App\Models\CrmProduct::whereNull('parent_id')->get();
 }
 
 /**

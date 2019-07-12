@@ -63,7 +63,7 @@
                     <span class="dropdown">
                       <a id="btnSearchDrop{{$item->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{$item->id}}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
-                        <a href="#" class="dropdown-item text-success" data-quotation_order="{{ $item->id }}/{{ isset($item->sales->id) ? $item->sales->id : '' }}/QO/{{ date('Ymhis') }}" onclick="move_to_quotation('{{ route('pipeline.move-to-quotation', $item->id) }}', this)">Move to Quotation <i class="ft-arrow-right"></i></a>
+                        <a href="#" class="dropdown-item text-success" data-price="Rp. {{ number_format($item->price,0,'','.') }}"  data-quotation_order="{{ $item->id }}/{{ isset($item->sales->id) ? $item->sales->id : '' }}/QO/{{ date('Ymhis') }}" onclick="move_to_quotation('{{ route('pipeline.move-to-quotation', $item->id) }}', this)">Move to Quotation <i class="ft-arrow-right"></i></a>
                         <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
                         <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
                       </span>
@@ -74,8 +74,8 @@
             </div>
             <div class="card-body pt-0">
               
-              @if(!empty($item->project_category))
-              <p><a href="javascript:void(0)" onclick="edit_card(this)" data-id="{{ $item->id }}" data-project_category="{{ $item->project_category }}" data-name="{{ $item->name }}" data-crm_client_id="{{ $item->crm_client_id }}" data-pipeline_status="{{ $item->pipeline_status }}" data-price="{{ $item->price }}" data-description="{{ $item->description }}" data-color="{{ $item->color }}">{{ $item->project_category }}</a></p>
+              @if(!empty($item->project_category_id))
+              <p><a href="javascript:void(0)" onclick="edit_card(this)" data-id="{{ $item->id }}" data-project_category_id="{{ $item->project_category_id }}" data-project_product= "{{ $item->projectProduct }}" data-name="{{ $item->name }}" data-crm_client_id="{{ $item->crm_client_id }}" data-pipeline_status="{{ $item->pipeline_status }}" data-price="{{ $item->price }}" data-project_type="{{ $item->project_type }}" data-durataion="{{ $item->durataion }}" data-license_number="{{ $item->license_number }}" data-description="{{ $item->description }}" data-color="{{ $item->color }}">{{ $item->projectCategory->name }}</a></p>
               @endif
               <p class="mb-0 float-left">{{ $item->name }} </p>
               @if(!empty($item->description))
@@ -130,7 +130,7 @@
                       <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
                         <!-- <a href="javascript:void(0)" onclick="move_to_negotation('{{ route('pipeline.move-to-negotiation', $item->id) }}', this)" data-negotation_order="{{ $item->id }}/{{ $item->sales->id }}/NO/{{ date('Ymhis') }}"  class="dropdown-item text-success">Move to Negotiation <i class="ft-arrow-right"></i></a> -->
-                        <a href="javascript:void(0)" data-po_number="{{ $item->id }}/{{ $item->sales->id }}/PO/{{ date('Ymhis') }}" data-price="Rp. {{ number_format($item->price,0,'','.') }}" onclick="move_to_po('{{ route('pipeline.move-to-po', $item->id) }}', this)" class="dropdown-item text-success">Move to PO / Contract <i class="ft-arrow-right"></i></a>
+                        <a href="javascript:void(0)" data-po_number="{{ $item->id }}/{{ $item->sales->id }}/PO/{{ date('Ymhis') }}" data-price="Rp. {{ number_format($item->price,0,'','.') }}" data-month="{{ get_crm_project_item($item, 'month') }}" data-start_date="{{ get_crm_project_item($item, 'start_date') }}" data-end_date="{{ get_crm_project_item($item, 'end_date') }}" onclick="move_to_po('{{ route('pipeline.move-to-po', $item->id) }}', this)" class="dropdown-item text-success">Move to PO / Contract <i class="ft-arrow-right"></i></a>
                         <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
                         <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
                       </span>
@@ -142,8 +142,8 @@
             <div class="card-body pt-0">
               <strong>{{ get_crm_project_item($item, 'quotation_order') }}</strong><br />
 
-              @if(!empty($item->project_category))
-              <p><a href="javascript:void(0)" onclick="edit_card(this)" data-id="{{ $item->id }}" data-project_category="{{ $item->project_category }}" data-name="{{ $item->name }}" data-crm_client_id="{{ $item->crm_client_id }}" data-pipeline_status="{{ $item->pipeline_status }}" data-price="{{ $item->price }}" data-description="{{ $item->description }}" data-color="{{ $item->color }}">{{ $item->project_category }}</a></p>
+              @if(!empty($item->project_category_id))
+              <p><a href="javascript:void(0)" onclick="edit_card(this)" data-id="{{ $item->id }}" data-project_category_id="{{ $item->project_category_id }}" data-project_product= "{{ $item->projectProduct }}" data-name="{{ $item->name }}" data-crm_client_id="{{ $item->crm_client_id }}" data-pipeline_status="{{ $item->pipeline_status }}" data-project_type="{{ $item->project_type }}" data-durataion="{{ $item->durataion }}" data-license_number="{{ $item->license_number }}" data-price="{{ $item->price }}" data-description="{{ $item->description }}" data-color="{{ $item->color }}">{{ $item->projectCategory->name }}</a></p>
               @endif
               <p class="mb-0 float-left">{{ $item->name }} </p>
               @if(!empty($item->description))
@@ -240,8 +240,8 @@
                   {{ get_crm_project_item($item, 'year') }} Tahun<br />
                 @endif
                 
-                @if(!empty($item->project_category))
-                <p><a href="javascript:void(0)" onclick="edit_card(this)" data-id="{{ $item->id }}" data-project_category="{{ $item->project_category }}" data-name="{{ $item->name }}" data-crm_client_id="{{ $item->crm_client_id }}" data-pipeline_status="{{ $item->pipeline_status }}" data-price="{{ $item->price }}" data-description="{{ $item->description }}" data-color="{{ $item->color }}">{{ $item->project_category }}</a></p>
+                @if(!empty($item->project_category_id))
+                <p><a href="javascript:void(0)" onclick="edit_card(this)" data-id="{{ $item->id }}" data-project_category_id="{{ $item->project_category_id }}" data-project_product= "{{ $item->projectProduct }}" data-name="{{ $item->name }}" data-project_type="{{ $item->project_type }}" data-durataion="{{ $item->durataion }}" data-license_number="{{ $item->license_number }}"data-crm_client_id="{{ $item->crm_client_id }}" data-pipeline_status="{{ $item->pipeline_status }}" data-price="{{ $item->price }}" data-description="{{ $item->description }}" data-color="{{ $item->color }}">{{ $item->projectCategory->name }}</a></p>
                 @endif
                 <p class="mb-0 float-left">{{ $item->name }} </p>
                 @if(!empty($item->description))
@@ -629,7 +629,7 @@
                 <label class="label-control">Submit Date</label>
               </div>
               <div class="col-md-12">
-                <input type="text" class="form-control datepicker" name="date">
+                <input type="text" class="form-control datepicker" name="submit_date">
               </div>
             </div>
         </div>
@@ -891,6 +891,7 @@
                 <input type="file" class="form-control" name="file">
               </div>
             </div>
+
             <div class="form-body">
               <div class="form-group">
                 <div class="col-md-12">
@@ -901,6 +902,28 @@
                 </div>
               </div>
             </div>
+
+            <div class="form-group">
+              <div class="col-md-12">
+                  <label class="label-control">Project Timeline</label>
+                </div>
+              <div class="col-md-12">
+                <div class="input-group">
+                  <input type="number" class="form-control" required name="monthQuo" placeholder="Project Timeline (Month)" aria-describedby="basic-addon2">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">Month</span>
+                  </div>
+                </div>
+              </div>
+              <div class="clearfix mt-2"></div>
+              <div class="col-md-6 float-left">
+                <input type="text" class="form-control datepicker" required name="start_date_quo" placeholder="Start Date">
+              </div>
+              <div class="col-md-6 float-left">
+                <input type="text" class="form-control" readonly="true" name="end_date_quo" placeholder="End Date">
+              </div><div class="clearfix"></div>
+            </div>
+
             <div class="form-group">
               <div class="col-md-12">
                 <label class="label-control">Submit Date</label>
@@ -1130,7 +1153,7 @@
                         <label class="label-control">Client / Customer</label>
                       </div>
                       <div class="col-md-12">
-                        <select class="form-control" name="crm_client_id">
+                        <select class="form-control" name="crm_client_id" disabled="true">
                           <option value="">Select Client / Customer</option>
                           @foreach(list_client() as $item)
                           <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -1139,30 +1162,29 @@
                       </div>
                     </div>
                   </div>
-                  <div class="form-group">
-                      <label class="col-md-12">Project Category</label>
+                  <div class="form-body">
+                    <div class="form-group">
                       <div class="col-md-12">
-                        <select class="form-control" name="project_category">
-                          <option>IT Services</option>
-                          <option value="IT Services - Custome Software Development"> -- Custome Software Development</option>
-                          <option value="IT Services - SaaS Application Developement"> -- SaaS Application Developement</option>
-                          <option value="IT Services - Cloud Software Developement"> -- Cloud Software Developement</option>
-                          <option value="IT Services - Application Enhancement"> -- Application Enhancement</option>
-                          <option value="IT Services - UI/UX Developement and Design"> -- UI/UX Developement and Design</option>
-                          <option value="IT Services - Mobile Application Developement"> -- Mobile Application Developement</option>
-                          <option value="IT Services - Full Life Cycle Software Testing"> -- Full Life Cycle Software Testing</option>
-                          <option value="IT Services - Dedicated In House Programmer"> -- Dedicated In House Programmer</option>
-                          <option>HR Services</option>
-                          <option value="HR Services - Recruitment & Head Hunting"> -- Recruitment & Head Hunting</option>
-                          <option value="HR Services - Contract & Temporary Staffing"> -- Contract & Temporary Staffing</option>
-                          <option value="HR Services - Payroll"> -- Payroll</option>
-                          <option>ERP Solution</option>
-                          <option value="ERP Solution - ERP Solutions"> --- ERP Solutions</option>
-                          <option value="ERP Solution - HR Solutions"> --- HR Solutions</option>
-                          <option value="ERP Solution - SLIK"> --- SLIK</option>
-                          <option>Others</option>
+                        <label class="label-control">Project Category</label>
+                      </div>
+                      <div class="col-md-12">
+                        <select class="form-control" name="project_category_id" disabled="true">
+                          <option value="">Select Project Category</option>
+                          @foreach(list_parent() as $item)
+                          <option value="{{ $item->id }}" data-child="{{ $item->child }}">{{ $item->name }}</option>
+                          @endforeach
                         </select>
                       </div>
+                    </div>
+                  </div>
+                  <div class="form-body">
+                    <div class="form-group" id="ProductList" style="display: none;">
+                      <div class="col-md-12">
+                        <label class="label-control">Product List</label>
+                      </div>
+                      <div class="col-md-12" id="ChildList">
+                      </div>
+                    </div>
                   </div>
                   <div class="form-body">
                     <div class="form-group">
@@ -1174,7 +1196,6 @@
                       </div>
                     </div>
                   </div>
-
                   <div class="form-body">
                     <div class="form-group">
                       <div class="col-md-6 float-left">
@@ -1183,7 +1204,6 @@
                       <div class="col-md-6 float-left">
                         <label class="label-control">Project Value</label>
                       </div>
-                      
                       <div class="col-md-6 float-left">
                         <select class="form-control" name="pipeline_status">
                           <option value="">Select Status</option>
@@ -1198,6 +1218,33 @@
                       <div class="clearfix"></div>
                     </div>
                   </div>
+
+                  <div class="form-body">
+                    <div class="form-group">
+                      <div class="col-md-6 float-left">
+                        <label class="label-control">Project Type</label>
+                      </div>
+                      <div class="col-md-6 float-right">
+                        <label class="label-control" id="divLabelDuration" style="display: none; text-align: left;">Duration(Day/s)</label>
+                        <label class="label-control" id="divLabelLicense" style="display: none; text-align: left;">License Number</label>
+                      </div>
+                      <div class="clearfix"></div>
+                      <div class="col-md-6 float-left">
+                        <select class="form-control" name="project_type" id="project_type" required>
+                          <option value="0">Select Type</option>
+                          @foreach(list_type_project() as $key => $val)
+                          <option value="{{ $key }}">{{ $val }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="col-md-6 float-right">
+                         <input type="number" class="form-control" name="durataion" placeholder="Duration(Day/s)" aria-describedby="basic-addon2" id="durataion" style="display: none;">
+                         <input type="text" class="form-control" id="license_number" name="license_number" style="display: none;">
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -1298,7 +1345,26 @@
 
 @section('js')
 <script type="text/javascript">
-  
+  $("select[name='project_type']").on('change', function(){
+    var el = $(this).find(":selected").val();
+    if(el == 1)
+    {
+      document.getElementById('divLabelDuration').style.display = "none";
+      document.getElementById('durataion').style.display = "none";
+      document.getElementById('divLabelLicense').style.display = "block";
+      document.getElementById('license_number').style.display = "block";
+    }
+    if(el == 2)
+    {   
+      document.getElementById('divLabelLicense').style.display = "none";
+      document.getElementById('license_number').style.display = "none";
+      document.getElementById('divLabelDuration').style.display = "block";
+      document.getElementById('durataion').style.display = "block";
+    } 
+  });
+</script>>
+
+<script type="text/javascript"> 
   function show_description(el)
   {
     $(el).parent().next().slideToggle("slow");
@@ -1308,14 +1374,79 @@
   {
     $("#form-edit-card input[name='id']").val($(el).data('id'));
     $("#form-edit-card select[name='crm_client_id']").val($(el).data('crm_client_id'));
-    $("#form-edit-card select[name='project_category']").val($(el).data('project_category'));
+    $("#form-edit-card select[name='project_category_id']").val($(el).data('project_category_id'));
     $("#form-edit-card input[name='name']").val($(el).data('name'));
     $("#form-edit-card select[name='pipeline_status']").val($(el).data('pipeline_status'));
     $("#form-edit-card input[name='price']").val($(el).data('price'));
+    $("#form-edit-card select[name='project_type']").val($(el).data('project_type'));
+    $("#form-edit-card input[name='durataion']").val($(el).data('durataion'));
+    $("#form-edit-card input[name='license_number']").val($(el).data('license_number'));
     $("#form-edit-card textarea[name='description']").val($(el).data('description'));
     $("#form-edit-card input[name='color']").val($(el).data('color'));
+    
+    //
+    //crm_product_id
+    //limit_user
 
     $("#modal_edit_card").modal("show");
+        var project = $("select[name='project_category_id'] :selected");
+        var valSelect = project.val();
+        if(valSelect > 0)
+        {
+          document.getElementById('ProductList').style.display = "block";
+          var html ='';
+            $(project.data('child')).each(function(k,v){
+              var a = v.user_limit;
+              html +='<p style="margin-bottom: 4px">';
+              //var produk = $(el).data('project_product');
+              var check='';
+              var limit ='';
+              $($(el).data('project_product')).each(function(i,j){
+                if(j.crm_product_id == v.id){
+                  check = 'checked';
+                  if(j.limit_user > 0){
+                      limit = j.limit_user;
+                  }
+                  if(j.limit_user == null){
+                    limit='';
+                  }
+                }
+              });
+              html += '<label><input type="checkbox" style="margin-right: 10px;" '+check+' name="project_product_id['+v.id+']" value="'+v.id+'">'+ v.name+'</label>';
+              if(a == 1)
+                html += '<input type="text" style="margin-left: 20px;" value="'+limit+'" class="form-control" name="limit_user['+v.id+']" placeholder="User Limit">';
+              html +='</p>';
+            });
+          $('#ChildList').html(html);
+        }else{
+          document.getElementById('ProductList').style.display = "none";
+        }
+
+        //project type
+        var projectType = $("select[name='project_type'] :selected");
+        var valSelectType = projectType.val();
+
+        if(valSelectType <= 0)
+        {
+            document.getElementById('divLabelLicense').style.display = "none";
+            document.getElementById('license_number').style.display = "none";
+            document.getElementById('divLabelDuration').style.display = "none";
+            document.getElementById('durataion').style.display = "none";
+        }
+        if(valSelectType == 1)
+        {
+            document.getElementById('divLabelDuration').style.display = "none";
+            document.getElementById('durataion').style.display = "none";
+            document.getElementById('divLabelLicense').style.display = "block";
+            document.getElementById('license_number').style.display = "block";
+        }
+        if(valSelectType == 2)
+        {
+            document.getElementById('divLabelLicense').style.display = "none";
+            document.getElementById('license_number').style.display = "none";
+            document.getElementById('divLabelDuration').style.display = "block";
+            document.getElementById('durataion').style.display = "block"; 
+        }
   }
 
   function edit_update(el)
@@ -1502,10 +1633,26 @@
       dataType: 'json',
       success: function (data) {
         var html  = "";
+        var valueType = "";
+        var descriptionType = "";
         $.each(data.update, function(k,item){
 
+          if(item.value == null)
+          {
+            valueType = "";
+          }else{
+            valueType = item.value;
+          }
+
+          if(item.title == null)
+          {
+            descriptionType = "";
+          }else{
+            descriptionType = item.title;
+          }
+
           html += '<div class="mt-0 p-1" style="border-bottom: 1px solid #e4e7ed;">'+
-                      '<strong>'+ item.title +'</strong><br />'+ item.value;
+                      '<strong>'+ descriptionType +'</strong><br />'+ valueType;
 
           if(item.file != null)
           {
@@ -1546,7 +1693,6 @@
     calculate_start_date();
   });
 
-
   $("input[name='start_date']").on('change', function(){
     calculate_start_date();      
   });
@@ -1562,6 +1708,27 @@
     month = end_date.getMonth() + 1;
 
     $("input[name='end_date']").val( end_date.getFullYear() +'-'+ (month < 10 ? '0'+month : month)  +'-'+ end_date.getDate() );
+  }
+
+  $("input[name='monthQuo']").on('input', function(){
+    calculate_start_date_quo();
+  });
+
+  $("input[name='start_date_quo']").on('change', function(){
+    calculate_start_date_quo();      
+  });
+  
+  function calculate_start_date_quo()
+  {
+    var start_date = $("input[name='start_date_quo']").val();
+    
+    if(start_date == "") return false;
+
+    var end_date = new Date(start_date).addMonths(parseInt($("input[name='monthQuo']").val()));
+
+    month = end_date.getMonth() + 1;
+
+    $("input[name='end_date_quo']").val( end_date.getFullYear() +'-'+ (month < 10 ? '0'+month : month)  +'-'+ end_date.getDate() );
   }
 
   $("select[name='payment_method']").on('change', function(){
@@ -1583,8 +1750,12 @@
   function move_to_po(url, el)
   {
     $("input[name='po-auto-generate']").val($(el).data('po_number'));
+    //$("input[name='price']").val($(el).data('price'));
 
     $("#form-move-to-po input[name='price']").val($(el).data('price'));
+    $("#form-move-to-po input[name='month']").val($(el).data('month'));
+    $("#form-move-to-po input[name='start_date']").val($(el).data('start_date'));
+    $("#form-move-to-po input[name='end_date']").val($(el).data('end_date'));
 
     $("#form-move-to-po").attr('action', url);
 
@@ -1626,6 +1797,7 @@
   function move_to_quotation(action, el)
   {
     $("input[name='quotation_order']").val($(el).data('quotation_order'));
+    $("input[name='price']").val($(el).data('price'));
 
     $("#form-move-to-quotation").attr('action', action);
 

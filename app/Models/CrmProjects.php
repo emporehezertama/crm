@@ -52,4 +52,14 @@ class CrmProjects extends Model
     {
       return $this->hasMany('App\Models\CrmProjectPipeline', 'crm_project_id', 'id')->orderBy('id', 'DESC');
     }
+
+    public function projectCategory()
+    {
+      return $this->hasOne('App\Models\CrmProduct','id','project_category_id');
+    }
+
+    public function projectProduct()
+    {
+      return $this->hasMany('App\Models\ProjectProduct', 'crm_project_id', 'id');
+    }
 }

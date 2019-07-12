@@ -26,7 +26,7 @@
   <div class="content-body">
     <!-- Basic Tables start -->
     <div class="row">
-      <div class="col-12">
+      <div class="col-6">
         <div class="card">
           <div class="card-content collapse show">
             <div class="card-body mt-1">
@@ -35,27 +35,41 @@
                   <thead>
                     <tr>
                       <th style="width: 50px;">#</th>
-                      <th>Produk</th>
-                      <th>Description</th>
+                      <th>Product</th>
                       <th style="width: 50px;"></th>
                     </tr>
                   </thead>
                   <tbody>
-                   @foreach($data as $key => $item)
+                    @foreach($data as $key => $item)
                     <tr>
                       <td>{{ $key + 1 }}</td>
                       <td>{{ $item->name }}</td>
-                      <td>{{ $item->description }}</td>
                       <td width="100">
                         <form method="POST" action="{{ route('admin.product.destroy', $item->id) }}">
                           {{ csrf_field() }}
                           {{ method_field('DELETE') }}
-                          <a href="javascript:void(0)" class="text-danger" title="Delete data" onclick="confirm_delete('Hapus data ini ?', this)"><i class="la la-trash"></i></a>
+                          <a href="javascript:void(0)" class="text-danger" title="Delete data" onclick="confirm_delete('Delete this data?', this)"><i class="la la-trash"></i></a>
                           <a href="{{ route('admin.product.edit', $item->id) }}" title="Edit Data"><i class="la la-edit"></i></a>
                         </form>
                       </td>
                     </tr>
-                   @endforeach
+                    @if(isset($item->child))
+                      @foreach($item->child as $k => $items)
+                        <tr>
+                          <td>{{ $key + 1 }}.{{$k+1}}</td>
+                          <td>{{ $items->name }}</td>
+                          <td width="100">
+                            <form method="POST" action="{{ route('admin.product.destroy', $items->id) }}">
+                              {{ csrf_field() }}
+                              {{ method_field('DELETE') }}
+                              <a href="javascript:void(0)" class="text-danger" title="Delete data" onclick="confirm_delete('Delete this data?', this)"><i class="la la-trash"></i></a>
+                              <a href="{{ route('admin.product.edit', $items->id) }}" title="Edit Data"><i class="la la-edit"></i></a>
+                            </form>
+                          </td>
+                        </tr>
+                       @endforeach
+                    @endif
+                  @endforeach
                   </tbody>
                 </table>
                 <div class="col-m-6 pull-left text-left">Showing {{ $data->firstItem() }} to {{ $data->lastItem() }} of {{ $data->total() }} entries</div>
@@ -64,6 +78,9 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="col-6">
+        
       </div>
     </div>
   </div>

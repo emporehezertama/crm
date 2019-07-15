@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnClient3 extends Migration
+class AddColumnToProduct extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class AddColumnClient3 extends Migration
      */
     public function up()
     {
-        Schema::table('crm_client', function (Blueprint $table) {
-            $table->integer('user_id')->nullable();
+        Schema::table('crm_product', function (Blueprint $table) {
+            //
+            $table->integer('parent_id')->nullable();
+            $table->integer('user_limit')->nullable();
         });
     }
 
@@ -25,7 +27,7 @@ class AddColumnClient3 extends Migration
      */
     public function down()
     {
-        Schema::table('crm_client', function (Blueprint $table) {
+        Schema::table('crm_product', function (Blueprint $table) {
             //
         });
     }

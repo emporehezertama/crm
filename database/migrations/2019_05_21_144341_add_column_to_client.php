@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnCrmProjectPipeline4 extends Migration
+class AddColumnToClient extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddColumnCrmProjectPipeline4 extends Migration
      */
     public function up()
     {
-        Schema::table('crm_project_pipeline', function (Blueprint $table) {
-            $table->string('title')->nullable();
+        Schema::table('crm_client', function (Blueprint $table) {
+            //
+            $table->integer('status')->nullable();
         });
     }
 
@@ -25,7 +26,7 @@ class AddColumnCrmProjectPipeline4 extends Migration
      */
     public function down()
     {
-        Schema::table('crm_project_pipeline', function (Blueprint $table) {
+        Schema::table('crm_client', function (Blueprint $table) {
             //
         });
     }

@@ -11,6 +11,7 @@ use App\Models\CrmProjectItems;
 use App\Models\CrmProjectPaymentMethodSubscription;
 use App\Models\CrmProjectPaymentMethodPerpetualLicense;
 use App\Models\CrmProjectInvoice;
+use App\Models\ProjectProduct;
 
 class PipelineController extends Controller
 {
@@ -31,14 +32,15 @@ class PipelineController extends Controller
      */
     public function index()
     {
-        $seed           = CrmProjects::select('crm_projects.*')->where('pipeline_status', 1)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
-        $quotation      = CrmProjects::select('crm_projects.*')->where('pipeline_status', 2)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
-        $negotiation    = CrmProjects::select('crm_projects.*')->where('pipeline_status', 3)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
-        $po             = CrmProjects::select('crm_projects.*')->where('pipeline_status', 4)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
-        $cr             = CrmProjects::select('crm_projects.*')->where('pipeline_status', 5)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
-        $po_done        = CrmProjects::select('crm_projects.*')->where('pipeline_status', 6)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_projects.updated_at', 'DESC');
-        $invoice        = CrmProjectInvoice::select('crm_project_invoice.*')->where('status', '0')->join('crm_projects', 'crm_projects.id','=','crm_project_invoice.crm_project_id')->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_project_invoice.updated_at', 'DESC');
-        $payment_receive= CrmProjectInvoice::select('crm_project_invoice.*')->where('status', 1)->join('crm_projects', 'crm_projects.id','=','crm_project_invoice.crm_project_id')->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->orderBy('crm_project_invoice.updated_at', 'DESC');
+        $seed           = CrmProjects::select('crm_projects.*')->where('pipeline_status', 1)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->join('crm_product','crm_product.id','=','crm_projects.project_category_id')->orderBy('crm_projects.updated_at', 'DESC');
+
+        $quotation      = CrmProjects::select('crm_projects.*')->where('pipeline_status', 2)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->join('crm_product','crm_product.id','=','crm_projects.project_category_id')->orderBy('crm_projects.updated_at', 'DESC');
+        $negotiation    = CrmProjects::select('crm_projects.*')->where('pipeline_status', 3)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->join('crm_product','crm_product.id','=','crm_projects.project_category_id')->orderBy('crm_projects.updated_at', 'DESC');
+        $po             = CrmProjects::select('crm_projects.*')->where('pipeline_status', 4)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->join('crm_product','crm_product.id','=','crm_projects.project_category_id')->orderBy('crm_projects.updated_at', 'DESC');
+        $cr             = CrmProjects::select('crm_projects.*')->where('pipeline_status', 5)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->join('crm_product','crm_product.id','=','crm_projects.project_category_id')->orderBy('crm_projects.updated_at', 'DESC');
+        $po_done        = CrmProjects::select('crm_projects.*')->where('pipeline_status', 6)->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->join('crm_product','crm_product.id','=','crm_projects.project_category_id')->orderBy('crm_projects.updated_at', 'DESC');
+        $invoice        = CrmProjectInvoice::select('crm_project_invoice.*')->where('crm_project_invoice.status', '0')->join('crm_projects', 'crm_projects.id','=','crm_project_invoice.crm_project_id')->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->join('crm_product','crm_product.id','=','crm_projects.project_category_id')->orderBy('crm_project_invoice.updated_at', 'DESC');
+        $payment_receive= CrmProjectInvoice::select('crm_project_invoice.*')->where('crm_project_invoice.status', 1)->join('crm_projects', 'crm_projects.id','=','crm_project_invoice.crm_project_id')->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')->join('crm_product','crm_product.id','=','crm_projects.project_category_id')->orderBy('crm_project_invoice.updated_at', 'DESC');
 
         if(isset($_GET['search']) and $_GET['search'] != "")
         {
@@ -235,7 +237,29 @@ class PipelineController extends Controller
         $item->status               = 2;
         $item->item                 = 'price';
         $item->value                = replace_idr($request->price);
-        $item->save(); 
+        $item->save();
+
+        $item                       = new CrmProjectItems();
+        $item->crm_project_id       = $project->id;
+        $item->status               = 2;
+        $item->item                 = 'month';
+        $item->value                = $request->monthQuo;
+        $item->save();
+
+        $item                       = new CrmProjectItems();
+        $item->crm_project_id       = $project->id;
+        $item->status               = 2;
+        $item->item                 = 'start_date';
+        $item->value                = $request->start_date_quo;
+        $item->save();
+
+        $item                       = new CrmProjectItems();
+        $item->crm_project_id       = $project->id;
+        $item->status               = 2;
+        $item->item                 = 'end_date';
+        $item->value                = $request->end_date_quo;
+        $item->save();
+
 
         if (isset($fileName))
         {
@@ -520,7 +544,7 @@ class PipelineController extends Controller
     public function updateCard(Request $request)
     {
         $data                       = CrmProjects::where('id', $request->id)->first();
-        $data->crm_client_id        = $request->crm_client_id;
+        //$data->crm_client_id        = $request->crm_client_id;
         $data->price                = replace_idr($request->price);
         $data->description          = $request->description; 
         $data->color                = $request->color; 
@@ -528,6 +552,10 @@ class PipelineController extends Controller
         $data->name                 = $request->name;
         $data->project_category     = $request->project_category;
         $data->sales_id             = \Auth::user()->id;
+
+        $data->project_type         = $request->project_type;
+        $data->license_number   = $request->license_number;
+        $data->durataion         = $request->durataion;
 
         if ($request->hasFile('file'))
         {
@@ -552,6 +580,77 @@ class PipelineController extends Controller
             $item->save();
         }
 
+        //cek data projectproductnya dia sebelumnya trus cek yang di ceklis dia
+        
+        /*$dataProduct = ProjectProduct::where('crm_project_id',$data->id)->get()->each->delete();
+        
+        foreach ($request->project_product_id as $key => $value) {
+            $val = isset($value) ? 1 : 0;
+            # code...
+            if($val == 1) {
+                $product = new ProjectProduct();
+                $product->crm_project_id  = $data->id;
+                $product->crm_product_id  = $request->project_product_id[$key];
+                if(isset($request->limit_user[$key])){
+                    $product->limit_user      = $request->limit_user[$key];
+                }
+                $product->save();
+            }
+        }
+        */
+
+        if($request->project_product_id != null) {
+            ProjectProduct::whereNotIn('crm_product_id',$request->project_product_id)->where('crm_project_id',$data->id)->delete();
+            foreach ($request->project_product_id as $key => $value) {
+                $product = ProjectProduct::where('crm_product_id',$value)->where('crm_project_id',$data->id)->first();
+                if(!$product)
+                {
+                    $product = new ProjectProduct();
+                    $product->crm_project_id  = $data->id;
+                    $product->crm_product_id  = $request->project_product_id[$key];
+                    if(isset($request->limit_user[$key])){
+                        $product->limit_user      = $request->limit_user[$key];
+                    }
+                    $product->save();
+                }
+            }
+        } else{
+            ProjectProduct::where('crm_project_id',$data->id)->delete();
+        }
+        
+        //jika project_id = 1 update ke server
+        if($data->project_category_id == 1)
+        {
+            //send to api
+            $dataAPI   = CrmProjects::select('crm_projects.id as project_id','crm_projects.name as project_name','crm_client.name as client_name','crm_projects.user_name','crm_projects.password','project_product.crm_product_id','project_product.limit_user','crm_product.name as modul_name')
+            ->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')
+            ->join('project_product', 'project_product.crm_project_id','=','crm_projects.id')
+            ->join('crm_product','project_product.crm_product_id','=','crm_product.id')
+            ->where('crm_projects.id', $data->id);
+
+            $dataSend = clone $dataAPI;
+
+            foreach ($dataSend->get() as $key => $value) {
+                # code...
+                $ch = curl_init();
+                $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&user_name=$value->user_name&password=$value->password&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name";
+
+                $url = 'http://api.em-hr.co.id/update-modul-hris';
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                
+                $html = curl_exec($ch);
+
+                if (curl_errno($ch)) 
+                {
+                    print curl_error($ch);
+                }
+                curl_close($ch);
+                //dd($html);
+            }
+        }
         return redirect()->route('pipeline.index')->with('message-success', 'Card Updated');
     }
 
@@ -561,6 +660,13 @@ class PipelineController extends Controller
      */
     public function store(Request $request)
     {
+        if($request->project_category_id == 1) {
+            $this->validate($request,[
+            'user_name' => 'required|unique:crm_projects',
+            'password' => 'required',
+            ]);
+        }
+
         $data                       = new CrmProjects();
         $data->crm_client_id        = $request->crm_client_id;
         $data->price                = replace_idr($request->price);
@@ -569,7 +675,18 @@ class PipelineController extends Controller
         $data->pipeline_status      = $request->pipeline_status;
         $data->name                 = $request->name;
         $data->project_category     = $request->project_category;
+        $data->project_category_id  = $request->project_category_id;
         $data->sales_id             = \Auth::user()->id;
+        $data->user_name            = $request->user_name;
+        $data->password             = bcrypt($request->password);
+        $data->project_type         = $request->project_type;
+        if($request->project_type == 1){
+            $data->license_number   = $request->license_number;
+        }
+        if($request->project_type == 2){
+            $data->durataion            = $request->durataion;
+            $data->expired_date         = $request->expired_date;
+        }
 
         if ($request->hasFile('file'))
         {
@@ -582,12 +699,34 @@ class PipelineController extends Controller
             $data->file = $fileName;
         }
         $data->save();
-
+        if($request->project_product_id != null)
+        {
+            foreach ($request->project_product_id as $key => $value) {
+                $val = isset($value) ? 1 : 0;
+                if($val == 1){
+                # code...
+                    $product = new ProjectProduct();
+                    $product->crm_project_id  = $data->id;
+                    $product->crm_product_id  = $request->project_product_id[$key];
+                    if(isset($request->limit_user[$key])){
+                        $product->limit_user      = $request->limit_user[$key];
+                    }
+                    $product->save();
+                }
+            }
+        }
+        
         $item                       = new CrmProjectItems();
         $item->crm_project_id       = $data->id;
         $item->status               = 1;
         $item->item                 = 'price';
         $item->value                = replace_idr($request->price);
+        $item->save();
+        $item                       = new CrmProjectItems();
+        $item->crm_project_id       = $data->id;
+        $item->status               = 1;
+        $item->item                 = 'type';
+        $item->value                = $request->project_type;
         $item->save();
 
         if(isset($fileName))
@@ -600,6 +739,57 @@ class PipelineController extends Controller
             $item->save();
         }
 
+        if($data->project_category_id == 1)
+        {
+            //send to api
+            $dataAPI   = CrmProjects::select('crm_projects.id as project_id','crm_projects.name as project_name','crm_client.name as client_name','crm_projects.user_name','crm_projects.password','project_product.crm_product_id','project_product.limit_user','crm_product.name as modul_name')
+            ->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')
+            ->join('project_product', 'project_product.crm_project_id','=','crm_projects.id')
+            ->join('crm_product','project_product.crm_product_id','=','crm_product.id')
+            ->where('crm_projects.id', $data->id);
+
+            $dataSend = clone $dataAPI;
+
+            foreach ($dataSend->get() as $key => $value) {
+                # code...
+                $ch = curl_init();
+                $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name";
+
+                $url = 'http://192.168.112.125:8001/set-modul-hris';
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                
+                $html = curl_exec($ch);
+
+                if (curl_errno($ch)) 
+                {
+                    print curl_error($ch);
+                }
+                curl_close($ch);
+                //dd($html);
+            }
+
+            $dataUser = $dataAPI->first();
+            $data = "project_id=$dataUser->project_id&user_name=$dataUser->user_name&password=$dataUser->password";
+            
+            $ch = curl_init();
+            $url = 'http://api.em-hr.co.id/set-user-hris';
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                
+            $html = curl_exec($ch);
+
+            if (curl_errno($ch)) 
+            {
+                print curl_error($ch);
+            }
+            curl_close($ch);
+
+        }
         return redirect()->route('pipeline.index')->with('message-success', 'Card created');
     }
 

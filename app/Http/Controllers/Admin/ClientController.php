@@ -76,6 +76,7 @@ class ClientController extends Controller
         $client->pic_name               = $request->pic_name;
         $client->pic_email              = $request->pic_email;
         $client->pic_telepon            = $request->pic_telepon;
+        $client->status                 = $request->status;
 
         if ($request->hasFile('foto'))
         {
@@ -120,6 +121,7 @@ class ClientController extends Controller
         $client->pic_name               = $request->pic_name;
         $client->pic_email              = $request->pic_email;
         $client->pic_telepon            = $request->pic_telepon;
+        $client->status                 = $request->status;
 
         if ($request->hasFile('foto'))
         {

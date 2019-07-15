@@ -23,28 +23,31 @@
         <div class="card">
           <div class="card-content collapse show">
             <div class="card-body">
-              <form class="form form-horizontal" method="POST" action="{{ route('admin.product.store') }}">
+              <form class="form form-horizontal" method="POST" action="{{ route('admin.product.update', $data->id) }}">
                 {{ csrf_field() }}
+                <input type="hidden" name="_method" value="PUT">
                 <div class="form-body">
+                  @if($data->parent_id != NULL)
                   <div class="form-group">
                     <div class="col-md-9">
                       <label class="label-control">Parent</label>
                     </div>
                     <div class="col-md-5">
                       <select class="form-control" name="parent_id">
-                        <option value=""> Select Parent </option>
+                          <option value=""> Select Parent </option>
                           @foreach(list_parent() as $item)
-                          <option value="{{ $item->id }}">{{ $item->name }}</option>
+                          <option value="{{ $item->id }}" {{ $data->parent_id == $item->id ? 'selected' : '' }} >{{ $item->name }}</option>
                           @endforeach
-                      </select>
+                        </select>
                     </div>
                   </div>
+                  @endif
                   <div class="form-group">
                     <div class="col-md-9">
                       <label class="label-control">Product</label>
                     </div>
                     <div class="col-md-5">
-                      <input type="text" class="form-control" placeholder="Product" name="name">
+                      <input type="text" class="form-control" placeholder="Product" name="name" value="{{ $data->name }}">
                     </div>
                   </div>
                   <div class="form-group">
@@ -52,7 +55,7 @@
                       <label class="label-control">User Limit?</label>
                     </div>
                     <div class="col-md-5">
-                      <label><input type="checkbox" name="user_limit" value="1" style="margin-right: 10px">Yes</label>
+                      <label><input type="checkbox" name="user_limit" style="margin-right: 10px" value="1" {{ $data->user_limit == 1 ? 'checked' : '' }} >Yes</label>
                     </div>
                   </div>
                   <div class="form-group">
@@ -60,7 +63,7 @@
                       <label class="label-control">Description</label>
                     </div>
                     <div class="col-md-5">
-                      <textarea class="form-control" name="description" style="height: 150px;" placeholder="Typing here .."></textarea>
+                      <textarea class="form-control" name="description" style="height: 150px;" placeholder="Typing here .." value="{{ $data->description }}"></textarea>
                     </div>
                   </div>
                   <div class="form-actions">

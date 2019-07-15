@@ -3,12 +3,25 @@
 @section('title', 'New Card')
 
 @section('content')
+ <form class="form form-horizontal" method="POST" id="form_card" autocomplete="off" name="form_card" enctype="multipart/form-data" action="{{ route('pipeline.store') }}">
+          {{ csrf_field() }}
+          @if (count($errors) > 0)
+                            <div class="alert alert-danger">
+                                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                                <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
 <div class="content-wrapper">
   <div class="content-header row">
     <div class="content-header-left col-md-12 col-12 mb-2">
       <h3 class="content-header-title mb-0">New Card</h3>
       <div class="float-right">
-        <button type="submit" class="btn btn-info btn-sm" onclick="document.getElementById('form_card').submit()"><i class="ft ft-save"></i> Save Card</button>
+        <button type="submit" class="btn btn-info btn-sm" ><i class="ft ft-save"></i> Save Card</button>
       </div>
       <div class="row breadcrumbs-top">
         <div class="breadcrumb-wrapper col-12">
@@ -25,8 +38,7 @@
   <div class="content-body">
     <div class="row">
       <div class="col-12 px-0">
-        <form class="form form-horizontal" method="POST" id="form_card" autocomplete="off" name="form_card" enctype="multipart/form-data" action="{{ route('pipeline.store') }}">
-          {{ csrf_field() }}
+       
           <div class="col-6 float-left">
              <div class="card">
               <div class="card-content collapse show">
@@ -37,7 +49,7 @@
                         <label class="label-control">Client / Customer</label>
                       </div>
                       <div class="col-md-12">
-                        <select class="form-control" name="crm_client_id">
+                        <select class="form-control" name="crm_client_id" required>
                           <option value="">Select Client / Customer</option>
                           @foreach(list_client() as $item)
                           <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -49,27 +61,37 @@
                   <div class="form-group">
                       <label class="col-md-12">Project Category</label>
                       <div class="col-md-12">
-                        <select class="form-control" name="project_category">
-                          <option>IT Services</option>
-                          <option value="IT Services - Custome Software Development"> -- Custome Software Development</option>
-                          <option value="IT Services - SaaS Application Developement"> -- SaaS Application Developement</option>
-                          <option value="IT Services - Cloud Software Developement"> -- Cloud Software Developement</option>
-                          <option value="IT Services - Application Enhancement"> -- Application Enhancement</option>
-                          <option value="IT Services - UI/UX Developement and Design"> -- UI/UX Developement and Design</option>
-                          <option value="IT Services - Mobile Application Developement"> -- Mobile Application Developement</option>
-                          <option value="IT Services - Full Life Cycle Software Testing"> -- Full Life Cycle Software Testing</option>
-                          <option value="IT Services - Dedicated In House Programmer"> -- Dedicated In House Programmer</option>
-                          <option>HR Services</option>
-                          <option value="HR Services - Recruitment & Head Hunting"> -- Recruitment & Head Hunting</option>
-                          <option value="HR Services - Contract & Temporary Staffing"> -- Contract & Temporary Staffing</option>
-                          <option value="HR Services - Payroll"> -- Payroll</option>
-                          <option>ERP Solution</option>
-                          <option value="ERP Solution - ERP Solutions"> --- ERP Solutions</option>
-                          <option value="ERP Solution - HR Solutions"> --- HR Solutions</option>
-                          <option value="ERP Solution - SLIK"> --- SLIK</option>
-                          <option>Others</option>
-                        </select>
+                        <select class="form-control" name="project_category_id" required>
+                        <option value=""> Select Project Category </option>
+                          @foreach(list_parent() as $item)
+                          <option value="{{ $item->id }}" data-child="{{ $item->child }}">{{ $item->name }}</option>
+                          @endforeach
+                      </select>
                       </div>
+                  </div>
+                  <div class="form-group" id="ProductList" style="display: none;">
+                    <label class="col-md-12" style="margin-bottom: 15px">Product List</label>
+                     </br>
+                    <div class="col-md-12" id="ChildList">
+                    </div>
+                  </div>
+                    <div class="form-body">
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <label class="label-control">User Name</label>
+                      </div>
+                      <div class="col-md-12">
+                        <input type="text" class="form-control" name="user_name">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <label class="label-control">Password</label>
+                      </div>
+                      <div class="col-md-12">
+                        <input type="password" class="form-control" name="password">
+                      </div>
+                    </div>
                   </div>
                   <div class="form-body">
                     <div class="form-group">
@@ -77,12 +99,10 @@
                         <label class="label-control">Project Name</label>
                       </div>
                       <div class="col-md-12">
-                        <input type="text" class="form-control" name="name">
+                        <input type="text" class="form-control" name="name" required>
                       </div>
                     </div>
                   </div>
-                  
-                 
                   <div class="form-body">
                     <div class="form-group">
                       <div class="col-md-6 float-left">
@@ -91,9 +111,8 @@
                       <div class="col-md-6 float-left">
                         <label class="label-control">Project Value</label>
                       </div>
-                      
                       <div class="col-md-6 float-left">
-                        <select class="form-control" name="pipeline_status">
+                        <select class="form-control" name="pipeline_status" required>
                           <option value="">Select Status</option>
                           @foreach(list_pipeline_status() as $key => $val)
                           <option value="{{ $key }}">{{ $val }}</option>
@@ -106,6 +125,43 @@
                       <div class="clearfix"></div>
                     </div>
                   </div>
+
+                <div class="form-body">
+                    <div class="form-group">
+                      <div class="col-md-6 float-left">
+                        <label class="label-control">Project Type</label>
+                      </div>
+                      <div class="col-md-6 float-right">
+                        <label class="label-control" id="divLabelDuration" style="display: none; text-align: left;">Duration(Day/s)</label>
+                        <label class="label-control" id="divLabelLicense" style="display: none; text-align: left;">License Number</label>
+                      </div>
+                      <div class="clearfix"></div>
+                      <div class="col-md-6 float-left">
+                        <select class="form-control" name="project_type" required>
+                          <option value="">Select Type</option>
+                          @foreach(list_type_project() as $key => $val)
+                          <option value="{{ $key }}">{{ $val }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="col-md-6 float-right">
+                        <input type="number" class="form-control" name="durataion" placeholder="Duration(Day/s)" aria-describedby="basic-addon2" id="durataion" style="display: none;">
+                        <input type="text" class="form-control" id="license_number" name="license_number" style="display: none;">
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                  </div>
+                  <div class="form-body" id="divExpiredDate" style="display: none;">
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <label class="label-control">Expired Date </label>
+                      </div>
+                      <div class="col-md-12">
+                        <input type="text" class="form-control" readonly="true" name="expired_date" id="expired_date" placeholder="Expired Date">
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -144,12 +200,11 @@
               </div>
             </div>
           </div>
-          
           <div class="clearfix"></div>
-        </form>
     </div>
   </div>
 </div>
+</form>
 @section('js')
 <style type="text/css">
     .color{
@@ -169,7 +224,38 @@
 <link rel="stylesheet" href="{{ asset('app-assets/vendors/js/colorpicker/src/colorPick.css') }}">
 <script src="{{ asset('app-assets/vendors/js/colorpicker/src/colorPick.js') }}"></script> 
 <script type="text/javascript">
+  $("select[name='project_type']").on('change', function(){
+    var el = $(this).find(":selected").val();
+    if(el == 1)
+    {
+      document.getElementById('divLabelDuration').style.display = "none";
+      document.getElementById('durataion').style.display = "none";
+      document.getElementById('divExpiredDate').style.display = "none";
+      document.getElementById('divLabelLicense').style.display = "block";
+      document.getElementById('license_number').style.display = "block";
+    }
+    if(el == 2)
+    {   
+      document.getElementById('divLabelLicense').style.display = "none";
+      document.getElementById('license_number').style.display = "none";
+      document.getElementById('divLabelDuration').style.display = "block";
+      document.getElementById('durataion').style.display = "block";
+      document.getElementById('divExpiredDate').style.display = "block";
+    } 
+  });
 
+  $("input[name='durataion']").on('input', function(){
+   var dt = new Date();
+   var value = parseInt($("input[name='durataion']").val());
+   dt.setDate(dt.getDate() + value);
+   //$("input[name='expired_date']").val(dt); 
+   
+   month = dt.getMonth() + 1 ;
+
+   $("input[name='expired_date']").val( dt.getFullYear() +'-'+ (month < 10 ? '0'+month : month) +'-'+ dt.getDate() );
+
+  });
+  
     $(".color").colorPick({
         'initialColor' : '#E74C3C',
         'onColorSelected': function(){
@@ -177,6 +263,27 @@
           this.element.css({'backgroundColor': this.color, 'color': this.color});
         }
     });
+    $("select[name='project_category_id']").on('change', function(){
+        var el = $(this).find(":selected");
+        var valSelect = el.val();
+        if(valSelect > 0)
+        {
+          document.getElementById('ProductList').style.display = "block";
+          var html ='';
+            $(el.data('child')).each(function(k,v){
+              var a = v.user_limit;
+              html +='<p style="margin-bottom: 4px">';
+              html += '<label><input type="checkbox" style="margin-right: 10px;" name="project_product_id['+v.id+']" value="'+v.id+'">'+ v.name+'</label>';
+              if(a == 1)
+                html += '<input type="text" style="margin-left: 20px;"  class="form-control" name="limit_user['+v.id+']" placeholder="User Limit">';
+              html +='</p>';
+            });
+          $('#ChildList').html(html);
+        }else{
+          document.getElementById('ProductList').style.display = "none";
+        }
+    });
+   
 </script>
 @endsection
 @endsection

@@ -25,7 +25,7 @@ class ProductController extends Controller
      */
     public function index()
     {   
-        $params['data'] = CrmProduct::paginate(50);
+        $params['data'] = CrmProduct::whereNull('parent_id')->paginate(50);
 
         return view('admin.product.index')->with($params);
     }
@@ -38,7 +38,6 @@ class ProductController extends Controller
     {
         return view('admin.product.create');
     }
-
     /**
      * Store Product
      * @param  Request $request
@@ -46,7 +45,11 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $data                           = new CrmProduct();
+        $data               = new CrmProduct();
+        $data->parent_id    = $request->parent_id;
+        $data->name         = $request->name;
+        $data->user_limit   = isset($request->user_limit) ? 1 : 0;
+        $data->description  = $request->description;
         $data->save();
 
         return redirect()->route('admin.product.index')->with('message-success', 'Product saved.');
@@ -70,7 +73,11 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data                           = CrmProduct::where('id', $id)->first();
+        $data               = CrmProduct::where('id', $id)->first();
+        $data->parent_id    = $request->parent_id;
+        $data->name         = $request->name;
+        $data->user_limit   = isset($request->user_limit) ? 1 : 0;
+        $data->description  = $request->description;
 
         $data->save();
 
@@ -85,6 +92,8 @@ class ProductController extends Controller
     {
         $data = CrmProduct::where('id', $id)->first();
         $data->delete();
+
+        $child = CrmProduct::where('parent_id', $id)->delete();
 
         return redirect()->route('admin.product.index')->with('message-success', 'Deleted');
     }

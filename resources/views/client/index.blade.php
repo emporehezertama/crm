@@ -18,12 +18,35 @@
       </div>
     </div>
     <div class="content-header-right text-md-right col-md-6 col-12">
+<<<<<<< HEAD
       <div class="btn-group">
         <a id="importDataClient" class="btn btn-round btn-info"><i class="ft ft-plus"></i>Import Data Client</a>
       </div>
       <div class="btn-group">
         <a href="{{ route('client.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Cient / Customer</a>
+=======
+      <div class="col-md-4 float-right">
+        <div class="btn-group">
+          <a href="{{ route('client.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Cient / Customer</a>
+        </div>
       </div>
+       <div class="col-md-6 float-right text-right">
+          <form method="GET" action="" name="form_search" id="form_search" autocomplete="off">
+            <fieldset class="form-group position-relative">
+              <input type="text" class="form-control round" name="search" id="iconLeft11" value="{{ (isset($_GET['search']) and $_GET['search'] != "") ? $_GET['search'] : '' }}" placeholder="Search Company Name, Sales/Marketing, Telepon, Address, Email">
+              <div class="form-control-position"><i style="cursor: pointer;" onclick="document.getElementById('form_search').submit();" class="ft ft-search primary"></i>
+              </div>
+            </fieldset>
+          </form>
+>>>>>>> 86b8b4c8b91b7ee6c50de2a77bb3c7d0e907ca19
+      </div>
+<!--
+      <form method="GET" action="" style="float: left; width: 40%;">
+          <div class="form-group">
+            <input type="text" name="keyword-client" class="form-control" style="float:right;width: 100%;margin-right: -210px;" placeholder="Search Client Here...">
+          </div>
+      </form>
+      -->
     </div>
   </div>
   <div class="content-body">
@@ -33,7 +56,7 @@
           <div class="card-content collapse show">
             <div class="card-body pt-1 pl-1 pr-1 ">
               <div class="table-responsive">
-                <table class="table table-striped table-bordered data-table">
+                <table class="table table-striped table-bordered">
                   <thead>
                     <tr>
                       <th style="width: 50px;">#</th>

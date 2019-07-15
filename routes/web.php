@@ -59,6 +59,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
 	Route::post('setting/update', 'SettingController@update')->name('admin.setting.update');
 	Route::post('profile/update', 'IndexController@profileUpdate')->name('admin.profile.update');
 	Route::post('profile/change-password', 'IndexController@changePassword')->name('admin.profile.change-password');
+	Route::post('client/importClient', 'ClientController@importClient')->name('client.importClient');
 });
 
 Route::group(['prefix' => 'sales', 'middleware' => ['auth', 'access:4']], function(){

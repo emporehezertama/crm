@@ -18,6 +18,13 @@
       </div>
     </div>
     <div class="content-header-right text-md-right col-md-6 col-12">
+<<<<<<< HEAD
+      <div class="btn-group">
+        <a id="importDataClient" class="btn btn-round btn-info"><i class="ft ft-plus"></i>Import Data Client</a>
+      </div>
+      <div class="btn-group">
+        <a href="{{ route('client.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Cient / Customer</a>
+=======
       <div class="col-md-4 float-right">
         <div class="btn-group">
           <a href="{{ route('client.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Cient / Customer</a>
@@ -31,6 +38,7 @@
               </div>
             </fieldset>
           </form>
+>>>>>>> 86b8b4c8b91b7ee6c50de2a77bb3c7d0e907ca19
       </div>
 <!--
       <form method="GET" action="" style="float: left; width: 40%;">
@@ -95,4 +103,68 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+
+<!-- MODAL -->
+<div class="modal fade text-left" id="modal-import-client" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel1">Import Data</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {{ csrf_field() }}   
+            <!-- payment method  Perpetual License -->
+            <div class="form-body perpetual_license">
+              <div class="form-group mb-2">
+                <form method="POST" id="form-upload" enctype="multipart/form-data" class="form-horizontal" action="{{ route('client.importClient') }}">
+                    {{ csrf_field() }}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-md-3">File (xls)</label>
+                            <div class="col-md-9">
+                                <input type="file" name="file" class="form-control">
+                            </div>
+                        </div>
+                        <!--a href="http://emhr.local/administrator/payroll/download"><i class="fa fa-download"></i> Download Sample Excel</a-->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect btn-sm" data-dismiss="modal">Close</button>
+                        <label class="btn btn-info btn-sm" id="btn_import">Import</label>
+                    </div>
+                </form>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+@section('js')
+<script type="text/javascript">
+
+  $('#importDataClient').click(function(){
+    $('#modal-import-client').modal('show');
+  });
+
+  $("#btn_import").click(function(){
+    if($("input[type='file']").val() == "")
+    {
+        bootbox.alert('File harus dipilih');
+        return false;
+    }
+
+    $("#form-upload").submit();
+    $("#form-upload").hide();
+    $('.div-proses- ').show();
+
+  });
+</script>
 @endsection

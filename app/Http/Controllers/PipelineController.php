@@ -755,7 +755,7 @@ class PipelineController extends Controller
                 $ch = curl_init();
                 $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name";
 
-                $url = 'http://192.168.112.125:8001/set-modul-hris';
+                $url = 'http://api.em-hr.co.id/set-modul-hris';
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($ch, CURLOPT_POST, true);

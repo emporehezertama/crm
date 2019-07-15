@@ -7,6 +7,9 @@ use App\Models\CrmClient;
 use App\Models\Users;
 use App\Http\Controllers\Controller;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class ClientController extends Controller
 {
     /**
@@ -157,5 +160,59 @@ class ClientController extends Controller
         $data->delete();
 
         return redirect()->route('sales.client.index')->with('message-success', 'Deleted');
+    }
+
+
+    public function importClient(Request $request)
+    {
+        $this->validate($request, [
+	        'file' => 'required',
+        ]);
+        
+        if($request->hasFile('file'))
+        {
+            
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file);
+            $worksheet = $spreadsheet->getActiveSheet();
+            $rows = [];
+            foreach ($worksheet->getRowIterator() AS $row) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE); // This loops through all cells,
+                $cells = [];
+                foreach ($cellIterator as $cell) {
+                    $cells[] = $cell->getValue();
+                }
+                $rows[] = $cells;
+            }
+
+            foreach($rows as $key => $row)
+            {
+                $count_row = 5;
+                if($key ==0) continue;
+                
+                $fullname           = $row[0];
+                $email              = $row[1];
+                $jabatan            = $row[2];
+                $bidang_usaha       = $row[3];
+                $nama_perusahaan    = $row[4];
+                $handphone          = $row[5];
+
+                $user                           = new Users();
+                $user->name                     = $nama_perusahaan;
+                $user->email                    = $email;
+                $user->save();
+
+                $client                         = new CrmClient();
+                $client->name                   = $nama_perusahaan;
+                $client->handphone              = $handphone;
+                $client->email                  = $email;
+                $client->pic_name               = $fullname;
+                $client->pic_email              = $email;
+                $client->pic_telepon            = $handphone;
+                $client->save();
+            }
+            
+            return redirect()->route('client.index')->with('message-success', 'Client saved.');
+        }
     }
 }

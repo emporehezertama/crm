@@ -18,17 +18,11 @@
       </div>
     </div>
     <div class="content-header-right text-md-right col-md-6 col-12">
-<<<<<<< HEAD
       <div class="btn-group">
         <a id="importDataClient" class="btn btn-round btn-info"><i class="ft ft-plus"></i>Import Data Client</a>
       </div>
       <div class="btn-group">
         <a href="{{ route('client.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Cient / Customer</a>
-=======
-      <div class="col-md-4 float-right">
-        <div class="btn-group">
-          <a href="{{ route('client.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Cient / Customer</a>
-        </div>
       </div>
        <div class="col-md-6 float-right text-right">
           <form method="GET" action="" name="form_search" id="form_search" autocomplete="off">
@@ -38,7 +32,6 @@
               </div>
             </fieldset>
           </form>
->>>>>>> 86b8b4c8b91b7ee6c50de2a77bb3c7d0e907ca19
       </div>
 <!--
       <form method="GET" action="" style="float: left; width: 40%;">

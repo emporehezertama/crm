@@ -44,6 +44,7 @@
             </li>
           </ul>
         </li>
+        <li class="dropdown nav-item mega-dropdown"><a class="nav-link" href="{{ route('price.index') }}">Price</a>
       </ul>
       @endif
       @if(Auth::user()->user_access_id == 4)

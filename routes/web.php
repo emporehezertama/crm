@@ -44,6 +44,8 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::post('ajax/get-pipeline-history', 'AjaxController@getPipelineHistory')->name('ajax.get-pipeline-history');
 	Route::post('ajax/get-company', 'AjaxController@getCompany')->name('ajax.get-company');
 	Route::post('ajax/get-invoice-perpetual-license', 'AjaxController@getInvoicePerpetualLicense')->name('ajax.get-invoice-perpetual-license');
+	Route::resource('price', 'PriceController', ['only'=> ['index','create','store','edit','destroy','update']]);
+
 });
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['auth', 'access:1']], function(){

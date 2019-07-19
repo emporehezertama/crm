@@ -8,6 +8,10 @@ class Users extends Model
 {
     protected $table = 'users';
 
+    protected $fillable = ['name','email','email_verified_at', 'password', 'remember_token', 'user_access_id', 'status', 
+                            'foto', 'address', 'telepon', 'fax'];
+
+
     /**
      * Relation table user_access
      * @return object

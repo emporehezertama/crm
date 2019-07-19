@@ -10,11 +10,7 @@ use App\Http\Controllers\Controller;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-use App\Imports\ClientImport;
-use App\Imports\UsersImport;
-use Maatwebsite\Excel\Facades\Excel;
-
-class ClientController extends Controller
+class PriceController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -33,18 +29,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        if(\Auth::user()->user_access_id == 1)
-        {
-            $data = CrmClient::paginate(50);
-        }
-        else
-        {
-            $data = CrmClient::where('sales_id', \Auth::user()->id)->paginate(50);
-        }
-
-        $params['data'] = $data;
-        
-        return view('sales.client.index')->with($params);
+        echo "test";
     }
 
     /**
@@ -172,13 +157,13 @@ class ClientController extends Controller
     public function importClient(Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|mimes:csv,xls,xlsx'
+	        'file' => 'required',
         ]);
         
         if($request->hasFile('file'))
         {
             
-        /*  $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file);
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file);
             $worksheet = $spreadsheet->getActiveSheet();
             $rows = [];
             foreach ($worksheet->getRowIterator() AS $row) {
@@ -216,23 +201,7 @@ class ClientController extends Controller
                 $client->pic_email              = $email;
                 $client->pic_telepon            = $handphone;
                 $client->save();
-            }   */
-
-            
-     
-            // menangkap file excel
-            $file = $request->file('file');
-     
-            // membuat nama file unik
-            $nama_file = rand().$file->getClientOriginalName();
-     
-            // upload ke folder file_siswa di dalam folder public
-            $file->move('upload',$nama_file);
-     
-            // import data
-            Excel::import(new ClientImport, public_path('/upload/'.$nama_file));
-            Excel::import(new UsersImport, public_path('/upload/'.$nama_file));
-     
+            }
             
             return redirect()->route('client.index')->with('message-success', 'Client saved.');
         }

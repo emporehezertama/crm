@@ -5,15 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Users;
-use App\Models\CrmProjects;
-use App\Models\CrmProjectPipeline;
-use App\Models\CrmProjectItems;
-use App\Models\CrmProjectPaymentMethodSubscription;
-use App\Models\CrmProjectPaymentMethodPerpetualLicense;
-use App\Models\CrmProjectInvoice;
-use App\Models\ProjectProduct;
 use App\Models\CrmPriceList;
+use App\Models\CrmProduct;
 use App\Models\CrmPriceListHistory;
+use App\Models\CrmPriceListHistoryDetail;
+use DB;
 
 class PriceController extends Controller
 {
@@ -34,8 +30,7 @@ class PriceController extends Controller
      */
     public function index()
     {
-        $params['data'] = CrmPriceList::get();
-    //    $data = 'ok';
+        $params['data'] = CrmPriceListHistory::get();
         return view('price.index')->with($params);
     }
 
@@ -44,550 +39,38 @@ class PriceController extends Controller
      * @param  $id
      * @return pdf
      */
-    public function printInvoice($id)
-    {
-        $params['data'] = CrmProjectInvoice::where('id', $id)->first();
+    
 
-        $view = view('pipeline.invoice-print')->with($params);        
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view);
-
-        return $pdf->stream();
-    }
-
-    /**
-     * Store Invoice Perpetula
-     * @param  Request $request
-     * @return objects
-     */
-    public function storeInvoicePerpetual(Request $request)
-    {
-        $data                       = new CrmProjectInvoice();
-        $data->crm_project_id       = $request->crm_project_id;
-        $data->payment_term         = $request->payment_term;
-        $data->invoice_number       = $request->invoice_number;
-        $data->date                 = $request->date;
-        $data->sub_total            = replace_idr($request->sub_total);
-        $data->tax                  = $request->tax;
-        $data->tax_price            = replace_idr($request->tax_price);
-        $data->total                = replace_idr($request->total);
-        $data->remarks              = $request->remarks;
-        $data->status               = 0;
-        $data->save();
-
-        $perpetual = CrmProjectPaymentMethodPerpetualLicense::where('id', $request->id)->first();
-        if($perpetual)
-        {
-            $perpetual->status                  = 1;
-            $perpetual->crm_project_invoice_id  = $data->id;
-            $perpetual->save();
-        }
-
-        return redirect()->route('pipeline.index');
-    }
-
-    /**
-     * Store Invoice Pay
-     * @param  Request $request
-     * @return void
-     */
-    public function storeInvoicePay(Request $request)
-    {
-        $invoice = CrmProjectInvoice::where('id', $request->id)->first();
-        if($invoice)
-        {
-            $invoice->date_payment      = $request->date_payment;
-            $invoice->total_payment     = replace_idr($request->total_payment);
-            $invoice->remarks_payment   = $request->remarks_payment;
-            $invoice->status            = 1;
-            $invoice->save();            
-        }
-
-        return redirect()->route('pipeline.index')->with('message-success', 'Payment Success');
-    }
-
-    /**
-     * Create
-     * @return view
-     */
     public function create()
     {
-        return view('pipeline.create');
+        if(CrmPriceListHistory::count() < 1){
+            $params['data'] = CrmProduct::whereNotNull('price_id')
+                                            ->orderBy('price_id')
+                                            ->get();
+        }else{
+            $lasthistoryid = CrmPriceListHistoryDetail::latest('history_id')->first();
+            $params['data'] = DB::table('crm_pricelist_history_detail')
+                                    ->select('crm_pricelist_history_detail.price as modul_price', 'crm_product.name', 'crm_product.price_id')
+                                    ->join('crm_product', 'crm_pricelist_history_detail.price_id', '=', 'crm_product.price_id')
+                                    ->where('crm_pricelist_history_detail.history_id', $lasthistoryid->history_id)
+                                    ->orderBy('crm_pricelist_history_detail.price_id')
+                                    ->get();
+        }
+        return view('price.create')->with($params);
     }
 
     /**
      * Move To Change Request
      * @return 
      */
-    public function moveToPoDone($id)
-    {
-        $project = CrmProjects::where('id', $id)->first();
-        $project->pipeline_status = 6;
-        $project->save();
-
-        return redirect()->route('pipeline.index');
-    }
-
-    /**
-     * Move To Quotation
-     * @return 
-     */
-    public function moveToQuotation($id, Request $request)
-    {
-        $project                    = CrmProjects::where('id', $id)->first();
-        $project->pipeline_status   = 2;
-        $project->quotation_order   = $request->quotation_order;
-        $project->price             = replace_idr($request->price);
-
-        if ($request->hasFile('file'))
-        {
-            $file = $request->file('file');
-            $fileName = $file->getClientOriginalName();
-
-            $destinationPath = public_path('/storage/projects/'. $project->id);
-            $file->move($destinationPath, $fileName);
-
-           $project->file = $fileName;
-        }
-
-        $project->save();
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 2;
-        $item->item                 = 'quotation_order';
-        $item->value                = $request->quotation_order;
-        $item->save(); 
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 2;
-        $item->item                 = 'submit_date';
-        $item->value                = $request->submit_date;
-        $item->save(); 
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 2;
-        $item->item                 = 'price';
-        $item->value                = replace_idr($request->price);
-        $item->save();
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 2;
-        $item->item                 = 'month';
-        $item->value                = $request->monthQuo;
-        $item->save();
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 2;
-        $item->item                 = 'start_date';
-        $item->value                = $request->start_date_quo;
-        $item->save();
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 2;
-        $item->item                 = 'end_date';
-        $item->value                = $request->end_date_quo;
-        $item->save();
-
-
-        if (isset($fileName))
-        {
-            $item                       = new CrmProjectItems();
-            $item->crm_project_id       = $project->id;
-            $item->status               = 2;
-            $item->item                 = 'file';
-            $item->value                = $fileName;
-            $item->save();
-        }
-
-        return redirect()->route('pipeline.index');
-    }
-
-    /**
-     * Move To Negotation
-     * @return 
-     */
-    public function moveToNegotation($id, Request $request)
-    {
-        $project = CrmProjects::where('id', $id)->first();
-        $project->pipeline_status = 3;
-        $project->price             = replace_idr($request->price);
-
-        if ($request->hasFile('file'))
-        {
-            $file = $request->file('file');
-            $fileName = $file->getClientOriginalName();
-
-            $destinationPath = public_path('/storage/projects/'. $project->id);
-            $file->move($destinationPath, $fileName);
-
-           $project->file = $fileName;
-        }
-
-        $project->save();
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 3;
-        $item->item                 = 'negotation_order';
-        $item->value                = $request->negotation_order;
-        $item->save(); 
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 3;
-        $item->item                 = 'submit_date';
-        $item->value                = $request->submit_date;
-        $item->save(); 
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 3;
-        $item->item                 = 'price';
-        $item->value                = replace_idr($request->price);
-        $item->save(); 
-
-        if (isset($fileName))
-        {
-            $item                       = new CrmProjectItems();
-            $item->crm_project_id       = $project->id;
-            $item->status               = 3;
-            $item->item                 = 'file';
-            $item->value                = $fileName;
-            $item->save();
-        }
-
-        return redirect()->route('pipeline.index');
-    }
-
-    /**
-     * Move To Quotation
-     * @return 
-     */
-    public function moveToPO($id, Request $request)
-    {
-        $project = CrmProjects::where('id', $id)->first();
-        $project->pipeline_status = 4;
-        $project->save();
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 4;
-        $item->item                 = 'po_number';
-        $item->value                = $request->po_number;
-        $item->save(); 
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 4;
-        $item->item                 = 'price';
-        $item->value                = replace_idr($request->price);
-        $item->save();
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 4;
-        $item->item                 = 'payment_method';
-        $item->value                = $request->payment_method;
-        $item->save();
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 4;
-        $item->item                 = 'month';
-        $item->value                = $request->month;
-        $item->save();
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 4;
-        $item->item                 = 'start_date';
-        $item->value                = $request->start_date;
-        $item->save();
-
-        $item                       = new CrmProjectItems();
-        $item->crm_project_id       = $project->id;
-        $item->status               = 4;
-        $item->item                 = 'end_date';
-        $item->value                = $request->end_date;
-        $item->save();
-
-        // perpetual license
-        if($request->payment_method == 1)
-        {
-            if(isset($request->terms))
-            {
-                foreach($request->terms as $k => $i)
-                {
-                    $perpetual                      = new CrmProjectPaymentMethodPerpetualLicense();
-                    $perpetual->crm_project_id      = $project->id;
-                    $perpetual->terms               = $i;
-                    $perpetual->milestone           = $request->milestone[$k];
-                    $perpetual->persen              = $request->persen[$k];
-                    $perpetual->value               = replace_idr($request->value[$k]);
-                    $perpetual->status              = 0;
-                    $perpetual->save();
-                }
-            }
-        }
-
-        if($request->payment_method == 2)
-        {
-            $item                       = new CrmProjectItems();
-            $item->crm_project_id       = $project->id;
-            $item->status               = 4;
-            $item->item                 = 'year';
-            $item->value                = $request->year;
-            $item->save();
-
-            $item                       = new CrmProjectItems();
-            $item->crm_project_id       = $project->id;
-            $item->status               = 4;
-            $item->item                 = 'subscription_year_or_month';
-            $item->value                = $request->subscription_year_or_month;
-            $item->save();
-
-            $item                       = new CrmProjectItems();
-            $item->crm_project_id       = $project->id;
-            $item->status               = 4;
-            $item->item                 = 'start_date_subscription';
-            $item->value                = $request->start_date_subscription;
-            $item->save();
-
-            // if subscribe year
-            if($request->subscription_year_or_month==1)
-            {
-                for($var =0; $var <= $request->year; $var++)
-                {
-                    $sub                    = new CrmProjectPaymentMethodPerpetualLicense();
-                    $sub->crm_project_id    = $project->id; 
-                    $sub->term              = $var;
-                    $sub->due_date          = date('Y-m-d', strtotime('+ '+ $var +' year', strtotime($request->start_date_subscription)));
-                    $sub->status            = 0;
-                    $sub->save();
-                }
-            }
-            //if subscribe month
-            if($request->subscription_year_or_month==2)
-            {
-                for($var =0; $var <= $request->year; $var++)
-                {
-                    $sub                    = new CrmProjectPaymentMethodPerpetualLicense();
-                    $sub->crm_project_id    = $project->id; 
-                    $sub->term              = $var;
-                    $sub->due_date          = date('Y-m-d', strtotime('+ '+ $var +' month', strtotime($request->start_date_subscription)));
-                    $sub->status            = 0;
-                    $sub->save();
-                }
-            }
-        }
-
-        if ($request->hasFile('file'))
-        {
-            $file = $request->file('file');
-            $fileName = $file->getClientOriginalName();
-
-            $destinationPath = public_path('/storage/projects/'. $project->id);
-            $file->move($destinationPath, $fileName);
-
-            $item                       = new CrmProjectItems();
-            $item->crm_project_id       = $project->id;
-            $item->status               = 2;
-            $item->item                 = 'file';
-            $item->value                = $fileName;
-            $item->save();
-        }
-
-        return redirect()->route('pipeline.index');
-    }
+    
 
     /**
      * Add Notes
      * @param  $id
      * @return 
      */
-    public function addNote($id, Request $request)
-    {
-        $project = CrmProjects::where('id', $id)->first();
-
-        $data                       = new CrmProjectPipeline();
-        $data->user_id              = \Auth::user()->id;
-        $data->crm_project_id       = $id;
-        $data->status_card          = 5;
-        $data->pipeline_status      = $project->pipeline_status; 
-        $data->value                = $request->note;
-        $data->title                = $request->title;
-        $data->date                 = empty($request->date) ? date('Y-m-d') : $request->date;
-
-        if ($request->hasFile('file'))
-        {
-            $file = $request->file('file');
-            $fileName = $file->getClientOriginalName();
-
-            $destinationPath = public_path('/storage/projects/'. $project->id);
-            $file->move($destinationPath, $fileName);
-
-            $data->file = $fileName;
-        }
-
-        $data->save();
-
-        return redirect()->route('pipeline.index');
-    }
-
-    /**
-     * Update Note
-     * @return void
-     */
-    public function updateNote(Request $request)
-    {
-        $data                       = CrmProjectPipeline::where('id', $request->id)->first();
-        $data->user_id              = \Auth::user()->id;
-        $data->status_card          = 5;
-        $data->pipeline_status      = $request->pipeline_status; 
-        $data->value                = $request->note;
-        $data->title                = $request->title;
-        $data->date                 = empty($request->date) ? date('Y-m-d') : $request->date;
-
-        if ($request->hasFile('file'))
-        {
-            $file = $request->file('file');
-            $fileName = $file->getClientOriginalName();
-
-            $destinationPath = public_path('/storage/projects/'. $project->id);
-            $file->move($destinationPath, $fileName);
-
-            $data->file = $fileName;
-        }
-
-        $data->save();
-
-        return redirect()->route('pipeline.index');
-    }
-
-    /**
-     * Update Card
-     * @param  Request $request
-     * @return void
-     */
-    public function updateCard(Request $request)
-    {
-        $data                       = CrmProjects::where('id', $request->id)->first();
-        //$data->crm_client_id        = $request->crm_client_id;
-        $data->price                = replace_idr($request->price);
-        $data->description          = $request->description; 
-        $data->color                = $request->color; 
-        $data->pipeline_status      = $request->pipeline_status;
-        $data->name                 = $request->name;
-        $data->project_category     = $request->project_category;
-        $data->sales_id             = \Auth::user()->id;
-
-        $data->project_type         = $request->project_type;
-        $data->license_number   = $request->license_number;
-        $data->durataion         = $request->durataion;
-
-        if ($request->hasFile('file'))
-        {
-            $file = $request->file('file');
-            $fileName = $file->getClientOriginalName();
-
-            $destinationPath = public_path('/storage/projects/'. $data->id);
-            $file->move($destinationPath, $fileName);
-
-            $data->file = $fileName;
-        }
-        $data->save();
-
-
-        if(isset($fileName))
-        {
-            $item                       = new CrmProjectItems();
-            $item->crm_project_id       = $data->id;
-            $item->status               = 1;
-            $item->item                 = 'file';
-            $item->value                = $fileName;
-            $item->save();
-        }
-
-        //cek data projectproductnya dia sebelumnya trus cek yang di ceklis dia
-        
-        /*$dataProduct = ProjectProduct::where('crm_project_id',$data->id)->get()->each->delete();
-        
-        foreach ($request->project_product_id as $key => $value) {
-            $val = isset($value) ? 1 : 0;
-            # code...
-            if($val == 1) {
-                $product = new ProjectProduct();
-                $product->crm_project_id  = $data->id;
-                $product->crm_product_id  = $request->project_product_id[$key];
-                if(isset($request->limit_user[$key])){
-                    $product->limit_user      = $request->limit_user[$key];
-                }
-                $product->save();
-            }
-        }
-        */
-
-        if($request->project_product_id != null) {
-            ProjectProduct::whereNotIn('crm_product_id',$request->project_product_id)->where('crm_project_id',$data->id)->delete();
-            foreach ($request->project_product_id as $key => $value) {
-                $product = ProjectProduct::where('crm_product_id',$value)->where('crm_project_id',$data->id)->first();
-                if(!$product)
-                {
-                    $product = new ProjectProduct();
-                    $product->crm_project_id  = $data->id;
-                    $product->crm_product_id  = $request->project_product_id[$key];
-                    if(isset($request->limit_user[$key])){
-                        $product->limit_user      = $request->limit_user[$key];
-                    }
-                    $product->save();
-                }
-            }
-        } else{
-            ProjectProduct::where('crm_project_id',$data->id)->delete();
-        }
-        
-        //jika project_id = 1 update ke server
-        if($data->project_category_id == 1)
-        {
-            //send to api
-            $dataAPI   = CrmProjects::select('crm_projects.id as project_id','crm_projects.name as project_name','crm_client.name as client_name','crm_projects.user_name','crm_projects.password','project_product.crm_product_id','project_product.limit_user','crm_product.name as modul_name')
-            ->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')
-            ->join('project_product', 'project_product.crm_project_id','=','crm_projects.id')
-            ->join('crm_product','project_product.crm_product_id','=','crm_product.id')
-            ->where('crm_projects.id', $data->id);
-
-            $dataSend = clone $dataAPI;
-
-            foreach ($dataSend->get() as $key => $value) {
-                # code...
-                $ch = curl_init();
-                $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&user_name=$value->user_name&password=$value->password&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name";
-
-                $url = 'http://api.em-hr.co.id/update-modul-hris';
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-                
-                $html = curl_exec($ch);
-
-                if (curl_errno($ch)) 
-                {
-                    print curl_error($ch);
-                }
-                curl_close($ch);
-                //dd($html);
-            }
-        }
-        return redirect()->route('pipeline.index')->with('message-success', 'Card Updated');
-    }
-
+   
     /**
      * Store database Card
      * @return void
@@ -595,10 +78,27 @@ class PriceController extends Controller
     public function store(Request $request)
     {
 
-        $data                       = new CrmPriceListHistory();
-        $data->priceid              = 1;
-        $data->price                = $request->price;
-    
+        $id = $request->input('id');
+
+        if(CrmPriceListHistory::count() < 1){
+            $historyid = 1;
+        }else{
+            $getid = CrmPriceListHistory::latest('id')->first();
+            $historyid = $getid->id + 1;
+        }
+
+        $data               = new CrmPriceListHistory();
+        $data->id           = $historyid;
+        $data->save();
+
+        foreach($id as $key => $item){
+            $data                       = new CrmPriceListHistoryDetail();
+            $data->price_id             = $id[$key];
+            $data->history_id           = $historyid;
+            $data->price                = $request->price[$key];
+            $data->save();
+        }
+        
         return redirect()->route('price.index')->with('message-success', 'Price Successfully Saved');
     }
 
@@ -606,98 +106,93 @@ class PriceController extends Controller
      * Calls
      * @return void
      */
-    public function calls($id)
-    {
-        $project = CrmProjects::where('id', $id)->first();
-
-        $data                       = new CrmProjectPipeline();
-        $data->user_id              = \Auth::user()->id;
-        $data->crm_project_id       = $id;
-        $data->status_card          = 1;
-        $data->pipeline_status      = $project->pipeline_status; 
-        $data->value                = 'Calls';
-        $data->save();
-
-        return redirect()->route('pipeline.index');
-    }
-
-    /**
-     * Reminder
-     * @param 
-     */
-    public function reminder($id)
-    {
-        $project = CrmProjects::where('id', $id)->first();
-
-        $data                       = new CrmProjectPipeline();
-        $data->user_id              = \Auth::user()->id;
-        $data->crm_project_id       = $id;
-        $data->status_card          = 2;
-        $data->pipeline_status      = $project->pipeline_status; 
-        $data->value                = 'Reminder';
-        $data->save();
-
-        return redirect()->route('pipeline.index');
-    }
-
-     /**
-     * Reminder
-     * @param 
-     */
-    public function demo($id)
-    {
-        $project = CrmProjects::where('id', $id)->first();
-
-        $data                       = new CrmProjectPipeline();
-        $data->user_id              = \Auth::user()->id;
-        $data->crm_project_id       = $id;
-        $data->status_card          = 3;
-        $data->pipeline_status      = $project->pipeline_status; 
-        $data->value                = 'Demo';
-        $data->save();
-
-        return redirect()->route('pipeline.index');
-    }
-
-    /**
-     * Reminder
-     * @param 
-     */
-    public function terminate($id)
-    {
-        $project = CrmProjects::where('id', $id)->first();
-
-        $data                       = new CrmProjectPipeline();
-        $data->user_id              = \Auth::user()->id;
-        $data->crm_project_id       = $id;
-        $data->status_card          = 4;
-        $data->pipeline_status      = $project->pipeline_status; 
-        $data->value                = 'Terminate';
-        $data->save();
-
-        return redirect()->route('pipeline.index');
-    }
-
+    
      /**
      * Reminder
      * @param 
      */
     public function edit($id)
     {
-        $project = CrmProjects::where('id', $id)->first();
+        $params['data'] = DB::table('crm_pricelist_history_detail')
+                                    ->select('crm_pricelist_history_detail.price', 'crm_product.name', 'crm_product.price_id')
+                                    ->join('crm_product', 'crm_pricelist_history_detail.price_id', '=', 'crm_product.price_id')
+                                    ->where('crm_pricelist_history_detail.history_id', $id)
+                                    ->orderBy('crm_pricelist_history_detail.price_id')
+                                    ->get();
+    //    dd($params);
+        return view('price.edit')->with($params);
+    }
 
-        return view('project.edit')->with(['data' => $project]);
+    public function update(Request $request)
+    {
+        $id = $request->input('id');
+
+        foreach($id as $key => $item){
+            $data                       = CrmPriceListHistoryDetail::where('history_id');
+            $data->price_id             = $id[$key];
+            $data->history_id           = $historyid;
+            $data->price                = $request->price[$key];
+            $data->save();
+        }
+        return view('price.update')->with(['data' => $project]);
     }
 
     /**
      * Delete
      * @return void
      */
-    public function delete($id)
+    public function destroy ($id)
     {
-        $data   = CrmProjectPipeline::where('id', $id)->first();
+        $data   = CrmPricelistHistory::where('id', $id)->first();
         $data->delete();
 
-        return redirect()->route('pipeline.index');
+        $data   = CrmPricelistHistoryDetail::where('history_id', $id)->first();
+        $data->delete();
+
+        return redirect()->route('price.index');
     }   
+
+/*    public function editNewPricelist ()
+    {
+        if(CrmPriceListHistory::count() < 1){
+            $params['data'] = CrmProduct::whereNotNull('price_id')
+                                            ->orderBy('price_id')
+                                            ->get();
+        }else{
+            $lasthistoryid = CrmPriceListHistoryDetail::latest('history_id')->first();
+            $params['data'] = DB::table('crm_pricelist_history_detail')
+                                    ->select('crm_pricelist_history_detail.price as modul_price', 'crm_product.name', 'crm_product.price_id')
+                                    ->join('crm_product', 'crm_pricelist_history_detail.price_id', '=', 'crm_product.price_id')
+                                    ->where('crm_pricelist_history_detail.history_id', $lasthistoryid->history_id)
+                                    ->orderBy('crm_pricelist_history_detail.price_id')
+                                    ->get();
+        }
+        return view('price.create1')->with($params);
+    }
+
+    public function updateNewPricelist (Request $request)
+    {
+        $id = $request->input('id');
+
+        if(CrmPriceListHistory::count() < 1){
+            $historyid = 1;
+        }else{
+            $getid = CrmPriceListHistory::latest('id')->first();
+            $historyid = $getid->id + 1;
+        }
+
+        $data               = new CrmPriceListHistory();
+        $data->id           = $historyid;
+        $data->save();
+
+        foreach($id as $key => $item){
+            $data                       = new CrmPriceListHistoryDetail();
+            $data->price_id             = $id[$key];
+            $data->history_id           = $historyid;
+            $data->price                = $request->price[$key];
+            $data->save();
+        }
+        
+        return redirect()->route('price.index')->with('message-success', 'Price Successfully Saved');
+    }   */
 }

@@ -227,11 +227,11 @@ class ClientController extends Controller
             $nama_file = rand().$file->getClientOriginalName();
      
             // upload ke folder file_siswa di dalam folder public
-            $file->move('upload',$nama_file);
+            $file->move('storage',$nama_file);
      
             // import data
-            Excel::import(new ClientImport, public_path('/upload/'.$nama_file));
-            Excel::import(new UsersImport, public_path('/upload/'.$nama_file));
+            Excel::import(new ClientImport, public_path('/storage/'.$nama_file));
+            Excel::import(new UsersImport, public_path('/storage/'.$nama_file));
      
             
             return redirect()->route('client.index')->with('message-success', 'Client saved.');

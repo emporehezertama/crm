@@ -1,67 +1,80 @@
 @extends('layouts.administrator')
 
-@section('title', 'Setting')
+@section('title', 'Pricelist')
 
 @section('content')
 <div class="content-wrapper">
   <div class="content-header row">
     <div class="content-header-left col-md-6 col-12 mb-2">
-      <h3 class="content-header-title mb-0">Price</h3>
+      <h3 class="content-header-title mb-0">Pricelist</h3>
       <div class="row breadcrumbs-top">
         <div class="breadcrumb-wrapper col-12">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Home</a>
             </li>
-            <li class="breadcrumb-item active">Price
-            </li>
+            <li class="breadcrumb-item active">Pricelist</li>
           </ol>
         </div>
       </div>
     </div>
     <div class="content-header-right text-md-right col-md-6 col-12">
       <div class="btn-group">
-        <a href="javascript:void(0)" class="btn btn-round btn-info" onclick="submit_pricelist();"><i class="fa fa-plus"></i> Save Price List</a>
+        <a href="{{ route('price.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Update New Pricelist</a>
       </div>
     </div>
   </div>
   <div class="content-body">
-    <form class="form form-horizontal" id="form-setting" method="POST" action="{{ route('admin.setting.update') }}" enctype="multipart/form-data">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-12">
         <div class="card">
-          <div class="card-header">
-            <h4 class="card-title">Price List</h4>
-          </div>
           <div class="card-content collapse show">
-            <div class="card-body pt-0">
-                {{ csrf_field() }}
-                
-                <div class="form-body">
-                  @foreach($data as $key => $item)
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="label-control">{{$item->item}}</label>
-                    </div>
-                    <div class="col-md-6">
-                      <input type="text" class="form-control" placeholder="Typing here .." name="setting[title]" value="{{$item->price}}">
-                    </div>
-                  </div>
-                  <br>
-                  @endforeach
-                </div>
-                
+            <div class="card-body mt-1 ">
+              <div class="table-responsive">
+                <table class="table ">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px;">#</th>
+                      <th>Price Id</th>
+                      <th>Created</th>
+                      <th style="width: 45px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach($data as $key => $item)
+                      <tr>
+                        <td>{{ $key + 1 }}</td>
+                        <td>
+                          {{ $item->id }}
+                        </td>
+                        <td>{{ $item->created_at }}</td>
+                        <td>
+                          <form method="POST" action="{{ route('price.destroy', $item->id) }}">
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+                            <a href="javascript:void(0)" class="text-danger" title="Delete data" onclick="confirm_delete('Hapus data ini ?', this)"><i class="la la-trash"></i></a>
+                            <a href="{{ route('price.edit', $item->id) }}" title="Edit Data"><i class="la la-edit"></i></a>
+                          </form>
+                        </td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+                <div class="col-m-6 pull-left text-left">Showing  $data->firstItem()  to  $data->lastItem()  of  $data->total()  entries</div>
+                <div class="col-md-6 pull-right text-right"> $data->appends($_GET)->render() </div><div class="clearfix"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-    </form>
+    </div>
   </div>
 </div>
+
+
+
+@section('js')
 <script type="text/javascript">
-  function submit_pricelist()
-  {
-    $("#form-setting").submit();
-  }
+
+
 </script>
 @endsection

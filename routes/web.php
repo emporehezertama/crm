@@ -45,6 +45,8 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::post('ajax/get-company', 'AjaxController@getCompany')->name('ajax.get-company');
 	Route::post('ajax/get-invoice-perpetual-license', 'AjaxController@getInvoicePerpetualLicense')->name('ajax.get-invoice-perpetual-license');
 	Route::resource('price', 'PriceController', ['only'=> ['index','create','store','edit','destroy','update']]);
+	Route::get('price/edit-new-pricelist', 'PriceController@editNewPriceList')->name('price.edit-new-pricelist');
+	Route::post('price/update-new-pricelist', 'PriceController@updateNewPriceList')->name('price.update-new-pricelist');
 
 });
 

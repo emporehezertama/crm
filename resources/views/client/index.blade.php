@@ -19,7 +19,7 @@
     </div>
     <div class="content-header-right text-md-right col-md-6 col-12">
       <div class="btn-group">
-        <a id="importDataClient" class="btn btn-round btn-info"><i class="ft ft-plus"></i>Import Data Clientsss</a>
+        <a id="importDataClient" class="btn btn-round btn-info"><i class="ft ft-plus"></i>Import Data Client</a>
       </div>
       <div class="btn-group">
         <a href="{{ route('client.create') }}" class="btn btn-round btn-info"><i class="ft ft-plus"></i> Cient / Customer</a>

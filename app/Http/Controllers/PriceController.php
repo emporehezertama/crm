@@ -44,16 +44,17 @@ class PriceController extends Controller
     public function create()
     {
         if(CrmPriceListHistory::count() < 1){
-            $params['data'] = CrmProduct::whereNotNull('price_id')
-                                            ->orderBy('price_id')
+            $params['data'] = CrmProduct::where('parent_id', 1)
+                                            ->orderBy('id')
                                             ->get();
         }else{
             $lasthistoryid = CrmPriceListHistoryDetail::latest('history_id')->first();
             $params['data'] = DB::table('crm_pricelist_history_detail')
-                                    ->select('crm_pricelist_history_detail.price as modul_price', 'crm_product.name', 'crm_product.price_id')
-                                    ->join('crm_product', 'crm_pricelist_history_detail.price_id', '=', 'crm_product.price_id')
+                                    ->select('crm_pricelist_history_detail.price as modul_price', 'crm_product.name', 'crm_product.price_id', 'crm_product.id')
+                                    ->join('crm_product', 'crm_pricelist_history_detail.price_id', '=', 'crm_product.id')
                                     ->where('crm_pricelist_history_detail.history_id', $lasthistoryid->history_id)
-                                    ->orderBy('crm_pricelist_history_detail.price_id')
+                                    ->where('crm_product.parent_id', 1)
+                                    ->orderBy('crm_pricelist_history_detail.id')
                                     ->get();
         }
         return view('price.create')->with($params);
@@ -113,11 +114,19 @@ class PriceController extends Controller
      */
     public function edit($id)
     {
-        $params['data'] = DB::table('crm_pricelist_history_detail')
+    /*    $params['data'] = DB::table('crm_pricelist_history_detail')
                                     ->select('crm_pricelist_history_detail.price', 'crm_product.name', 'crm_product.price_id')
                                     ->join('crm_product', 'crm_pricelist_history_detail.price_id', '=', 'crm_product.price_id')
                                     ->where('crm_pricelist_history_detail.history_id', $id)
                                     ->orderBy('crm_pricelist_history_detail.price_id')
+                                    ->get();    */
+
+        $params['data'] = DB::table('crm_pricelist_history_detail')
+                                    ->select('crm_pricelist_history_detail.price as modul_price', 'crm_product.name', 'crm_product.price_id', 'crm_product.id')
+                                    ->join('crm_product', 'crm_pricelist_history_detail.price_id', '=', 'crm_product.id')
+                                    ->where('crm_pricelist_history_detail.history_id', $id)
+                                    ->where('crm_product.parent_id', 1)
+                                    ->orderBy('crm_pricelist_history_detail.id')
                                     ->get();
     //    dd($params);
         return view('price.edit')->with($params);

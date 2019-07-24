@@ -41,8 +41,8 @@
                       <label class="label-control">{{$item->name}}</label>
                     </div>
                     <div class="col-md-6">
-                      <input type="hidden" class="form-control" placeholder="Typing here .." name="id[]" value="{{$item->price_id}}">
-                      <input type="text" class="form-control" placeholder="Typing here .." name="price[]" value="{{$item->price}}" disabled>
+                      <input type="hidden" class="form-control" placeholder="Typing here .." name="id[]" value="{{$item->id}}">
+                      <input type="text" class="form-control" placeholder="Typing here .." name="price[]" value="{{$item->modul_price}}" disabled>
                     </div>
                   </div>
                   <br>

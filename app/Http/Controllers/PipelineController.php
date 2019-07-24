@@ -636,6 +636,7 @@ class PipelineController extends Controller
                 $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&user_name=$value->user_name&password=$value->password&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name";
 
                 $url = 'http://api.em-hr.co.id/update-modul-hris';
+                //$url = 'http://192.168.112.131:8001/update-modul-hris';
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($ch, CURLOPT_POST, true);
@@ -756,6 +757,7 @@ class PipelineController extends Controller
                 $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name";
 
                 $url = 'http://api.em-hr.co.id/set-modul-hris';
+                //$url = 'http://192.168.112.131:8001/set-modul-hris';
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($ch, CURLOPT_POST, true);
@@ -776,6 +778,7 @@ class PipelineController extends Controller
             
             $ch = curl_init();
             $url = 'http://api.em-hr.co.id/set-user-hris';
+            //$url = 'http://192.168.112.131:8001/set-user-hris';
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($ch, CURLOPT_POST, true);

@@ -271,9 +271,20 @@
           document.getElementById('ProductList').style.display = "block";
           var html ='';
             $(el.data('child')).each(function(k,v){
+              var check='';
+              var readonly='';
+              if(v.id == 3){
+                check = 'checked disabled';
+              }
+
               var a = v.user_limit;
               html +='<p style="margin-bottom: 4px">';
-              html += '<label><input type="checkbox" style="margin-right: 10px;" name="project_product_id['+v.id+']" value="'+v.id+'">'+ v.name+'</label>';
+              if(v.id == 3){
+                html += '<label><input type="checkbox" style="margin-right: 10px;" '+check+'>'+ v.name+'</label>';
+                html += '<input type="hidden" style="margin-right: 10px;" name="project_product_id['+v.id+']" value="'+v.id+'">';
+              }else{
+                    html += '<label><input type="checkbox" style="margin-right: 10px;" '+check+' name="project_product_id['+v.id+']" value="'+v.id+'">'+ v.name+'</label>';
+              }
               if(a == 1)
                 html += '<input type="text" style="margin-left: 20px;"  class="form-control" name="limit_user['+v.id+']" placeholder="User Limit">';
               html +='</p>';
@@ -283,6 +294,11 @@
           document.getElementById('ProductList').style.display = "none";
         }
     });
+
+    $('#form_card').submit(function() {
+        $('project_product_id').removeAttr('disabled');
+    });
+
    
 </script>
 @endsection

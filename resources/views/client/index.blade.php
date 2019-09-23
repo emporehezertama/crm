@@ -1,6 +1,6 @@
 @extends('layouts.administrator')
 
-@section('title', 'Cient / Customer')
+@section('title', 'Empore CRM - Cient / Customer')
 
 @section('content')
 <div class="content-wrapper">

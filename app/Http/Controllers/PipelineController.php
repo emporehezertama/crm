@@ -635,7 +635,7 @@ class PipelineController extends Controller
                 $ch = curl_init();
                 $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&user_name=$value->user_name&password=$value->password&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name";
 
-                $url = 'http://api.em-hr.co.id/update-modul-hris';
+                $url = env('API_URL').'/update-modul-hris';
                 //$url = 'http://192.168.112.131:8001/update-modul-hris';
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -662,9 +662,14 @@ class PipelineController extends Controller
     public function store(Request $request)
     {
         if($request->project_category_id == 1) {
+            if(!is_null($request->db_name)){
+                $request->db_name = "hris_$request->db_name";
+            }
             $this->validate($request,[
             'user_name' => 'required|unique:crm_projects',
             'password' => 'required',
+            'db_name' => 'unique:crm_projects',
+            'url' => 'unique:crm_projects',
             ]);
         }
 
@@ -680,7 +685,10 @@ class PipelineController extends Controller
         $data->sales_id             = \Auth::user()->id;
         $data->user_name            = $request->user_name;
         $data->password             = bcrypt($request->password);
+        $data->url                  = $request->url;
+        $data->db_name              = $request->db_name;
         $data->project_type         = $request->project_type;
+//        echo json_encode($data);
         if($request->project_type == 1){
             $data->license_number   = $request->license_number;
         }
@@ -716,7 +724,7 @@ class PipelineController extends Controller
                 }
             }
         }
-        
+
         $item                       = new CrmProjectItems();
         $item->crm_project_id       = $data->id;
         $item->status               = 1;
@@ -750,22 +758,23 @@ class PipelineController extends Controller
             ->where('crm_projects.id', $data->id);
 
             $dataSend = clone $dataAPI;
-
+            $db_name = $data->db_name;
             foreach ($dataSend->get() as $key => $value) {
                 # code...
                 $ch = curl_init();
-                $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name";
+                $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name&db_name=$db_name";
 
-                $url = 'http://api.em-hr.co.id/set-modul-hris';
+                $url = env('API_URL').'/set-modul-hris';
                 //$url = 'http://192.168.112.131:8001/set-modul-hris';
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-                
+
                 $html = curl_exec($ch);
 
-                if (curl_errno($ch)) 
+
+                if (curl_errno($ch))
                 {
                     print curl_error($ch);
                 }
@@ -774,19 +783,21 @@ class PipelineController extends Controller
             }
 
             $dataUser = $dataAPI->first();
-            $data = "project_id=$dataUser->project_id&user_name=$dataUser->user_name&password=$dataUser->password";
-            
+
+            $data = "project_id=$dataUser->project_id&user_name=$dataUser->user_name&password=$dataUser->password&db_name=$db_name";
+
             $ch = curl_init();
-            $url = 'http://api.em-hr.co.id/set-user-hris';
+            $url = env('API_URL').'/set-user-hris';
             //$url = 'http://192.168.112.131:8001/set-user-hris';
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-                
+
             $html = curl_exec($ch);
 
-            if (curl_errno($ch)) 
+
+            if (curl_errno($ch))
             {
                 print curl_error($ch);
             }

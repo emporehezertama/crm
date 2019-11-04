@@ -9,7 +9,7 @@ class CrmProduct extends Model
     protected $table = 'crm_product';
 
     public function child()
-   	{
-   		return $this->hasMany('App\Models\CrmProduct', 'parent_id', 'id');
-   	}
+    {
+        return $this->hasMany('App\Models\CrmProduct', 'parent_id', 'id');
+    }
 }

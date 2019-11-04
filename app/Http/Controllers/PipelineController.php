@@ -663,7 +663,7 @@ class PipelineController extends Controller
     {
         if($request->project_category_id == 1) {
             if(!is_null($request->db_name)){
-                $request->db_name = "hris_$request->db_name";
+                $request->db_name = "emhr_$request->db_name";
             }
             $this->validate($request,[
             'user_name' => 'required|unique:crm_projects',

@@ -93,7 +93,7 @@
                         <div class="col-md-12">
                           <div class="input-group">
                             <div class="input-group-prepend">
-                              <div class="input-group-text">hris_</div>
+                              <div class="input-group-text">emhr_</div>
                             </div>
                             <input type="text" class="form-control" name="db_name" placeholder="Username">
                           </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CrmProduct;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Users;
@@ -638,6 +639,7 @@ class PipelineController extends Controller
             ->where('crm_projects.id', $data->id);
 
             $dataSend = clone $dataAPI;
+            $project_id = $data->id;
 
             foreach ($dataSend->get() as $key => $value) {
                 # code...
@@ -659,6 +661,29 @@ class PipelineController extends Controller
                 }
                 curl_close($ch);
                 //dd($html);
+            }
+
+            $deletedProducts = CrmProduct::whereNotIn('id',$request->project_product_id)->where('parent_id',1)->get();
+            $project = CrmProjects::find($project_id);
+            if($project) {
+                foreach ($deletedProducts as $del) {
+                    $ch = curl_init();
+                    $data = "project_id=$project_id&crm_product_id=$del->id&db_name=$project->db_name";
+
+                    $url = env('API_URL', 'http://192.168.112.110:8000') . '/delete-modul-hris';
+                    //$url = 'http://192.168.112.131:8001/update-modul-hris';
+                    curl_setopt($ch, CURLOPT_URL, $url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                    curl_setopt($ch, CURLOPT_POST, true);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+                    $html = curl_exec($ch);
+
+                    if (curl_errno($ch)) {
+                        print curl_error($ch);
+                    }
+                    curl_close($ch);
+                }
             }
         }
         return redirect()->route('pipeline.index')->with('message-success', 'Card Updated');

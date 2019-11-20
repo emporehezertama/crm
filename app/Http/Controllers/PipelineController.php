@@ -602,7 +602,9 @@ class PipelineController extends Controller
         if($request->project_product_id != null) {
             ProjectProduct::whereNotIn('crm_product_id',$request->project_product_id)->where('crm_project_id',$data->id)->delete();
             foreach ($request->project_product_id as $key => $value) {
+
                 $product = ProjectProduct::where('crm_product_id',$value)->where('crm_project_id',$data->id)->first();
+
                 if(!$product)
                 {
                     $product = new ProjectProduct();
@@ -613,6 +615,13 @@ class PipelineController extends Controller
                     }
                     $product->save();
                 }
+                else{
+                    if(isset($request->limit_user[$key])){
+                        $product->limit_user      = $request->limit_user[$key];
+                    }
+                    $product->save();
+                }
+
             }
         } else{
             ProjectProduct::where('crm_project_id',$data->id)->delete();
@@ -622,7 +631,7 @@ class PipelineController extends Controller
         if($data->project_category_id == 1)
         {
             //send to api
-            $dataAPI   = CrmProjects::select('crm_projects.id as project_id','crm_projects.name as project_name','crm_client.name as client_name','crm_projects.user_name','crm_projects.password','project_product.crm_product_id','project_product.limit_user','crm_product.name as modul_name')
+            $dataAPI   = CrmProjects::select('crm_projects.id as project_id','crm_projects.name as project_name','crm_client.name as client_name','crm_projects.user_name','crm_projects.password','crm_projects.db_name','project_product.crm_product_id','project_product.limit_user','crm_product.name as modul_name')
             ->join('crm_client', 'crm_client.id','=','crm_projects.crm_client_id')
             ->join('project_product', 'project_product.crm_project_id','=','crm_projects.id')
             ->join('crm_product','project_product.crm_product_id','=','crm_product.id')
@@ -633,9 +642,9 @@ class PipelineController extends Controller
             foreach ($dataSend->get() as $key => $value) {
                 # code...
                 $ch = curl_init();
-                $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&user_name=$value->user_name&password=$value->password&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name";
+                $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&user_name=$value->user_name&password=$value->password&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name&db_name=$value->db_name";
 
-                $url = env('API_URL').'/update-modul-hris';
+                $url = env('API_URL','http://192.168.112.110:8000').'/update-modul-hris';
                 //$url = 'http://192.168.112.131:8001/update-modul-hris';
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -764,7 +773,7 @@ class PipelineController extends Controller
                 $ch = curl_init();
                 $data = "project_id=$value->project_id&project_name=$value->project_name&client_name=$value->client_name&crm_product_id=$value->crm_product_id&limit_user=$value->limit_user&modul_name=$value->modul_name&db_name=$db_name";
 
-                $url = env('API_URL').'/set-modul-hris';
+                $url = env('API_URL','http://192.168.112.110:8000').'/set-modul-hris';
                 //$url = 'http://192.168.112.131:8001/set-modul-hris';
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -779,7 +788,8 @@ class PipelineController extends Controller
                     print curl_error($ch);
                 }
                 curl_close($ch);
-                //dd($html);
+                info("Create modules ".$url);
+                info($html);
             }
 
             $dataUser = $dataAPI->first();
@@ -787,7 +797,7 @@ class PipelineController extends Controller
             $data = "project_id=$dataUser->project_id&user_name=$dataUser->user_name&password=$dataUser->password&db_name=$db_name";
 
             $ch = curl_init();
-            $url = env('API_URL').'/set-user-hris';
+            $url = env('API_URL','http://192.168.112.110:8000').'/set-user-hris';
             //$url = 'http://192.168.112.131:8001/set-user-hris';
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -802,6 +812,8 @@ class PipelineController extends Controller
                 print curl_error($ch);
             }
             curl_close($ch);
+            info("Create user");
+            info($html);
 
         }
         return redirect()->route('pipeline.index')->with('message-success', 'Card created');

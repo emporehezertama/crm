@@ -788,8 +788,6 @@ class PipelineController extends Controller
                     print curl_error($ch);
                 }
                 curl_close($ch);
-                info("Create modules ".$url);
-                info($html);
             }
 
             $dataUser = $dataAPI->first();
@@ -812,8 +810,6 @@ class PipelineController extends Controller
                 print curl_error($ch);
             }
             curl_close($ch);
-            info("Create user");
-            info($html);
 
         }
         return redirect()->route('pipeline.index')->with('message-success', 'Card created');

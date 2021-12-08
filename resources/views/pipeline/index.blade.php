@@ -63,9 +63,9 @@
                     <span class="dropdown">
                       <a id="btnSearchDrop{{$item->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{$item->id}}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
-                        <a href="#" class="dropdown-item text-success" data-price="Rp. {{ number_format($item->price,0,'','.') }}"  data-quotation_order="{{ $item->id }}/{{ isset($item->sales->id) ? $item->sales->id : '' }}/QO/{{ date('Ymhis') }}" onclick="move_to_quotation('{{ route('pipeline.move-to-quotation', $item->id) }}', this)">Move to Quotation <i class="ft-arrow-right"></i></a>
-                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
-                        <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
+                        <a href="#" class="dropdown-item text-success" data-price="Rp. {{ number_format($item->price,0,'','.') }}"  data-quotation_order="{{ $item->id }}/{{ isset($item->sales->id) ? $item->sales->id : '' }}/QO/{{ date('Ymhis') }}" onclick="move_to_quotation('{{ route('pipeline.move-to-quotation', ['id' => $item->id]) }}', this)">Move to Quotation <i class="ft-arrow-right"></i></a>
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', ['id' => $item->id]) }}')"><i class="ft-plus"></i> Update</a>
+                        <a href="{{ route('pipeline.terminate', ['id' => $item->id]) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
                       </span>
                     </span>
                   </li>
@@ -129,10 +129,10 @@
                     <span class="dropdown">
                       <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
-                        <!-- <a href="javascript:void(0)" onclick="move_to_negotation('{{ route('pipeline.move-to-negotiation', $item->id) }}', this)" data-negotation_order="{{ $item->id }}/{{ $item->sales->id }}/NO/{{ date('Ymhis') }}"  class="dropdown-item text-success">Move to Negotiation <i class="ft-arrow-right"></i></a> -->
-                        <a href="javascript:void(0)" data-po_number="{{ $item->id }}/{{ $item->sales->id }}/PO/{{ date('Ymhis') }}" data-price="Rp. {{ number_format($item->price,0,'','.') }}" data-month="{{ get_crm_project_item($item, 'month') }}" data-start_date="{{ get_crm_project_item($item, 'start_date') }}" data-end_date="{{ get_crm_project_item($item, 'end_date') }}" onclick="move_to_po('{{ route('pipeline.move-to-po', $item->id) }}', this)" class="dropdown-item text-success">Move to PO / Contract <i class="ft-arrow-right"></i></a>
-                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
-                        <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
+                        <!-- <a href="javascript:void(0)" onclick="move_to_negotation('{{ route('pipeline.move-to-negotiation', ['id' => $item->id]) }}', this)" data-negotation_order="{{ $item->id }}/{{ $item->sales->id }}/NO/{{ date('Ymhis') }}"  class="dropdown-item text-success">Move to Negotiation <i class="ft-arrow-right"></i></a> -->
+                        <a href="javascript:void(0)" data-po_number="{{ $item->id }}/{{ $item->sales->id }}/PO/{{ date('Ymhis') }}" data-price="Rp. {{ number_format($item->price,0,'','.') }}" data-month="{{ get_crm_project_item($item, 'month') }}" data-start_date="{{ get_crm_project_item($item, 'start_date') }}" data-end_date="{{ get_crm_project_item($item, 'end_date') }}" onclick="move_to_po('{{ route('pipeline.move-to-po', ['id' => $item->id]) }}', this)" class="dropdown-item text-success">Move to PO / Contract <i class="ft-arrow-right"></i></a>
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', ['id' => $item->id]) }}')"><i class="ft-plus"></i> Update</a>
+                        <a href="{{ route('pipeline.terminate', ['id' => $item->id]) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
                       </span>
                     </span>
                   </li>
@@ -203,18 +203,18 @@
                     <span class="dropdown">
                       <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
-                        <a href="{{ route('pipeline.move-to-po-done', $item->id) }}" class="dropdown-item text-success">PO Done <i class="ft-arrow-right"></i></a>
-                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
+                        <a href="{{ route('pipeline.move-to-po-done', ['id' => $item->id]) }}" class="dropdown-item text-success">PO Done <i class="ft-arrow-right"></i></a>
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', ['id' => $item->id]) }}')"><i class="ft-plus"></i> Update</a>
                         
                         @if(get_crm_project_item($item, 'payment_method') == 1)
                         <a href="javascript:void(0)" class="dropdown-item" data-id="{{ $item->id }}" data-po_number="{{ get_crm_project_item($item, 'po_number') }}" onclick="add_invoice_perpetual(this)"><i class="ft-plus"></i> Invoice</a>
                         @endif
                         
                         @if(get_crm_project_item($item, 'payment_method') == 2)
-                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_invoice_subscription('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Invoice</a>
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_invoice_subscription('{{ route('pipeline.add-note', ['id' => $item->id]) }}')"><i class="ft-plus"></i> Invoice</a>
                         @endif
 
-                        <a href="{{ route('pipeline.terminate', $item->id) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
+                        <a href="{{ route('pipeline.terminate', ['id' => $item->id]) }}" class="dropdown-item"><i class="ft-trash-2"></i> Terminate</a>
                       </span>
                     </span>
                   </li>
@@ -313,8 +313,8 @@
                     <span class="dropdown">
                       <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
-                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
-                        <a href="{{ route('pipeline.print-invoice', $item->id) }}" target="_blank" class="dropdown-item"><i class="ft-printer"></i> Print / Download</a>
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', ['id' => $item->id]) }}')"><i class="ft-plus"></i> Update</a>
+                        <a href="{{ route('pipeline.print-invoice', ['id' => $item->id]) }}" target="_blank" class="dropdown-item"><i class="ft-printer"></i> Print / Download</a>
                       </span>
                     </span>
                   </li>
@@ -422,8 +422,8 @@
                     <span class="dropdown">
                       <a id="btnSearchDrop{{ $item->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"></a>
                       <span aria-labelledby="btnSearchDrop{{ $item->id }}" class="dropdown-menu mt-1 dropdown-menu-right" style="min-width: 15rem;">
-                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', $item->id) }}')"><i class="ft-plus"></i> Update</a>
-                        <a href="{{ route('pipeline.print-invoice', $item->id) }}" target="_blank" class="dropdown-item"><i class="ft-printer"></i> Print / Download</a>
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="add_note('{{ route('pipeline.add-note', ['id' => $item->id]) }}')"><i class="ft-plus"></i> Update</a>
+                        <a href="{{ route('pipeline.print-invoice', ['id' => $item->id]) }}" target="_blank" class="dropdown-item"><i class="ft-printer"></i> Print / Download</a>
                       </span>
                     </span>
                   </li>

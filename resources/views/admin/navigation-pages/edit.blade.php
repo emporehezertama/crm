@@ -23,7 +23,7 @@
         <div class="card">
           <div class="card-content collapse show">
             <div class="card-body">
-              <form class="form form-horizontal" method="POST" action="{{ route('admin.navigation-pages.update', $data->id) }}" enctype="multipart/form-data">
+              <form class="form form-horizontal" method="POST" action="{{ route('admin.navigation-pages.update', ['id' => $data->id]) }}" enctype="multipart/form-data">
                 <ul class="nav nav-tabs">
                   <li class="nav-item" style="position: relative;">
                     <i style="color: yellow;color: yellow;position: absolute;top: 2px;right: -4px;" class="ft ft-star"></i>

@@ -15,7 +15,7 @@
 		</tr>
 		<tr>
 			<th style="text-align: left;">Jumlah </th>
-			<th style="text-align: left;"> : {{ sum_payment_request_price($data->id) }}</th>
+			<th style="text-align: left;"> : {{ sum_payment_request_price(['id' => $data->id]) }}</th>
 		</tr>
 		<tr>
 			<th style="text-align: left;">Jenis Transaksi </th>

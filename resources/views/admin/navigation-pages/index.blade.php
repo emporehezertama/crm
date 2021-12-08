@@ -51,11 +51,11 @@
                       <td>{{ $item->order }}</td>
                       <td>{{ $item->created_at }}</td>
                       <td width="100">
-                        <form method="POST" action="{{ route('admin.navigation-pages.destroy', $item->id) }}">
+                        <form method="POST" action="{{ route('admin.navigation-pages.destroy', ['id' => $item->id]) }}">
                           {{ csrf_field() }}
                           {{ method_field('DELETE') }}
                           <a href="javascript:void(0)" class="text-danger" title="Delete data" onclick="confirm_delete('Hapus data ini ?', this)"><i class="la la-trash"></i></a>
-                          <a href="{{ route('admin.navigation-pages.edit', $item->id) }}" title="Edit Data"><i class="la la-edit"></i></a>
+                          <a href="{{ route('admin.navigation-pages.edit', ['id' => $item->id]) }}" title="Edit Data"><i class="la la-edit"></i></a>
                         </form>
                       </td>
                     </tr>

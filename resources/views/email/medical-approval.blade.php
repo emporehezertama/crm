@@ -11,7 +11,7 @@
 		</tr>
 		<tr>
 			<th style="text-align: left;">Jenis Klaim </th>
-			<th style="text-align: left;"> : {{ medical_jenis_claim_string($data->id) }}</th>
+			<th style="text-align: left;"> : {{ medical_jenis_claim_string(['id' => $data->id]) }}</th>
 		</tr>
 		<tr>
 			<th style="text-align: left;">Jumlah</th>

@@ -56,11 +56,11 @@
                         <td>{{ isset($item->sales->name) ? $item->sales->name : '' }}</td>
                         <td>{{ $item->created_at }}</td>
                         <td>
-                          <form method="POST" action="{{ route('sales.project.destroy', $item->id) }}">
+                          <form method="POST" action="{{ route('sales.project.destroy', ['id' => $item->id]) }}">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
                             <a href="javascript:void(0)" class="text-danger" title="Delete data" onclick="confirm_delete('Hapus data ini ?', this)"><i class="la la-trash"></i></a>
-                            <a href="{{ route('sales.project.edit', $item->id) }}" title="Edit Data"><i class="la la-edit"></i></a>
+                            <a href="{{ route('sales.project.edit', ['id' => $item->id]) }}" title="Edit Data"><i class="la la-edit"></i></a>
                           </form>
                         </td>
                       </tr>

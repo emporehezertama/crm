@@ -47,11 +47,11 @@
                       <td>{{ $item->name }}</td>
                       <td>{{ $item->description }}</td>
                       <td>
-                        <form method="POST" action="{{ route('admin.user-access.destroy', $item->id) }}">
+                        <form method="POST" action="{{ route('admin.user-access.destroy', ['id' => $item->id]) }}">
                           {{ csrf_field() }}
                           {{ method_field('DELETE') }}
                           <a href="javascript:void(0)" onclick="confirm_delete('Hapus data ini ?', this)" title="Delete" class="text-danger"><i class="la la-trash"></i></a>
-                          <a href="javascript:void(0)" onclick="edit_('{{ route('admin.user-access.update', $item->id) }}','{{ $item->name }}','{{ $item->description }}')" title="Edit"><i class="la la-edit"></i></a>
+                          <a href="javascript:void(0)" onclick="edit_('{{ route('admin.user-access.update', ['id' => $item->id]) }}','{{ $item->name }}','{{ $item->description }}')" title="Edit"><i class="la la-edit"></i></a>
                         </form>
                       </td>
                     </tr>

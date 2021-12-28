@@ -82,16 +82,16 @@
                                             @if($item->status == 2)
                                                 @if($item->status_actual_bill >= 2)
                                                     @if($item->status_actual_bill == 2)
-                                                    <a href="{{ route('karyawan.training.biaya', $item->id) }}">
+                                                    <a href="{{ route('karyawan.training.biaya', ['id' => $item->id]) }}">
                                                     <label class="btn btn-warning btn-xs"><i class="fa fa-history"></i> Waiting Approval</label></a>
                                                     @endif
 
                                                     @if($item->status_actual_bill == 3)
-                                                    <a href="{{ route('karyawan.training.detail-all', $item->id) }}" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Actual Bill di Approve</a>
+                                                    <a href="{{ route('karyawan.training.detail-all', ['id' => $item->id]) }}" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Actual Bill di Approve</a>
                                                     @endif
 
                                                     @if($item->status_actual_bill == 4)
-                                                    <a  href="{{ route('karyawan.training.detail-all', $item->id) }}"class="btn btn-danger btn-xs"><i class="fa fa-close"></i> Actual Bill di Tolak</a>
+                                                    <a  href="{{ route('karyawan.training.detail-all', ['id' => $item->id]) }}"class="btn btn-danger btn-xs"><i class="fa fa-close"></i> Actual Bill di Tolak</a>
                                                     @endif
                                                     
                                                 @endif

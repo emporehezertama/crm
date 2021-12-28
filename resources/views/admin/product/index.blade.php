@@ -45,11 +45,11 @@
                       <td>{{ $key + 1 }}</td>
                       <td>{{ $item->name }}</td>
                       <td width="100">
-                        <form method="POST" action="{{ route('admin.product.destroy', $item->id) }}">
+                        <form method="POST" action="{{ route('admin.product.destroy', ['id' => $item->id]) }}">
                           {{ csrf_field() }}
                           {{ method_field('DELETE') }}
                           <a href="javascript:void(0)" class="text-danger" title="Delete data" onclick="confirm_delete('Delete this data?', this)"><i class="la la-trash"></i></a>
-                          <a href="{{ route('admin.product.edit', $item->id) }}" title="Edit Data"><i class="la la-edit"></i></a>
+                          <a href="{{ route('admin.product.edit', ['id' => $item->id]) }}" title="Edit Data"><i class="la la-edit"></i></a>
                         </form>
                       </td>
                     </tr>
@@ -59,11 +59,11 @@
                           <td>{{ $key + 1 }}.{{$k+1}}</td>
                           <td>{{ $items->name }}</td>
                           <td width="100">
-                            <form method="POST" action="{{ route('admin.product.destroy', $items->id) }}">
+                            <form method="POST" action="{{ route('admin.product.destroy', ['id' => $items->id]) }}">
                               {{ csrf_field() }}
                               {{ method_field('DELETE') }}
                               <a href="javascript:void(0)" class="text-danger" title="Delete data" onclick="confirm_delete('Delete this data?', this)"><i class="la la-trash"></i></a>
-                              <a href="{{ route('admin.product.edit', $items->id) }}" title="Edit Data"><i class="la la-edit"></i></a>
+                              <a href="{{ route('admin.product.edit', ['id' => $items->id]) }}" title="Edit Data"><i class="la la-edit"></i></a>
                             </form>
                           </td>
                         </tr>

@@ -22,7 +22,7 @@
   <div class="content-body">
     <div class="row">
       <div class="col-12 px-0">
-        <form class="form form-horizontal" method="POST" action="{{ route('client.update', $data->id) }}"  enctype="multipart/form-data">
+        <form class="form form-horizontal" method="POST" action="{{ route('client.update', ['id' => $data->id]) }}"  enctype="multipart/form-data">
           <input type="hidden" name="_method" value="PUT">
           <div class="col-6 float-left">
              <div class="card">

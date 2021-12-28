@@ -25,7 +25,7 @@
         <div class="card">
           <div class="card-content collapse show">
             <div class="card-body">
-              <form class="form form-horizontal" method="POST" action="{{ route('admin.users.update', $data->id) }}">
+              <form class="form form-horizontal" method="POST" action="{{ route('admin.users.update', ['id' => $data->id]) }}">
                 {{ csrf_field() }}
                 <input type="hidden" name="_method" value="PUT">
                 <div class="form-body">
